@@ -1,0 +1,12 @@
+name: svc
+
+channels:
+  - pytorch
+  - conda-forge
+  - nvidia
+
+dependencies:
+  - python=3.10.12
+  - pip=23.2.1
+  - nvidia::cudatoolkit=11.7.0
+  - pytorch::pytorch=2.0.1
