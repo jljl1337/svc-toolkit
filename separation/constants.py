@@ -1,5 +1,6 @@
 SEED = 4514
 MODEL_NUM = 2
+STEM = ['vocals', 'accompaniment']
 FRAME_LENGTH = 4096
 FRAME_STEP = 1024
 SAMPLE_RATE = 44100

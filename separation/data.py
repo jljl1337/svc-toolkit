@@ -32,8 +32,8 @@ class MusicDataset(Dataset):
                 post_stft_list = []
                 for path in [mixture_path, vocal_path, accompaniment_path]:
                     audio_data, sample_rate = load(path, offset=start, duration=length)
-                    audio_data = pre_stft(audio_data, sample_rate)
-                    post_stft = stft(audio_data)
+                    audio_data = pre_stft(audio_data, sample_rate, constants.SAMPLE_RATE)
+                    post_stft = stft(audio_data, constants.FRAME_LENGTH, constants.FRAME_STEP)
                     post_stft = abs(post_stft)
                     post_stft = post_stft.transpose(2, 1, 0)
                     post_stft_list.append(post_stft)
@@ -60,8 +60,8 @@ class MusicDataset(Dataset):
         post_stft_list = []
         for path in path_list:
             audio_data, sample_rate = load(path, offset = start, duration = length)
-            audio_data = pre_stft(audio_data, sample_rate)
-            post_stft = stft(audio_data)
+            audio_data = pre_stft(audio_data, sample_rate, constants.SAMPLE_RATE)
+            post_stft = stft(audio_data, constants.FRAME_LENGTH, constants.FRAME_STEP)
             post_stft = abs(post_stft)
             post_stft = post_stft.transpose(2, 1, 0)
             post_stft_list.append(post_stft)
