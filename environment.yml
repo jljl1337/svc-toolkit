@@ -17,3 +17,4 @@ dependencies:
     - musdb==0.4.0
     - python-dotenv==1.0.0
     - librosa==0.10.1
+    - pandas==2.1.3
