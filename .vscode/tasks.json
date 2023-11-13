@@ -1,0 +1,57 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Create Conda Environment",
+            "type": "shell",
+            "command": "conda env create --file environment.yml",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Update Conda Environment",
+            "type": "shell",
+            "command": "conda env update --file environment.yml --prune",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Hard Reset Conda Environment",
+            "type": "shell",
+            "command": "conda env remove --name svc && conda env create --file environment.yml",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Freeze Conda Environment",
+            "type": "shell",
+            "command": "conda env export -n svc > environment_tmp.yml",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+    ]
+}
