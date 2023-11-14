@@ -13,7 +13,6 @@ def load(path, offset=0, duration=-1):
 
 def save(path, data, sample_rate):
     sf.write(path, data, sample_rate)
-    print('save')
 
 def duration(path):
     return sf.info(path).duration
