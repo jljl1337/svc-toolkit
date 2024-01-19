@@ -65,3 +65,20 @@ def stft(data, frame_length, frame_step, inverse=False, length=None):
     if channel == 1:
         return output[0]
     return np.concatenate(output, axis=1 if inverse else 2)
+
+def to_mag_phase(mix_wave, stem_wave, win_length, hop_length):
+    mix_spectrogram = librosa.stft(mix_wave, n_fft=win_length, hop_length=hop_length)
+    stem_spec = librosa.stft(stem_wave, n_fft=win_length, hop_length=hop_length)
+    mix_magnitude, mix_phase = librosa.magphase(mix_spectrogram)
+    stem_magnitude, stem_phase = librosa.magphase(stem_spec)
+
+    mix_mag_max = mix_magnitude.max()
+    mix_magnitude /= mix_mag_max
+    stem_magnitude /= mix_mag_max
+
+    return mix_magnitude, mix_phase, stem_magnitude, stem_phase
+
+def to_wave(magnitude, phase, mix_spectrogram, win_length, hop_length):
+    spectrogram = magnitude * phase
+    spectrogram *= mix_spectrogram.max()
+    return librosa.istft(spectrogram, win_length=win_length, hop_length=hop_length)
