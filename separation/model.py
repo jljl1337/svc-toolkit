@@ -1,54 +1,41 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
-def down_pad_conv(in_channels, out_channels, kernel_size=5, stride=2, padding=(1, 2, 1, 2)):
+def down_layer(in_channels, out_channels, kernel_size=5, stride=2, padding=2):
     return nn.Sequential(
-        nn.ZeroPad2d(padding),
-        nn.Conv2d(in_channels, out_channels, kernel_size, stride),
+        nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding),
+        nn.BatchNorm2d(out_channels),
+        nn.LeakyReLU(0.2, inplace=True),
     )
 
-def down_batch_act(out_channels, eps=1e-3, momentum=1e-2):
-    return nn.Sequential(
-        nn.BatchNorm2d(out_channels, eps=eps, momentum=momentum),
-        nn.LeakyReLU(0.2),
-    )
-
-def up_layer(in_channels, out_channels, dropout=False, kernel_size=5, stride=2, eps=1e-3, momentum=1e-2):
+def up_layer(in_channels, out_channels, kernel_size=5, stride=2, padding=1, dropout=False):
     layers = nn.Sequential(
-        nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride),
-        nn.ReLU(),
-        nn.BatchNorm2d(out_channels, eps=eps, momentum=momentum),
+        nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding),
+        nn.BatchNorm2d(out_channels),
+        nn.ReLU(inplace=True),
     )
 
     if dropout:
-        layers.add_module(f'dropout{in_channels}', nn.Dropout(0.5))
+        layers.insert(2, nn.Dropout(0.5))
 
     return layers
 
-def up_pad(x):
-    return x[:, :, 1: -2, 1: -2]
-
 class UNet(nn.Module):
-    def __init__(self, in_channels = 2):
+    def __init__(self, in_channels = 1):
         super(UNet, self).__init__()
 
-        self.down_conv1 = down_pad_conv(in_channels, 16)
-        self.down_batch1 = down_batch_act(16)
+        self.down1 = down_layer(in_channels, 16)
 
-        self.down_conv2 = down_pad_conv(16, 32)
-        self.down_batch2 = down_batch_act(32)
+        self.down2 = down_layer(16, 32)
 
-        self.down_conv3 = down_pad_conv(32, 64)
-        self.down_batch3 = down_batch_act(64)
+        self.down3 = down_layer(32, 64)
 
-        self.down_conv4 = down_pad_conv(64, 128)
-        self.down_batch4 = down_batch_act(128)
+        self.down4 = down_layer(64, 128)
 
-        self.down_conv5 = down_pad_conv(128, 256)
-        self.down_batch5 = down_batch_act(256)
+        self.down5 = down_layer(128, 256)
 
-        self.down_conv6 = down_pad_conv(256, 512)
-        self.down_batch6 = down_batch_act(512)
+        self.down6 = down_layer(256, 512)
 
         self.up1 = up_layer(512, 256, dropout=True)
 
@@ -62,70 +49,46 @@ class UNet(nn.Module):
 
         self.up6 = up_layer(32, 1)
 
-        self.mask = nn.Conv2d(1, 2, kernel_size=4, dilation=2, padding=3)
-        self.sigmoid = nn.Sigmoid()
-
     def forward(self, x):
-        x1 = self.down_conv1(x)
-        x2 = self.down_batch1(x1)
+        x_down1 = self.down1(x)
 
-        x3 = self.down_conv2(x2)
-        x4 = self.down_batch2(x3)
+        x_down2 = self.down2(x_down1)
 
-        x5 = self.down_conv3(x4)
-        x6 = self.down_batch3(x5)
+        x_down3 = self.down3(x_down2)
 
-        x7 = self.down_conv4(x6)
-        x8 = self.down_batch4(x7)
+        x_down4 = self.down4(x_down3)
 
-        x9 = self.down_conv5(x8)
-        x10 = self.down_batch5(x9)
+        x_down5 = self.down5(x_down4)
 
-        x11 = self.down_conv6(x10)
-        _x12 = self.down_batch6(x11)
+        x_down6 = self.down6(x_down5)
 
-        x13 = self.up1(x11)
-        x13 = up_pad(x13)
-        x14 = torch.cat((x9, x13), 1)
+        x_up1 = self.up1(x_down6)
+        x_up1 = x_up1[:, :, : -1, : -1]
 
-        x15 = self.up2(x14)
-        x15 = up_pad(x15)
-        x16 = torch.cat((x7, x15), 1)
+        x_up2 = torch.cat((x_up1, x_down5), 1)
+        x_up2 = self.up2(x_up2)
+        x_up2 = x_up2[:, :, : -1, : -1]
 
-        x17 = self.up3(x16)
-        x17 = up_pad(x17)
-        x18 = torch.cat((x5, x17), 1)
+        x_up3 = torch.cat((x_up2, x_down4), 1)
+        x_up3 = self.up3(x_up3)
+        x_up3 = x_up3[:, :, : -1, : -1]
 
-        x19 = self.up4(x18)
-        x19 = up_pad(x19)
-        x20 = torch.cat((x3, x19), 1)
+        x_up4 = torch.cat((x_up3, x_down3), 1)
+        x_up4 = self.up4(x_up4)
+        x_up4 = x_up4[:, :, : -1, : -1]
 
-        x21 = self.up5(x20)
-        x21 = up_pad(x21)
-        x22 = torch.cat((x1, x21), 1)
+        x_up5 = torch.cat((x_up4, x_down2), 1)
+        x_up5 = self.up5(x_up5)
+        x_up5 = x_up5[:, :, : -1, : -1]
 
-        x23 = self.up6(x22)
-        x23 = up_pad(x23)
+        x_up6 = torch.cat((x_up5, x_down1), 1)
+        x_up6 = self.up6(x_up6)
+        x_up6 = x_up6[:, :, : -1, : -1]
 
-        mask = self.mask(x23)
-        mask = self.sigmoid(mask)
+        return F.sigmoid(x_up6)
 
-        return x * mask
-
-
-class CombinedLoss(nn.Module):
-    def __init__(self, model_list, criterion) -> None:
-        super(CombinedLoss, self).__init__()
-        self.model_list = model_list
-        self.criterion = criterion
-        self.model_num = len(model_list)
-    
-    def forward(self, mixture, separate):
-        loss = 0
-
-        for i in range(self.model_num):
-            pred = self.model_list[i](mixture)
-            loss += self.criterion(pred, separate[i])
-
-        return loss / self.model_num
-
+# Test the model
+if __name__ == '__main__':
+    model = UNet()
+    print(model)
+    print(model(torch.randn(1, 1, 512, 128)).shape)
