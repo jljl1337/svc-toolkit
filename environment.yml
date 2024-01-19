@@ -24,3 +24,4 @@ dependencies:
     - musdb==0.4.0
     - librosa==0.10.1
     - nussl==1.1.9
+    - git+https://github.com/moises-ai/moises-db.git
