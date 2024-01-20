@@ -11,15 +11,16 @@ def _down_layer(in_channels, out_channels, kernel_size=5, stride=2, padding=2):
         nn.LeakyReLU(0.2, inplace=True),
     )
 
-def _up_layer(in_channels, out_channels, kernel_size=5, stride=2, padding=1, dropout=False):
+def _up_layer(in_channels, out_channels, kernel_size=5, stride=2, padding=1, dropout=False, last=False):
     layers = nn.Sequential(
         nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride, padding),
         nn.BatchNorm2d(out_channels),
-        nn.ReLU(inplace=True),
     )
 
     if dropout:
-        layers.insert(2, nn.Dropout(0.5))
+        layers.append(nn.Dropout(0.5))
+
+    layers.append(nn.Sigmoid() if last else nn.ReLU(inplace=True))
 
     return layers
 
@@ -49,7 +50,7 @@ class UNet(nn.Module):
 
         self.up5 = _up_layer(64, 16)
 
-        self.up6 = _up_layer(32, 1)
+        self.up6 = _up_layer(32, 1, last=True)
 
     def forward(self, x):
         x_down1 = self.down1(x)
@@ -87,7 +88,7 @@ class UNet(nn.Module):
         x_up6 = self.up6(x_up6)
         x_up6 = x_up6[:, :, : -1, : -1]
 
-        return F.sigmoid(x_up6)
+        return x_up6
 
 class UNetLightning(pl.LightningModule):
     def __init__(self, in_channels=1, lr=0.0001, weight_decay=0.00001):
