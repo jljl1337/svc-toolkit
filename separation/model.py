@@ -25,10 +25,10 @@ def _up_layer(in_channels, out_channels, kernel_size=5, stride=2, padding=1, dro
     return layers
 
 class UNet(nn.Module):
-    def __init__(self, in_channels = 1):
+    def __init__(self, channels = 1):
         super(UNet, self).__init__()
 
-        self.down1 = _down_layer(in_channels, 16)
+        self.down1 = _down_layer(channels, 16)
 
         self.down2 = _down_layer(16, 32)
 
@@ -50,7 +50,7 @@ class UNet(nn.Module):
 
         self.up5 = _up_layer(64, 16)
 
-        self.up6 = _up_layer(32, 1, last=True)
+        self.up6 = _up_layer(32, channels, last=True)
 
     def forward(self, x):
         x_down1 = self.down1(x)
