@@ -78,28 +78,35 @@ class MusicDataset(Dataset):
         return (*post_stft_list, )
 
 class MagnitudeDataset(Dataset):
-    def __init__(self, root, stem) -> None:
+    def __init__(self, root, stem, expand_factor) -> None:
         self.magnitudes = []
+        self.expanded_magnitudes = []
         self.stem = stem
 
         for dir in tqdm(os.listdir(root)):
-            stem_path = os.path.join(root, dir, f'{stem}.wav')
+            # Load audio
             mixture_path = os.path.join(root, dir, 'mixture.wav')
-            stem_wave, _sr = audio.load(stem_path)
-            mixture_wave, _sr = audio.load(mixture_path)
+            stem_path = os.path.join(root, dir, f'{stem}.wav')
+            mixture_wave, mixture_sr = audio.load(mixture_path)
+            stem_wave, _stem_sr = audio.load(stem_path)
 
-            if stem_wave.shape != mixture_wave.shape:
-                print('yo')
-
+            # Save magnitude
             tmp = audio.mix_stem_to_mag_phase(mixture_wave, stem_wave, constants.WIN_LENGTH, constants.HOP_LENGTH)
-            mix_magnitude, _mix_phase, stem_magnitude, _stem_phase, _mix_mag_max = tmp
+            mix_magnitude, stem_magnitude = tmp[0], tmp[2]
             self.magnitudes.append((mix_magnitude, stem_magnitude))
 
+            # Expand dataset by duration of each song
+            duration = mixture_wave.shape[0] / mixture_sr
+            weight = int(duration // expand_factor + 1)
+            index = len(self.magnitudes) - 1
+            self.expanded_magnitudes.extend([index] * weight)
+
     def __len__(self):
-        return len(self.magnitudes)
+        return len(self.expanded_magnitudes)
     
     def __getitem__(self, index):
-        mix_magnitude, stem_magnitude = self.magnitudes[index]
+        actual_index = self.expanded_magnitudes[index]
+        mix_magnitude, stem_magnitude = self.magnitudes[actual_index]
         start = random.randint(0, mix_magnitude.shape[1] - constants.PATCH_LENGTH + 1)
 
         mix_magnitude = mix_magnitude[: -1, start: start + constants.PATCH_LENGTH, np.newaxis]
@@ -112,6 +119,4 @@ class MagnitudeDataset(Dataset):
 
 if __name__ == "__main__":
     print('test')
-    dataset = MagnitudeDataset('/home/jljl1337/dataset/musdb18hq/train/', 'vocals')
-    dataset_train, dataset_val = torch.utils.data.random_split(dataset, [100, 10])
-    print(dataset[0][0].shape)
+    dataset = MagnitudeDataset('/home/jljl1337/dataset/musdb18hq/train/', 'vocals', 30)
