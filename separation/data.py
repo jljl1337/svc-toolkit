@@ -1,10 +1,14 @@
 import os
+
+import numpy as np
+import torch
 from tqdm import tqdm
 from numpy import random
 from torch.utils.data import Dataset
 
 # from separation.audio import duration
-from audio import duration, load, pre_stft, stft
+# from audio import duration, load, pre_stft, stft
+import audio
 # import separation.constants as constants
 import constants
 
@@ -73,11 +77,41 @@ class MusicDataset(Dataset):
 
         return (*post_stft_list, )
 
+class MagnitudeDataset(Dataset):
+    def __init__(self, root, stem) -> None:
+        self.magnitudes = []
+        self.stem = stem
 
+        for dir in tqdm(os.listdir(root)):
+            stem_path = os.path.join(root, dir, f'{stem}.wav')
+            mixture_path = os.path.join(root, dir, 'mixture.wav')
+            stem_wave, _sr = audio.load(stem_path)
+            mixture_wave, _sr = audio.load(mixture_path)
+
+            if stem_wave.shape != mixture_wave.shape:
+                print('yo')
+
+            tmp = audio.mix_stem_to_mag_phase(mixture_wave, stem_wave, constants.WIN_LENGTH, constants.HOP_LENGTH)
+            mix_magnitude, _mix_phase, stem_magnitude, _stem_phase, _mix_mag_max = tmp
+            self.magnitudes.append((mix_magnitude, stem_magnitude))
+
+    def __len__(self):
+        return len(self.magnitudes)
+    
+    def __getitem__(self, index):
+        mix_magnitude, stem_magnitude = self.magnitudes[index]
+        start = random.randint(0, mix_magnitude.shape[1] - constants.PATCH_LENGTH + 1)
+
+        mix_magnitude = mix_magnitude[: -1, start: start + constants.PATCH_LENGTH, np.newaxis]
+        stem_magnitude = stem_magnitude[: -1, start: start + constants.PATCH_LENGTH, np.newaxis]
+
+        mix_tensor = torch.from_numpy(mix_magnitude).permute(2, 0, 1)
+        stem_tensor = torch.from_numpy(stem_magnitude).permute(2, 0, 1)
+
+        return mix_tensor, stem_tensor
 
 if __name__ == "__main__":
     print('test')
-    dataset = MusicDataset('/home/jljl1337/dataset/musdb18wav/train/')
-    print(dataset.__getitem__(0)[0].shape)
-    print(dataset.__getitem__(0)[1].shape)
-    print(dataset.__getitem__(0)[2].shape)
+    dataset = MagnitudeDataset('/home/jljl1337/dataset/musdb18hq/train/', 'vocals')
+    dataset_train, dataset_val = torch.utils.data.random_split(dataset, [100, 10])
+    print(dataset[0][0].shape)
