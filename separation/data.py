@@ -82,6 +82,9 @@ class MagnitudeDataset(Dataset):
     def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length) -> None:
         self.magnitudes = []
         self.expanded_magnitudes = []
+        self.win_length = win_length
+        self.hop_length = hop_length
+        self.patch_length = patch_length
 
         df = pd.read_csv(csv_path)
 
@@ -93,7 +96,7 @@ class MagnitudeDataset(Dataset):
             stem_wave, _stem_sr = audio.load(stem_path)
 
             # Save magnitude
-            tmp = audio.mix_stem_to_mag_phase(mixture_wave, stem_wave, constants.WIN_LENGTH, constants.HOP_LENGTH)
+            tmp = audio.mix_stem_to_mag_phase(mixture_wave, stem_wave, win_length, hop_length)
             mix_magnitude, stem_magnitude = tmp[0], tmp[2]
             self.magnitudes.append((mix_magnitude, stem_magnitude))
 
@@ -109,10 +112,10 @@ class MagnitudeDataset(Dataset):
     def __getitem__(self, index):
         actual_index = self.expanded_magnitudes[index]
         mix_magnitude, stem_magnitude = self.magnitudes[actual_index]
-        start = random.randint(0, mix_magnitude.shape[1] - constants.PATCH_LENGTH + 1)
+        start = random.randint(0, mix_magnitude.shape[1] - self.patch_length + 1)
 
-        mix_magnitude = mix_magnitude[: -1, start: start + constants.PATCH_LENGTH, np.newaxis]
-        stem_magnitude = stem_magnitude[: -1, start: start + constants.PATCH_LENGTH, np.newaxis]
+        mix_magnitude = mix_magnitude[: -1, start: start + self.patch_length, np.newaxis]
+        stem_magnitude = stem_magnitude[: -1, start: start + self.patch_length, np.newaxis]
 
         mix_tensor = torch.from_numpy(mix_magnitude).permute(2, 0, 1)
         stem_tensor = torch.from_numpy(stem_magnitude).permute(2, 0, 1)
@@ -121,4 +124,4 @@ class MagnitudeDataset(Dataset):
 
 if __name__ == "__main__":
     print('test')
-    dataset = MagnitudeDataset('train.csv', 30)
+    dataset = MagnitudeDataset('train.csv', 30, 1024, 768, 128)
