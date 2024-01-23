@@ -1,4 +1,6 @@
 import os
+from multiprocessing import cpu_count
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import numpy as np
 import pandas as pd
@@ -85,26 +87,36 @@ class MagnitudeDataset(Dataset):
         self.win_length = win_length
         self.hop_length = hop_length
         self.patch_length = patch_length
+        self.expand_factor = expand_factor
 
         df = pd.read_csv(csv_path)
 
-        for index, row in tqdm(df.iterrows(), total=len(df)):
-            # Load audio
-            mixture_path = row['mixture_path']
-            stem_path = row['stem_path']
-            mixture_wave, mixture_sr = audio.load(mixture_path)
-            stem_wave, _stem_sr = audio.load(stem_path)
+        with ThreadPoolExecutor(max_workers=cpu_count()) as executor:
+            futures = [executor.submit(self.load_magnitude, row) for _index, row in df.iterrows()]
 
-            # Save magnitude
-            tmp = audio.mix_stem_to_mag_phase(mixture_wave, stem_wave, win_length, hop_length)
-            mix_magnitude, stem_magnitude = tmp[0], tmp[2]
-            self.magnitudes.append((mix_magnitude, stem_magnitude))
+            for future in tqdm(as_completed(futures), total=len(df)):
+                mix_magnitude, stem_magnitude, weight = future.result()
+                self.magnitudes.append((mix_magnitude, stem_magnitude))
 
-            # Expand dataset by duration of each song
-            duration = mixture_wave.shape[0] / mixture_sr
-            weight = int(duration // expand_factor + 1)
-            index = len(self.magnitudes) - 1
-            self.expanded_magnitudes.extend([index] * weight)
+                index = len(self.magnitudes) - 1
+                self.expanded_magnitudes.extend([index] * weight)
+
+    def load_magnitude(self, row):
+        # Load audio
+        mixture_path = row['mixture_path']
+        stem_path = row['stem_path']
+        mixture_wave, mixture_sr = audio.load(mixture_path)
+        stem_wave, _stem_sr = audio.load(stem_path)
+
+        # Save magnitude
+        tmp = audio.mix_stem_to_mag_phase(mixture_wave, stem_wave, self.win_length, self.hop_length)
+        mix_magnitude, stem_magnitude = tmp[0], tmp[2]
+
+        # Expand dataset by duration of each song
+        duration = mixture_wave.shape[0] / mixture_sr
+        weight = int(duration // self.expand_factor + 1)
+
+        return mix_magnitude, stem_magnitude, weight
 
     def __len__(self):
         return len(self.expanded_magnitudes)
