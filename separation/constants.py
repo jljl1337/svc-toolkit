@@ -1,4 +1,4 @@
-SEED = 4514
+SEED = 56615230
 MODEL_NUM = 2
 STEM = ['vocals', 'accompaniment']
 FRAME_LENGTH = 4096
