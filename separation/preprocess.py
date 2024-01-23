@@ -4,13 +4,13 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from moisesdb.dataset import MoisesDB
 from moisesdb.track import MoisesDBTrack
-from moisesdb.defaults import all_stems
+from moisesdb.defaults import all_stems, default_sample_rate
 
 import constants
 import audio
 
 def moisesdb_preprocess(root, save_dir, stem):
-    db = MoisesDB(root, constants.SAMPLE_RATE)
+    db = MoisesDB(root)
     os.makedirs(save_dir, exist_ok=True)
     print('yo')
 
@@ -34,8 +34,8 @@ def moisesdb_preprocess(root, save_dir, stem):
             mixture_path = os.path.join(save_dir, track_dir, 'mixture.wav')
             stem_path = os.path.join(save_dir, track_dir, f'{stem}.wav')
 
-            audio.save(mixture_path, waves['mixture'].T, constants.SAMPLE_RATE)
-            audio.save(stem_path, waves[stem].T, constants.SAMPLE_RATE)
+            audio.save(mixture_path, waves['mixture'].T, default_sample_rate)
+            audio.save(stem_path, waves[stem].T, default_sample_rate)
         
 
 def get_df(root, stem):
