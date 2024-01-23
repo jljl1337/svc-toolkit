@@ -1,6 +1,7 @@
 import os
 
 import numpy as np
+import pandas as pd
 import torch
 from tqdm import tqdm
 from numpy import random
@@ -78,15 +79,16 @@ class MusicDataset(Dataset):
         return (*post_stft_list, )
 
 class MagnitudeDataset(Dataset):
-    def __init__(self, root, stem, expand_factor) -> None:
+    def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length) -> None:
         self.magnitudes = []
         self.expanded_magnitudes = []
-        self.stem = stem
 
-        for dir in tqdm(os.listdir(root)):
+        df = pd.read_csv(csv_path)
+
+        for index, row in tqdm(df.iterrows(), total=len(df)):
             # Load audio
-            mixture_path = os.path.join(root, dir, 'mixture.wav')
-            stem_path = os.path.join(root, dir, f'{stem}.wav')
+            mixture_path = row['mixture_path']
+            stem_path = row['stem_path']
             mixture_wave, mixture_sr = audio.load(mixture_path)
             stem_wave, _stem_sr = audio.load(stem_path)
 
@@ -119,4 +121,4 @@ class MagnitudeDataset(Dataset):
 
 if __name__ == "__main__":
     print('test')
-    dataset = MagnitudeDataset('/home/jljl1337/dataset/musdb18hq/train/', 'vocals', 30)
+    dataset = MagnitudeDataset('train.csv', 30)
