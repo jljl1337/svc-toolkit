@@ -105,6 +105,8 @@ class UNet(nn.Module):
 class UNetLightning(pl.LightningModule):
     def __init__(self, in_channels=1, lr=0.0001, weight_decay=0.00001):
         super(UNetLightning, self).__init__()
+        self.save_hyperparameters()
+
         self.lr = lr
         self.weight_decay = weight_decay
 
@@ -117,7 +119,7 @@ class UNetLightning(pl.LightningModule):
         return self.model(x)
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        return torch.optim.AdamW(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
 
     def get_loss(self, batch):
         x, y = batch
