@@ -5,8 +5,8 @@ import librosa
 import soundfile as sf
 from scipy.signal.windows import hann
 
-def load(path, sr=None, offset=0, duration=None):
-    return librosa.load(path, sr=sr, offset=offset, duration=duration)
+def load(path, sr=None, mono=True, offset=0, duration=None):
+    return librosa.load(path, sr=sr, mono=mono, offset=offset, duration=duration)
 
 def save(path, data, sample_rate):
     sf.write(path, data, sample_rate)
