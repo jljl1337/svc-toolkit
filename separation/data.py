@@ -82,8 +82,6 @@ class MusicDataset(Dataset):
 
 class MagnitudeDataset(Dataset):
     def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length) -> None:
-        self.magnitudes = []
-        self.expanded_magnitudes = []
         self.win_length = win_length
         self.hop_length = hop_length
         self.patch_length = patch_length
@@ -91,17 +89,21 @@ class MagnitudeDataset(Dataset):
 
         df = pd.read_csv(csv_path)
 
+        self.magnitudes = [None] * len(df)
+        self.expanded_magnitudes = []
+
         with ThreadPoolExecutor(max_workers=cpu_count()) as executor:
-            futures = [executor.submit(self.load_magnitude, row) for _index, row in df.iterrows()]
+            futures = [executor.submit(self.load_magnitude, index, row) for index, row in df.iterrows()]
 
             for future in tqdm(as_completed(futures), total=len(df)):
-                mix_magnitude, stem_magnitude, weight = future.result()
-                self.magnitudes.append((mix_magnitude, stem_magnitude))
+                index, mix_magnitude, stem_magnitude, weight = future.result()
+                self.magnitudes[index] = (mix_magnitude, stem_magnitude)
 
-                index = len(self.magnitudes) - 1
                 self.expanded_magnitudes.extend([index] * weight)
 
-    def load_magnitude(self, row):
+            self.expanded_magnitudes = sorted(self.expanded_magnitudes)
+
+    def load_magnitude(self, index, row):
         # Load audio
         mixture_path = row['mixture_path']
         stem_path = row['stem_path']
@@ -116,7 +118,7 @@ class MagnitudeDataset(Dataset):
         duration = mixture_wave.shape[0] / mixture_sr
         weight = int(duration // self.expand_factor + 1)
 
-        return mix_magnitude, stem_magnitude, weight
+        return index, mix_magnitude, stem_magnitude, weight
 
     def __len__(self):
         return len(self.expanded_magnitudes)
