@@ -103,7 +103,9 @@ def main():
 
     model = UNetLightning(lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
-    model_checkpoint = ModelCheckpoint(monitor='val_loss', save_top_k=1, mode='min', save_last=True, dirpath=save_dir)
+    model_checkpoint = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
+                                       mode='min', filename='best-{epoch}',
+                                       save_last=True, dirpath=save_dir)
     logger = MyLogger(save_dir)
 
     trainer = pl.Trainer(max_epochs=EPOCHS, callbacks=[early_stopping, model_checkpoint], logger=logger)
