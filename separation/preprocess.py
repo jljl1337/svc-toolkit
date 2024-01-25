@@ -75,10 +75,17 @@ def main():
     df_moisesdb_train.to_csv('moisesdb_train.csv', index=False)
     df_moisesdb_val.to_csv('moisesdb_val.csv', index=False)
     df_moisesdb_test.to_csv('moisesdb_test.csv', index=False)
-    print(len(df_moisesdb))
-    print(len(df_moisesdb_train))
-    print(len(df_moisesdb_val))
-    print(len(df_moisesdb_test))
+    # print(len(df_moisesdb))
+    # print(len(df_moisesdb_train))
+    # print(len(df_moisesdb_val))
+    # print(len(df_moisesdb_test))
+
+    df_train = pd.concat([df_musdb_train, df_moisesdb_train])
+    df_train.to_csv('train.csv', index=False)
+    df_val = pd.concat([df_musdb_val, df_moisesdb_val])
+    df_val.to_csv('val.csv', index=False)
+    df_test = pd.concat([df_musdb_test, df_moisesdb_test])
+    df_test.to_csv('test.csv', index=False)
 
 if __name__ == "__main__":
     main()
