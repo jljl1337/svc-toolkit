@@ -66,5 +66,15 @@
             },
             "problemMatcher": []
         },
+        {
+            "label": "Generate .env.example",
+            "type": "shell",
+            "command": "awk -F '=' '{print $1 \"=\"}' .env > .env.example",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
     ]
 }
