@@ -64,9 +64,10 @@ def main():
     parser = ArgumentParser()
     parser.add_argument('--train_csv', type=str, default='./train.csv')
     parser.add_argument('--val_csv', type=str, default='./val.csv')
+    parser.add_argument('--experiment', type=str, default='exp')
     args = parser.parse_args()
 
-    load_dotenv()
+    load_dotenv(override=True)
     TRAIN_DIR = os.getenv('TRAIN_DIR')
     MODEL_DIR = os.getenv('MODEL_DIR')
     BATCH_SIZE = int(os.getenv('BATCH_SIZE'))
@@ -98,7 +99,7 @@ def main():
 
     now = datetime.now()
     date_time = now.strftime("%Y%m%d_%H%M%S")
-    save_dir = f'{MODEL_DIR}/{date_time}'
+    save_dir = f'{MODEL_DIR}/{args.experiment}/{date_time}'
     os.makedirs(save_dir, exist_ok=True)
 
     model = UNetLightning(lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
