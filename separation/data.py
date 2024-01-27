@@ -63,11 +63,11 @@ class MagnitudeDataset(Dataset):
         mix_magnitude, stem_magnitude = self.magnitudes[actual_index]
         start = random.randint(0, mix_magnitude.shape[1] - self.patch_length + 1)
 
-        mix_magnitude = mix_magnitude[: -1, start: start + self.patch_length, np.newaxis]
-        stem_magnitude = stem_magnitude[: -1, start: start + self.patch_length, np.newaxis]
+        mix_magnitude = mix_magnitude[np.newaxis, : -1, start: start + self.patch_length]
+        stem_magnitude = stem_magnitude[np.newaxis, : -1, start: start + self.patch_length]
 
-        mix_tensor = torch.from_numpy(mix_magnitude).permute(2, 0, 1)
-        stem_tensor = torch.from_numpy(stem_magnitude).permute(2, 0, 1)
+        mix_tensor = torch.from_numpy(mix_magnitude)
+        stem_tensor = torch.from_numpy(stem_magnitude)
 
         return mix_tensor, stem_tensor
 
