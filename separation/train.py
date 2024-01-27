@@ -64,7 +64,7 @@ def main():
     parser = ArgumentParser()
     parser.add_argument('--train_csv', type=str, default='./train.csv')
     parser.add_argument('--val_csv', type=str, default='./val.csv')
-    parser.add_argument('--experiment', type=str, default='exp')
+    parser.add_argument('-e', '--experiment', type=str, default='exp')
     args = parser.parse_args()
 
     load_dotenv(override=True)
