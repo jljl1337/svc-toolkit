@@ -50,13 +50,13 @@ def moisesdb_mix(root, save_dir, stem):
             pass
 
 def get_df(root, stem):
-    df = pd.DataFrame(columns=['mixture_path', 'stem_path'])
+    df = pd.DataFrame(columns=['song', 'mixture_path', 'stem_path'])
 
     for dir in os.listdir(root):
         mixture_path = os.path.join(root, dir, 'mixture.wav')
         stem_path = os.path.join(root, dir, f'{stem}.wav')
 
-        df.loc[len(df)] = [mixture_path, stem_path]
+        df.loc[len(df)] = [dir, mixture_path, stem_path]
     
     return df
 
