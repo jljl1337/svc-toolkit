@@ -88,17 +88,17 @@ class UNet(nn.Module):
         x_up6 = self.up6(x_up6)
         x_up6 = x_up6[:, :, : -1, : -1]
 
-        print(x_down1.shape)
-        print(x_down2.shape)
-        print(x_down3.shape)
-        print(x_down4.shape)
-        print(x_down5.shape)
-        print(x_down6.shape)
-        print(x_up1.shape)
-        print(x_up2.shape)
-        print(x_up3.shape)
-        print(x_up4.shape)
-        print(x_up5.shape)
+        # print(x_down1.shape)
+        # print(x_down2.shape)
+        # print(x_down3.shape)
+        # print(x_down4.shape)
+        # print(x_down5.shape)
+        # print(x_down6.shape)
+        # print(x_up1.shape)
+        # print(x_up2.shape)
+        # print(x_up3.shape)
+        # print(x_up4.shape)
+        # print(x_up5.shape)
 
         return x_up6
 
