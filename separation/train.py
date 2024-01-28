@@ -2,13 +2,8 @@ import os
 from argparse import ArgumentParser
 from datetime import datetime
 
-import torch
-import torch.nn as nn
-import numpy as np
-import pandas as pd
 import pytorch_lightning as pl
-from tqdm import tqdm
-from dotenv import load_dotenv
+import yaml
 from torch.utils.data import DataLoader
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
@@ -19,35 +14,38 @@ from models import UNetLightning
 
 def main():
     parser = ArgumentParser()
-    parser.add_argument('--train_csv', type=str, default='./train.csv')
-    parser.add_argument('--val_csv', type=str, default='./val.csv')
+    parser.add_argument('-t', '--train_csv', type=str, default='./train.csv')
+    parser.add_argument('-v', '--val_csv', type=str, default='./val.csv')
     parser.add_argument('-e', '--experiment', type=str, default='exp')
+    parser.add_argument('-m', '--model_dir', type=str, default='./model/')
+    parser.add_argument('-c', '--config', type=str, default='./config.yml')
     args = parser.parse_args()
 
-    load_dotenv(override=True)
-    TRAIN_DIR = os.getenv('TRAIN_DIR')
-    MODEL_DIR = os.getenv('MODEL_DIR')
-    BATCH_SIZE = int(os.getenv('BATCH_SIZE'))
-    EPOCHS = int(os.getenv('EPOCHS'))
-    LOADER_NUM_WORKERS = int(os.getenv('LOADER_NUM_WORKERS'))
+    model_dir = args.model_dir
+    with open(args.config) as file:
+        config = yaml.safe_load(file)
 
-    SAMPLE_RATE = int(os.getenv('SAMPLE_RATE'))
-    WIN_LENGTH = int(os.getenv('WIN_LENGTH'))
-    HOP_LENGTH = int(os.getenv('HOP_LENGTH'))
-    PATCH_LENGTH = int(os.getenv('PATCH_LENGTH'))
-    EXPAND_FACTOR = int(os.getenv('EXPAND_FACTOR'))
+    SAMPLE_RATE = config['SAMPLE_RATE']
+    BATCH_SIZE = config['BATCH_SIZE']
+    EPOCHS = config['EPOCHS']
+    LOADER_NUM_WORKERS = config['LOADER_NUM_WORKERS']
 
-    LEARNING_RATE = float(os.getenv('LEARNING_RATE'))
-    WEIGHT_DECAY = float(os.getenv('WEIGHT_DECAY'))
+    WIN_LENGTH = config['WIN_LENGTH']
+    HOP_LENGTH = config['HOP_LENGTH']
+    PATCH_LENGTH = config['PATCH_LENGTH']
+    EXPAND_FACTOR = config['EXPAND_FACTOR']
+
+    LEARNING_RATE = config['LEARNING_RATE']
+    WEIGHT_DECAY = config['WEIGHT_DECAY']
 
     pl.seed_everything(constants.SEED, workers=True)
 
     dataset_train = MagnitudeDataset(args.train_csv, expand_factor=EXPAND_FACTOR, 
                                      win_length=WIN_LENGTH, hop_length=HOP_LENGTH,
-                                     patch_length=PATCH_LENGTH)
+                                     patch_length=PATCH_LENGTH, sample_rate=SAMPLE_RATE)
     dataset_val = MagnitudeDataset(args.val_csv, expand_factor=EXPAND_FACTOR, 
                                    win_length=WIN_LENGTH, hop_length=HOP_LENGTH,
-                                   patch_length=PATCH_LENGTH)
+                                   patch_length=PATCH_LENGTH, sample_rate=SAMPLE_RATE)
 
     loader_train = DataLoader(dataset_train, batch_size=BATCH_SIZE, shuffle=True,
                               num_workers=LOADER_NUM_WORKERS, pin_memory=True)
@@ -56,7 +54,7 @@ def main():
 
     now = datetime.now()
     date_time = now.strftime("%Y%m%d_%H%M%S")
-    save_dir = f'{MODEL_DIR}/{args.experiment}/{date_time}'
+    save_dir = os.path.join(model_dir, args.experiment, date_time)
     os.makedirs(save_dir, exist_ok=True)
 
     model = UNetLightning(lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
