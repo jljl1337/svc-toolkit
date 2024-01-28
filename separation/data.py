@@ -1,4 +1,4 @@
-import os
+import math
 from multiprocessing import cpu_count
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -56,7 +56,7 @@ class MagnitudeDataset(Dataset):
 
         # Expand dataset by duration of each song
         duration = mixture_wave.shape[0] / mixture_sr
-        weight = int(duration // self.expand_factor + 1)
+        weight = math.ceil(duration / self.expand_factor)
 
         return index, mix_magnitude, stem_magnitude, weight
 
