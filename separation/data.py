@@ -16,11 +16,12 @@ import audio
 import constants
 
 class MagnitudeDataset(Dataset):
-    def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length) -> None:
+    def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length, sample_rate) -> None:
         self.win_length = win_length
         self.hop_length = hop_length
         self.patch_length = patch_length
         self.expand_factor = expand_factor
+        self.sample_rate = sample_rate
 
         df = pd.read_csv(csv_path)
 
@@ -42,12 +43,16 @@ class MagnitudeDataset(Dataset):
         # Load audio
         mixture_path = row['mixture_path']
         stem_path = row['stem_path']
-        mixture_wave, mixture_sr = audio.load(mixture_path)
-        stem_wave, _stem_sr = audio.load(stem_path)
+        mixture_wave, mixture_sr = audio.load(mixture_path, sr=self.sample_rate)
+        stem_wave, _stem_sr = audio.load(stem_path, sr=self.sample_rate)
 
-        # Save magnitude
-        tmp = audio.mix_stem_to_mag_phase(mixture_wave, stem_wave, self.win_length, self.hop_length)
-        mix_magnitude, stem_magnitude = tmp[0], tmp[2]
+        # Get magnitude
+        mix_magnitude, _mix_phase = audio.to_mag_phase(mixture_wave, self.win_length, self.hop_length)
+        stem_magnitude, _stem_phase = audio.to_mag_phase(stem_wave, self.win_length, self.hop_length)
+
+        mix_magnitude_max = mix_magnitude.max()
+        mix_magnitude /= mix_magnitude_max
+        stem_magnitude /= mix_magnitude_max
 
         # Expand dataset by duration of each song
         duration = mixture_wave.shape[0] / mixture_sr
