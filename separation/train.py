@@ -17,49 +17,6 @@ from data import MagnitudeDataset
 from logger import MyLogger
 from models import UNetLightning
 
-def train(model_list, epoch, loader, combined_loss, optimizer, device,
-          model_dir):
-
-    for m in model_list:
-        m.train()
-
-    os.makedirs(model_dir, exist_ok=True)
-
-    loss_sum = 0
-    samples_sum = 0
-
-    for i, post_stft_list in tqdm(enumerate(loader)):
-        for j in range(len(model_list)):
-            model_list[j] = model_list[j].to(device)
-
-        for j in range(len(post_stft_list)):
-            post_stft_list[j] = post_stft_list[j].to(device)
-            post_stft_list[j] = post_stft_list[j].transpose(2, 3)
-
-        samples_batch_num = len(post_stft_list[0])
-        samples_sum += samples_batch_num
-
-        loss = combined_loss(post_stft_list[0], post_stft_list[1:])
-
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        loss_sum += loss.item() * samples_batch_num
-
-    epoch_loss = loss_sum / samples_sum
-    print(f'Epoch: {epoch:3d} Loss: {epoch_loss:.4f}')
-
-    for i in range(len(model_list)):
-        torch.save({'epoch': epoch,
-                    'model_state_dict': model_list[i].state_dict(),
-                    'optimizer_state_dict': optimizer.state_dict(),
-                    'loss': epoch_loss},
-                    f'{model_dir}/net_{i}_{epoch:03d}.pth')
-    
-    return epoch_loss
-
-
 def main():
     parser = ArgumentParser()
     parser.add_argument('--train_csv', type=str, default='./train.csv')
