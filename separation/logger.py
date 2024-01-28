@@ -8,10 +8,10 @@ from pytorch_lightning.loggers.csv_logs import ExperimentWriter
 from pytorch_lightning.utilities import rank_zero_only
 
 class MyLogger(Logger):
-    def __init__(self, save_dir, old_csv=None):
+    def __init__(self, save_dir, old_dir=None):
         super().__init__()
-        if old_csv is not None:
-            self.df = pd.read_csv(old_csv)
+        if old_dir is not None:
+            self.df = pd.read_csv(os.path.join(old_dir, 'loss.csv'))
         else:
             self.df = pd.DataFrame(columns=['epoch', 'train_loss', 'val_loss'])
         self.dir = save_dir
