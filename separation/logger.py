@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from lightning_fabric.utilities.logger import _convert_params
@@ -6,11 +8,14 @@ from pytorch_lightning.loggers.csv_logs import ExperimentWriter
 from pytorch_lightning.utilities import rank_zero_only
 
 class MyLogger(Logger):
-    def __init__(self, dir):
+    def __init__(self, save_dir, old_csv=None):
         super().__init__()
-        self.df = pd.DataFrame(columns=['epoch', 'train_loss', 'val_loss'])
-        self.dir = dir
-        self.experiment = ExperimentWriter(dir)
+        if old_csv is not None:
+            self.df = pd.read_csv(old_csv)
+        else:
+            self.df = pd.DataFrame(columns=['epoch', 'train_loss', 'val_loss'])
+        self.dir = save_dir
+        self.experiment = ExperimentWriter(save_dir)
 
     @property
     def name(self):
@@ -39,8 +44,10 @@ class MyLogger(Logger):
 
     @rank_zero_only
     def save(self):
-        self.df.to_csv(f'{self.dir}/loss.csv', index=False)
+        csv_path = os.path.join(self.dir, 'loss.csv')
+        self.df.to_csv(csv_path, index=False)
 
+        graph_path = os.path.join(self.dir, 'loss.png')
         plt.clf()
         plt.plot(self.df['epoch'], self.df['train_loss'], label='train loss')
         plt.plot(self.df['epoch'], self.df['val_loss'], label='validation loss')
@@ -49,11 +56,4 @@ class MyLogger(Logger):
         plt.ylabel('loss')
         plt.title('Loss')
         plt.legend()
-        plt.savefig(f'{self.dir}/loss.png')
-
-
-    @rank_zero_only
-    def finalize(self, status):
-        # Optional. Any code that needs to be run after training
-        # finishes goes here
-        print('status:', status)
+        plt.savefig(graph_path)
