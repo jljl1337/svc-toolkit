@@ -2,55 +2,63 @@ import os
 import math
 import numpy as np
 import torch
-import torch.nn.functional as F
-from dotenv import load_dotenv
 
-import constants
+import utility
 import models
 import audio
 
 class Separator():
-    def __init__(self, model_path, device) -> None:
-        self.model = models.UNetLightning.load_from_checkpoint(model_path)
-        self.model.to(device)
+    def __init__(self, model_dir, device) -> None:
+        model_path = ''
+        for file in os.listdir(model_dir):
+            if file.startswith('best') and file.endswith('.ckpt'):
+                model_path = os.path.join(model_dir, file)
+                break
+
+        hparams_path = os.path.join(model_dir, 'hparams.yaml')
+        config_path = os.path.join(model_dir, 'config.yml')
+
+        config = utility.load_yaml(config_path)
+        self.sample_rate = config['sample_rate']
+        self.window_length = config['win_length']
+        self.hop_length = config['hop_length']
+        self.patch_length = config['patch_length']
+
+        self.model = models.UNetLightning.load_from_checkpoint(model_path, map_location=device, hparams_file=hparams_path)
         self.model.eval()
         self.device = device
 
-    def load_file(self, file, sample_rate):
-        wave, sr = audio.load(file, mono=False)
-
-        if sr != sample_rate:
-            wave = audio.resample(wave, sr, sample_rate)
-
+    def load_file(self, file):
+        wave, _sr = audio.load(file, sr=self.sample_rate, mono=False)
         return wave
 
-    def separate(self, wave, window_length, hop_length, patch_length):
+    def separate(self, wave):
         # Convert to 2D array if mono for convenience
         if wave.ndim == 1:
             wave = wave[np.newaxis, :]
 
         # Pad to fit segment length
         old_len = wave.shape[1]
-        factor = patch_length * hop_length
+        factor = self.patch_length * self.hop_length
         new_len = math.ceil((old_len + 1) / factor) * factor - 1
         diff = new_len - wave.shape[1]
         wave = np.pad(wave, ((0, 0), (0, diff)), mode='constant')
 
         # Separate spectrogram to magnitude and phase
-        magnitude, phase = audio.to_mag_phase(wave, window_length, hop_length)
+        magnitude, phase = audio.to_mag_phase(wave, self.window_length, self.hop_length)
 
         # Normalize magnitude
         magnitude_max = magnitude.max()
         magnitude /= magnitude_max
 
         # Calculate segment number
-        segment_num = magnitude.shape[-1] // patch_length
+        segment_num = magnitude.shape[-1] // self.patch_length
 
         for channel in range(magnitude.shape[0]):
             for segment_index in range(segment_num):
                 # Extract segment
-                start = segment_index * patch_length
-                end = start + patch_length
+                start = segment_index * self.patch_length
+                end = start + self.patch_length
                 segment = magnitude[np.newaxis, channel, :-1, start: end]
                 segment_tensor = torch.from_numpy(segment)
                 segment_tensor = torch.unsqueeze(segment_tensor, 0).to(self.device)
@@ -70,7 +78,7 @@ class Separator():
         magnitude *= magnitude_max
 
         # Reconstruct wave
-        pre_wave = audio.to_wave(magnitude, phase, window_length, hop_length)
+        pre_wave = audio.to_wave(magnitude, phase, self.window_length, self.hop_length)
 
         # Remove padding
         pre_wave = pre_wave[:, :old_len]
@@ -79,16 +87,14 @@ class Separator():
         if pre_wave.shape[0] == 1:
             pre_wave = pre_wave[0]
 
-        return pre_wave
+        return pre_wave, self.sample_rate
 
 def main():
-    load_dotenv()
-    MODEL_DIR = os.getenv('MODEL_DIR')
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    separator = Separator('model/test4096/20240127_010925/best-epoch=296.ckpt', device)
-    wave = separator.load_file('/home/jljl1337/dataset/musdb18hq/test/Al James - Schoolboy Facination/mixture.wav', constants.SAMPLE_RATE)
-    new_wave = separator.separate(wave, 4096, 1024, 512)
-    audio.save('testlast.wav', new_wave.T, constants.SAMPLE_RATE)
+    separator = Separator('/home/jljl1337/git/singing-voice-conversion-gui/model/all_deeper/20240131_041926', device)
+    wave = separator.load_file('/home/jljl1337/dataset/musdb18hq/test/Al James - Schoolboy Facination/mixture.wav')
+    new_wave, sample_rate = separator.separate(wave)
+    audio.save('test123.wav', new_wave.T, sample_rate)
 
 if __name__ == "__main__":
     main()
