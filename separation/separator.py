@@ -32,7 +32,7 @@ class Separator():
         wave, _sr = audio.load(file, sr=self.sample_rate, mono=False)
         return wave
 
-    def separate(self, wave):
+    def separate(self, wave, invert=False):
         # Convert to 2D array if mono for convenience
         if wave.ndim == 1:
             wave = wave[np.newaxis, :]
@@ -67,9 +67,12 @@ class Separator():
                 with torch.no_grad():
                     mask = self.model(segment_tensor)
 
+                # Invert mask if needed
+                if invert:
+                    mask = 1 - mask
+
                 # Apply mask
                 masked = segment_tensor * mask
-                # masked = segment_tensor * (1 - mask)
 
                 # Save masked segment
                 magnitude[channel, :-1, start: end] = masked.squeeze().cpu().numpy()
@@ -93,7 +96,7 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     separator = Separator('/home/jljl1337/git/singing-voice-conversion-gui/model/all_deeper/20240131_041926', device)
     wave = separator.load_file('/home/jljl1337/dataset/musdb18hq/test/Al James - Schoolboy Facination/mixture.wav')
-    new_wave, sample_rate = separator.separate(wave)
+    new_wave, sample_rate = separator.separate(wave, invert=True)
     audio.save('test123.wav', new_wave.T, sample_rate)
 
 if __name__ == "__main__":
