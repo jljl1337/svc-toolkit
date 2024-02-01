@@ -3,11 +3,11 @@ from argparse import ArgumentParser
 from datetime import datetime
 
 import pytorch_lightning as pl
-import yaml
 from torch.utils.data import DataLoader
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 import constants
+import utility
 from data import MagnitudeDataset
 from logger import MyLogger
 from models import UNetLightning
@@ -21,14 +21,12 @@ def main():
     parser.add_argument('-c', '--config', type=str, default='./config.yml')
     args = parser.parse_args()
 
-    with open(args.config) as file:
-        config = yaml.safe_load(file)
+    config = utility.load_yaml(args.config)
 
     # If resuming, use the old config
     resume_path = config['resume_path']
     if resume_path != '':
-        with open(os.path.join(args.resume, 'config.yml')) as file:
-            config_old = yaml.safe_load(file)
+        config_old = utility.load_yaml(os.path.join(args.resume, 'config.yml'))
 
         # Only use the epochs from the new config
         new_epochs = config['epochs']
@@ -42,8 +40,7 @@ def main():
     os.makedirs(save_dir, exist_ok=True)
 
     # Save config
-    with open(os.path.join(save_dir, 'config.yml'), 'w') as file:
-        yaml.safe_dump(config, file, sort_keys=False)
+    utility.save_yaml(config, os.path.join(save_dir, 'config.yml'))
 
     # Load config
     sample_rate = config['sample_rate']
