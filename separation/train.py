@@ -58,6 +58,7 @@ def main():
 
     learning_rate = config['learning_rate']
     weight_decay = config['weight_decay']
+    deeper = config['deeper']
 
     # Set seed
     pl.seed_everything(constants.SEED, workers=True)
@@ -75,7 +76,7 @@ def main():
     loader_val = DataLoader(dataset_val, batch_size=batch_size, shuffle=False,
                             num_workers=loader_num_workers, pin_memory=True)
 
-    model = UNetLightning(lr=learning_rate, weight_decay=weight_decay)
+    model = UNetLightning(lr=learning_rate, weight_decay=weight_decay, deeper=deeper)
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
     # model_checkpoint = ModelCheckpoint(monitor='train_loss', save_top_k=1, 
     model_checkpoint = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
