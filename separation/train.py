@@ -19,14 +19,14 @@ def main():
     parser.add_argument('-e', '--experiment', type=str, default='exp')
     parser.add_argument('-m', '--model_dir', type=str, default='./model/')
     parser.add_argument('-c', '--config', type=str, default='./config.yml')
-    parser.add_argument('-r', '--resume', type=str, default=None)
     args = parser.parse_args()
 
     with open(args.config) as file:
         config = yaml.safe_load(file)
 
     # If resuming, use the old config
-    if args.resume is not None:
+    resume_path = config['RESUME_PATH']
+    if resume_path != '':
         with open(os.path.join(args.resume, 'config.yml')) as file:
             config_old = yaml.safe_load(file)
 
@@ -77,18 +77,21 @@ def main():
 
     model = UNetLightning(lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
+    # model_checkpoint = ModelCheckpoint(monitor='train_loss', save_top_k=1, 
     model_checkpoint = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
                                        mode='min', filename='best-{epoch}',
                                        save_last=True, dirpath=save_dir)
-    logger = MyLogger(save_dir, args.resume)
+    logger = MyLogger(save_dir, resume_path)
 
-    trainer = pl.Trainer(max_epochs=EPOCHS, callbacks=[early_stopping, model_checkpoint], logger=logger)
+    # trainer = pl.Trainer(max_epochs=EPOCHS, callbacks=[early_stopping, model_checkpoint], logger=logger)
+    trainer = pl.Trainer(max_epochs=EPOCHS, callbacks=[model_checkpoint], logger=logger)
 
-    if args.resume is not None:
-        model_path = os.path.join(args.resume, 'last.ckpt')
+    if resume_path != '':
+        model_path = os.path.join(resume_path, 'last.ckpt')
         trainer.fit(model, loader_train, loader_val, ckpt_path=model_path)
     else:
         trainer.fit(model, loader_train, loader_val)
+    # trainer.fit(model, loader_train)
     
 if __name__ == '__main__':
     main()
