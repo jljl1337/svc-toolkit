@@ -25,15 +25,15 @@ def main():
         config = yaml.safe_load(file)
 
     # If resuming, use the old config
-    resume_path = config['RESUME_PATH']
+    resume_path = config['resume_path']
     if resume_path != '':
         with open(os.path.join(args.resume, 'config.yml')) as file:
             config_old = yaml.safe_load(file)
 
         # Only use the epochs from the new config
-        new_epochs = config['EPOCHS']
+        new_epochs = config['epochs']
         config = config_old
-        config['EPOCHS'] = new_epochs
+        config['epochs'] = new_epochs
 
     # Create directory for this experiment
     now = datetime.now()
@@ -46,36 +46,36 @@ def main():
         yaml.safe_dump(config, file, sort_keys=False)
 
     # Load config
-    SAMPLE_RATE = config['SAMPLE_RATE']
-    BATCH_SIZE = config['BATCH_SIZE']
-    EPOCHS = config['EPOCHS']
-    LOADER_NUM_WORKERS = config['LOADER_NUM_WORKERS']
+    sample_rate = config['sample_rate']
+    batch_size = config['batch_size']
+    epochs = config['epochs']
+    loader_num_workers = config['loader_num_workers']
 
-    WIN_LENGTH = config['WIN_LENGTH']
-    HOP_LENGTH = config['HOP_LENGTH']
-    PATCH_LENGTH = config['PATCH_LENGTH']
-    EXPAND_FACTOR = config['EXPAND_FACTOR']
+    win_length = config['win_length']
+    hop_length = config['hop_length']
+    patch_length = config['patch_length']
+    expand_factor = config['expand_factor']
 
-    LEARNING_RATE = config['LEARNING_RATE']
-    WEIGHT_DECAY = config['WEIGHT_DECAY']
+    learning_rate = config['learning_rate']
+    weight_decay = config['weight_decay']
 
     # Set seed
     pl.seed_everything(constants.SEED, workers=True)
 
     # Load dataset
-    dataset_train = MagnitudeDataset(args.train_csv, expand_factor=EXPAND_FACTOR, 
-                                     win_length=WIN_LENGTH, hop_length=HOP_LENGTH,
-                                     patch_length=PATCH_LENGTH, sample_rate=SAMPLE_RATE)
-    dataset_val = MagnitudeDataset(args.val_csv, expand_factor=EXPAND_FACTOR, 
-                                   win_length=WIN_LENGTH, hop_length=HOP_LENGTH,
-                                   patch_length=PATCH_LENGTH, sample_rate=SAMPLE_RATE)
+    dataset_train = MagnitudeDataset(args.train_csv, expand_factor=expand_factor, 
+                                     win_length=win_length, hop_length=hop_length,
+                                     patch_length=patch_length, sample_rate=sample_rate)
+    dataset_val = MagnitudeDataset(args.val_csv, expand_factor=expand_factor, 
+                                   win_length=win_length, hop_length=hop_length,
+                                   patch_length=patch_length, sample_rate=sample_rate)
 
-    loader_train = DataLoader(dataset_train, batch_size=BATCH_SIZE, shuffle=True,
-                              num_workers=LOADER_NUM_WORKERS, pin_memory=True)
-    loader_val = DataLoader(dataset_val, batch_size=BATCH_SIZE, shuffle=False,
-                            num_workers=LOADER_NUM_WORKERS, pin_memory=True)
+    loader_train = DataLoader(dataset_train, batch_size=batch_size, shuffle=True,
+                              num_workers=loader_num_workers, pin_memory=True)
+    loader_val = DataLoader(dataset_val, batch_size=batch_size, shuffle=False,
+                            num_workers=loader_num_workers, pin_memory=True)
 
-    model = UNetLightning(lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
+    model = UNetLightning(lr=learning_rate, weight_decay=weight_decay)
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
     # model_checkpoint = ModelCheckpoint(monitor='train_loss', save_top_k=1, 
     model_checkpoint = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
@@ -84,7 +84,7 @@ def main():
     logger = MyLogger(save_dir, resume_path)
 
     # trainer = pl.Trainer(max_epochs=EPOCHS, callbacks=[early_stopping, model_checkpoint], logger=logger)
-    trainer = pl.Trainer(max_epochs=EPOCHS, callbacks=[model_checkpoint], logger=logger)
+    trainer = pl.Trainer(max_epochs=epochs, callbacks=[model_checkpoint], logger=logger)
 
     if resume_path != '':
         model_path = os.path.join(resume_path, 'last.ckpt')
