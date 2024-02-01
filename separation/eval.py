@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from torchmetrics.audio import SignalDistortionRatio, ScaleInvariantSignalDistortionRatio
 from tqdm import tqdm
 
-from audio import load
 from separator import Separator
 
 class Evaluator:
