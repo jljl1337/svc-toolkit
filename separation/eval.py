@@ -1,10 +1,7 @@
-import os
-
 import torch
 import pandas as pd
 import matplotlib.pyplot as plt
 from torchmetrics.audio import SignalDistortionRatio, ScaleInvariantSignalDistortionRatio
-from dotenv import load_dotenv
 from tqdm import tqdm
 
 from audio import load
@@ -20,20 +17,20 @@ class Evaluator:
         wave = wave.reshape(-1)
         return torch.from_numpy(wave)
 
-    def evaluate(self, model_path, test_csv, window_length, hop_length, patch_length):
-        separator = Separator(model_path, self.device)
+    def evaluate(self, model_dir, test_csv):
+        separator = Separator(model_dir, self.device)
         df_test = pd.read_csv(test_csv)
-        df_result = pd.DataFrame(columns=['song', 'sdr', 'sisdr', 'nsdr', 'nsisdr'])
+        df_result = pd.DataFrame(columns=['song', 'SDR', 'SI-SDR', 'NSDR', 'NSI-SDR'])
 
         for _index, row in tqdm(df_test.iterrows(), total=len(df_test)):
             mixture_path = row['mixture_path']
             stem_path = row['stem_path']
-            mixture_wave, _ = load(mixture_path)
-            stem_wave, _ = load(stem_path)
+            mixture_wave, _ = separator.load_file(mixture_path)
+            stem_wave, _ = separator.load_file(stem_path)
             mixture_tensor = self._flatten_tensor(mixture_wave)
             stem_tensor = self._flatten_tensor(stem_wave)
 
-            estimate_wave = separator.separate(mixture_wave, window_length, hop_length, patch_length)
+            estimate_wave, _ = separator.separate(mixture_wave)
             estimate_tensor = self._flatten_tensor(estimate_wave)
 
             sdr_num = float(self.sdr(estimate_tensor, stem_tensor))
@@ -46,20 +43,16 @@ class Evaluator:
         return df_result
 
 def main():
-    load_dotenv(override=True)
-    WIN_LENGTH = int(os.getenv('WIN_LENGTH'))
-    HOP_LENGTH = int(os.getenv('HOP_LENGTH'))
-    PATCH_LENGTH = int(os.getenv('PATCH_LENGTH'))
-
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
 
     evaluator = Evaluator(device)
-    df_result = evaluator.evaluate('model/test4096_nozero/20240127_054904/best-epoch=92.ckpt', './musdb_test.csv', WIN_LENGTH, HOP_LENGTH, PATCH_LENGTH)
+    df_result = evaluator.evaluate('/home/jljl1337/git/singing-voice-conversion-gui/model/all_deeper/20240131_041926', './musdb_test.csv')
     # Create a box and whisker plot for each column
     df_result.boxplot(grid=False)
     # Save the figure
-    plt.savefig('boxplot0.png')
-    df_result.to_csv('result0.csv', index=False)
+    plt.savefig('boxplot_deeper_musdb.png')
+    df_result.to_csv('result_deeper_musdb.csv', index=False)
 
 
 if __name__ == "__main__":
