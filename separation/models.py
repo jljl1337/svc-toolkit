@@ -102,15 +102,117 @@ class UNet(nn.Module):
 
         return x_up6
 
+class DeeperUNet(nn.Module):
+    def __init__(self, channels = 1):
+        super(DeeperUNet, self).__init__()
+
+        self.down1 = _down_layer(channels, 16)
+
+        self.down2 = _down_layer(16, 32)
+
+        self.down3 = _down_layer(32, 64)
+
+        self.down4 = _down_layer(64, 128)
+
+        self.down5 = _down_layer(128, 256)
+
+        self.down6 = _down_layer(256, 512)
+
+        self.down7 = _down_layer(512, 1024)
+
+        self.down8 = _down_layer(1024, 2048)
+
+        self.up1 = _up_layer(2048, 1024, dropout=True)
+
+        self.up2 = _up_layer(2048, 512, dropout=True)
+
+        self.up3 = _up_layer(1024, 256, dropout=True)
+
+        self.up4 = _up_layer(512, 128, dropout=True)
+
+        self.up5 = _up_layer(256, 64)
+
+        self.up6 = _up_layer(128, 32)
+
+        self.up7 = _up_layer(64, 16)
+
+        self.up8 = _up_layer(32, channels, last=True)
+
+    def forward(self, x):
+        x_down1 = self.down1(x)
+
+        x_down2 = self.down2(x_down1)
+
+        x_down3 = self.down3(x_down2)
+
+        x_down4 = self.down4(x_down3)
+
+        x_down5 = self.down5(x_down4)
+
+        x_down6 = self.down6(x_down5)
+
+        x_down7 = self.down7(x_down6)
+
+        x_down8 = self.down8(x_down7)
+
+        x_up1 = self.up1(x_down8)
+        x_up1 = x_up1[:, :, : -1, : -1]
+
+        x_up2 = torch.cat((x_up1, x_down7), 1)
+        x_up2 = self.up2(x_up2)
+        x_up2 = x_up2[:, :, : -1, : -1]
+
+        x_up3 = torch.cat((x_up2, x_down6), 1)
+        x_up3 = self.up3(x_up3)
+        x_up3 = x_up3[:, :, : -1, : -1]
+
+        x_up4 = torch.cat((x_up3, x_down5), 1)
+        x_up4 = self.up4(x_up4)
+        x_up4 = x_up4[:, :, : -1, : -1]
+
+        x_up5 = torch.cat((x_up4, x_down4), 1)
+        x_up5 = self.up5(x_up5)
+        x_up5 = x_up5[:, :, : -1, : -1]
+
+        x_up6 = torch.cat((x_up5, x_down3), 1)
+        x_up6 = self.up6(x_up6)
+        x_up6 = x_up6[:, :, : -1, : -1]
+
+        x_up7 = torch.cat((x_up6, x_down2), 1)
+        x_up7 = self.up7(x_up7)
+        x_up7 = x_up7[:, :, : -1, : -1]
+
+        x_up8 = torch.cat((x_up7, x_down1), 1)
+        x_up8 = self.up8(x_up8)
+        x_up8 = x_up8[:, :, : -1, : -1]
+
+        # print(x_down1.shape)
+        # print(x_down2.shape)
+        # print(x_down3.shape)
+        # print(x_down4.shape)
+        # print(x_down5.shape)
+        # print(x_down6.shape)
+        # print(x_down7.shape)
+        # print(x_down8.shape)
+        # print(x_up1.shape)
+        # print(x_up2.shape)
+        # print(x_up3.shape)
+        # print(x_up4.shape)
+        # print(x_up5.shape)
+        # print(x_up6.shape)
+        # print(x_up7.shape)
+
+        return x_up8
+
 class UNetLightning(pl.LightningModule):
-    def __init__(self, in_channels=1, lr=0.0001, weight_decay=0.00001):
+    def __init__(self, in_channels=1, lr=0.0001, weight_decay=0.00001, deeper=False):
         super(UNetLightning, self).__init__()
         self.save_hyperparameters()
 
         self.lr = lr
         self.weight_decay = weight_decay
 
-        self.model = UNet(in_channels)
+        self.model = DeeperUNet(in_channels) if deeper else UNet(in_channels)
         self.loss = nn.L1Loss()
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()
