@@ -25,4 +25,5 @@ dependencies:
     - librosa==0.10.1
     - so-vits-svc-fork==4.1.40
     - pyside6==6.6.1
+    - huggingface-hub==0.20.3
     - git+https://github.com/moises-ai/moises-db.git
