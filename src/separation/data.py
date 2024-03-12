@@ -9,11 +9,7 @@ from tqdm import tqdm
 from numpy import random
 from torch.utils.data import Dataset
 
-# from separation.audio import duration
-# from audio import duration, load, pre_stft, stft
-import audio
-# import separation.constants as constants
-import constants
+from separation.audio import load, to_mag_phase
 
 class MagnitudeDataset(Dataset):
     def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length, sample_rate) -> None:
@@ -43,12 +39,12 @@ class MagnitudeDataset(Dataset):
         # Load audio
         mixture_path = row['mixture_path']
         stem_path = row['stem_path']
-        mixture_wave, mixture_sr = audio.load(mixture_path, sr=self.sample_rate)
-        stem_wave, _stem_sr = audio.load(stem_path, sr=self.sample_rate)
+        mixture_wave, mixture_sr = load(mixture_path, sr=self.sample_rate)
+        stem_wave, _stem_sr = load(stem_path, sr=self.sample_rate)
 
         # Get magnitude
-        mix_magnitude, _mix_phase = audio.to_mag_phase(mixture_wave, self.win_length, self.hop_length)
-        stem_magnitude, _stem_phase = audio.to_mag_phase(stem_wave, self.win_length, self.hop_length)
+        mix_magnitude, _mix_phase = to_mag_phase(mixture_wave, self.win_length, self.hop_length)
+        stem_magnitude, _stem_phase = to_mag_phase(stem_wave, self.win_length, self.hop_length)
 
         mix_magnitude_max = mix_magnitude.max()
         mix_magnitude /= mix_magnitude_max
