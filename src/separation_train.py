@@ -6,8 +6,8 @@ import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
-import separation.constants as constants
-import separation.utility as utility
+from separation import constants
+from separation import utility
 from separation.data import MagnitudeDataset
 from separation.logger import MyLogger
 from separation.models import UNetLightning
@@ -61,35 +61,44 @@ def main():
     pl.seed_everything(constants.SEED, workers=True)
 
     # Load dataset
-    dataset_train = MagnitudeDataset(args.train_csv, expand_factor=expand_factor, 
-                                     win_length=win_length, hop_length=hop_length,
-                                     patch_length=patch_length, sample_rate=sample_rate)
-    dataset_val = MagnitudeDataset(args.val_csv, expand_factor=expand_factor, 
-                                   win_length=win_length, hop_length=hop_length,
-                                   patch_length=patch_length, sample_rate=sample_rate)
+    dataset_kwargs = {
+        'expand_factor': expand_factor,
+        'win_length': win_length,
+        'hop_length': hop_length,
+        'patch_length': patch_length,
+        'sample_rate': sample_rate
+    }
+    dataset_train = MagnitudeDataset(args.train_csv, **dataset_kwargs)
+    dataset_val = MagnitudeDataset(args.val_csv, **dataset_kwargs)
 
-    loader_train = DataLoader(dataset_train, batch_size=batch_size, shuffle=True,
-                              num_workers=loader_num_workers, pin_memory=True)
-    loader_val = DataLoader(dataset_val, batch_size=batch_size, shuffle=False,
-                            num_workers=loader_num_workers, pin_memory=True)
+    loader_train_kwargs = {
+        'batch_size': batch_size,
+        'num_workers': loader_num_workers,
+        'pin_memory': True,
+        'shuffle': True,
+    }
+    loader_val_kwargs = loader_train_kwargs.copy()
+    loader_val_kwargs['shuffle'] = False
 
+    loader_train = DataLoader(dataset_train, **loader_train_kwargs)
+    loader_val = DataLoader(dataset_val, **loader_val_kwargs)
+
+    # Train model
     model = UNetLightning(lr=learning_rate, weight_decay=weight_decay, deeper=deeper)
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
-    # model_checkpoint = ModelCheckpoint(monitor='train_loss', save_top_k=1, 
-    model_checkpoint = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
-                                       mode='min', filename='best-{epoch}',
-                                       save_last=True, dirpath=save_dir)
+    model_checkpoint_best = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
+                                            mode='min', filename='best-{epoch}',
+                                            dirpath=save_dir)
+    model_checkpoint_last = ModelCheckpoint(filename='last-{epoch}', dirpath=save_dir)
     logger = MyLogger(save_dir, resume_path)
 
-    # trainer = pl.Trainer(max_epochs=EPOCHS, callbacks=[early_stopping, model_checkpoint], logger=logger)
-    trainer = pl.Trainer(max_epochs=epochs, callbacks=[model_checkpoint], logger=logger)
+    trainer = pl.Trainer(max_epochs=epochs, callbacks=[model_checkpoint_best, model_checkpoint_last], logger=logger)
 
     if resume_path != '':
         model_path = os.path.join(resume_path, 'last.ckpt')
         trainer.fit(model, loader_train, loader_val, ckpt_path=model_path)
     else:
         trainer.fit(model, loader_train, loader_val)
-    # trainer.fit(model, loader_train)
     
 if __name__ == '__main__':
     main()
