@@ -3,9 +3,16 @@ import math
 import numpy as np
 import torch
 
-import utility
-import models
-import audio
+from separation import utility
+from separation import models
+from separation import audio
+
+class SeparatorFactory():
+    def __init__(self) -> None:
+        pass
+
+    def create(self, model_dir, device):
+        return Separator(model_dir, device)
 
 class Separator():
     def __init__(self, model_dir, device) -> None:
@@ -32,7 +39,7 @@ class Separator():
         wave, _sr = audio.load(file, sr=self.sample_rate, mono=False)
         return wave
 
-    def separate(self, wave, invert=False):
+    def separate(self, wave, invert=False, emit=None):
         # Convert to 2D array if mono for convenience
         if wave.ndim == 1:
             wave = wave[np.newaxis, :]
@@ -53,6 +60,7 @@ class Separator():
 
         # Calculate segment number
         segment_num = magnitude.shape[-1] // self.patch_length
+        total_segments = segment_num * magnitude.shape[0]
 
         for channel in range(magnitude.shape[0]):
             for segment_index in range(segment_num):
@@ -77,6 +85,11 @@ class Separator():
                 # Save masked segment
                 magnitude[channel, :-1, start: end] = masked.squeeze().cpu().numpy()
 
+                # Update progress
+                if emit is not None:
+                    progress = (channel * segment_num + segment_index + 1) / total_segments * 100
+                    emit(progress)
+
         # Denormalize magnitude
         magnitude *= magnitude_max
 
@@ -91,6 +104,11 @@ class Separator():
             pre_wave = pre_wave[0]
 
         return pre_wave, self.sample_rate
+
+    def separate_file(self, file, output_path, invert=False, emit=None):
+        wave = self.load_file(file)
+        new_wave, sample_rate = self.separate(wave, invert=invert, emit=emit)
+        audio.save(output_path, new_wave.T, sample_rate)
 
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
