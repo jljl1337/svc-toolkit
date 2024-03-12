@@ -48,7 +48,7 @@ class MyLogger(Logger):
         self.df.to_csv(csv_path, index=False)
 
         graph_path = os.path.join(self.dir, 'loss.png')
-        plt.clf()
+        plt.figure(figsize=(10, 5))
         plt.plot(self.df['epoch'], self.df['train_loss'], label='train loss')
         plt.plot(self.df['epoch'], self.df['val_loss'], label='validation loss')
         plt.axhline(y=self.df['val_loss'].min(), color='grey', linestyle='--', label='lowest validation loss')
@@ -57,3 +57,4 @@ class MyLogger(Logger):
         plt.title('Loss')
         plt.legend()
         plt.savefig(graph_path)
+        plt.close()
