@@ -6,11 +6,11 @@ import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
-import constants
-import utility
-from data import MagnitudeDataset
-from logger import MyLogger
-from models import UNetLightning
+import separation.constants as constants
+import separation.utility as utility
+from separation.data import MagnitudeDataset
+from separation.logger import MyLogger
+from separation.models import UNetLightning
 
 def main():
     parser = ArgumentParser()
