@@ -9,10 +9,10 @@ from moisesdb.dataset import MoisesDB
 from moisesdb.track import MoisesDBTrack
 from moisesdb.defaults import all_stems, default_sample_rate
 
-import constants
-import audio
+import separation.constants as constants
+import separation.audio as audio
 
-def mix_track(track, stem, save_dir):
+def mix_track(track: MoisesDBTrack, stem, save_dir):
     if stem in track.stems:
         track_dir = f'{track.artist} - {track.name}'
 
@@ -59,6 +59,24 @@ def get_df(root, stem):
         df.loc[len(df)] = [dir, mixture_path, stem_path]
     
     return df
+
+def preprocess(musdb_dir, moisesdb_wav_dir, val_size, csv_dir, stem, seed):
+    df_musdb = get_df(os.path.join(musdb_dir, 'train'), stem)
+    df_musdb_train, df_musdb_val = train_test_split(df_musdb, test_size=val_size, random_state=seed)
+    df_musdb_train.to_csv(os.path.join(csv_dir, 'musdb_train.csv'), index=False)
+    df_musdb_val.to_csv(os.path.join(csv_dir, 'musdb_val.csv'), index=False)
+    df_musdb_test = get_df(os.path.join(musdb_dir, 'test'), stem)
+    df_musdb_test.to_csv(os.path.join(csv_dir, 'musdb_test.csv'), index=False)
+
+    df_moisesdb = get_df(moisesdb_wav_dir, stem)
+    df_moisesdb_train, df_moisesdb_val = train_test_split(df_moisesdb, test_size=val_size, random_state=seed)
+    df_moisesdb_train.to_csv(os.path.join(csv_dir, 'moisesdb_train.csv'), index=False)
+    df_moisesdb_val.to_csv(os.path.join(csv_dir, 'moisesdb_val.csv'), index=False)
+
+    df_train = pd.concat([df_musdb_train, df_moisesdb_train])
+    df_train.to_csv(os.path.join(csv_dir, 'train.csv'), index=False)
+    df_val = pd.concat([df_musdb_val, df_moisesdb_val])
+    df_val.to_csv(os.path.join(csv_dir, 'val.csv'), index=False)
 
 def main():
     # moisesdb_mix('/home/jljl1337/dataset/moisesdb/', '/home/jljl1337/dataset/moisesdb_wav', 'vocals')
