@@ -162,4 +162,7 @@ cython_debug/
 # Any filename including tmp
 *tmp*
 model/
+input_csv/
+output/
+evaluation/
 .DS_Store
