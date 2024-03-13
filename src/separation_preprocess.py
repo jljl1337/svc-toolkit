@@ -9,9 +9,9 @@ def main():
     parser.add_argument('-o', '--output_dir', type=str, default='./input_csv')
     parser.add_argument('-v', '--val_size', type=float, default=0.2)
     parser.add_argument('-s', '--stem', type=str, default='vocals')
-    parser.add_argument('-m', '--musdb_dir', type=str)
+    parser.add_argument('-m', '--musdb_dir', type=str, required=True)
     parser.add_argument('-M', '--moisesdb_dir', type=str, default='')
-    parser.add_argument('-w', '--moisesdb_wav_dir', type=str)
+    parser.add_argument('-w', '--moisesdb_wav_dir', type=str, required=True)
     args = parser.parse_args()
 
     if args.moisesdb_dir != '':

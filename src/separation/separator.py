@@ -15,10 +15,10 @@ class SeparatorFactory():
         return Separator(model_dir, device)
 
 class Separator():
-    def __init__(self, model_dir, device) -> None:
+    def __init__(self, model_dir, device, best=True) -> None:
         model_path = ''
         for file in os.listdir(model_dir):
-            if file.startswith('best') and file.endswith('.ckpt'):
+            if file.startswith('best' if best else 'last') and file.endswith('.ckpt'):
                 model_path = os.path.join(model_dir, file)
                 break
 
