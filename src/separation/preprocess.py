@@ -77,33 +77,3 @@ def preprocess(musdb_dir, moisesdb_wav_dir, val_size, csv_dir, stem, seed):
     df_train.to_csv(os.path.join(csv_dir, 'train.csv'), index=False)
     df_val = pd.concat([df_musdb_val, df_moisesdb_val])
     df_val.to_csv(os.path.join(csv_dir, 'val.csv'), index=False)
-
-def main():
-    # moisesdb_mix('/home/jljl1337/dataset/moisesdb/', '/home/jljl1337/dataset/moisesdb_wav', 'vocals')
-    df_musdb = get_df('/home/jljl1337/dataset/musdb18hq/train', 'vocals')
-    df_musdb_train, df_musdb_val = train_test_split(df_musdb, test_size=0.2, random_state=constants.SEED)
-    df_musdb_train.to_csv('musdb_train.csv', index=False)
-    df_musdb_val.to_csv('musdb_val.csv', index=False)
-    df_musdb_test = get_df('/home/jljl1337/dataset/musdb18hq/test', 'vocals')
-    df_musdb_test.to_csv('musdb_test.csv', index=False)
-
-    df_moisesdb = get_df('/home/jljl1337/dataset/moisesdb_wav', 'vocals')
-    df_moisesdb_rest, df_moisesdb_test = train_test_split(df_moisesdb, test_size=0.2, random_state=constants.SEED)
-    df_moisesdb_train, df_moisesdb_val = train_test_split(df_moisesdb_rest, test_size=0.125, random_state=constants.SEED)
-    df_moisesdb_train.to_csv('moisesdb_train.csv', index=False)
-    df_moisesdb_val.to_csv('moisesdb_val.csv', index=False)
-    df_moisesdb_test.to_csv('moisesdb_test.csv', index=False)
-    # print(len(df_moisesdb))
-    # print(len(df_moisesdb_train))
-    # print(len(df_moisesdb_val))
-    # print(len(df_moisesdb_test))
-
-    df_train = pd.concat([df_musdb_train, df_moisesdb_train])
-    df_train.to_csv('train.csv', index=False)
-    df_val = pd.concat([df_musdb_val, df_moisesdb_val])
-    df_val.to_csv('val.csv', index=False)
-    df_test = pd.concat([df_musdb_test, df_moisesdb_test])
-    df_test.to_csv('test.csv', index=False)
-
-if __name__ == "__main__":
-    main()
