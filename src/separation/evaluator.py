@@ -41,6 +41,18 @@ class Evaluator:
 
         return df_result
 
+    def summary(self, df: pd.DataFrame):
+        summary_df = pd.DataFrame(columns=['Mean', 'SD', 'Min', 'Max', 'Median'])
+        for column in df.columns[1:]:
+            summary_df.loc[column] = [
+                df[column].mean(),
+                df[column].std(),
+                df[column].min(),
+                df[column].max(),
+                df[column].median()
+            ]
+        return summary_df
+
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # device = torch.device('cpu')
