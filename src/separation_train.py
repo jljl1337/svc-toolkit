@@ -14,8 +14,8 @@ from separation.models import UNetLightning
 
 def main():
     parser = ArgumentParser()
-    parser.add_argument('-t', '--train_csv', type=str, default='./train.csv')
-    parser.add_argument('-v', '--val_csv', type=str, default='./val.csv')
+    parser.add_argument('-t', '--train_csv', type=str, required=True)
+    parser.add_argument('-v', '--val_csv', type=str, required=True)
     parser.add_argument('-e', '--experiment', type=str, default='exp')
     parser.add_argument('-m', '--model_dir', type=str, default='./model/')
     parser.add_argument('-c', '--config', type=str, default='./config.yml')
