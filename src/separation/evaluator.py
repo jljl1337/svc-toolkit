@@ -16,8 +16,8 @@ class Evaluator:
         wave = wave.reshape(-1)
         return torch.from_numpy(wave)
 
-    def evaluate(self, model_dir, test_csv):
-        separator = Separator(model_dir, self.device)
+    def evaluate(self, model_dir, test_csv, last):
+        separator = Separator(model_dir, self.device, last)
         df_test = pd.read_csv(test_csv)
         df_result = pd.DataFrame(columns=['song', 'SDR', 'SI-SDR', 'NSDR', 'NSI-SDR'])
 
@@ -52,30 +52,3 @@ class Evaluator:
                 df[column].median()
             ]
         return summary_df
-
-def main():
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # device = torch.device('cpu')
-
-    evaluator = Evaluator(device)
-    df_result = evaluator.evaluate('model/all/20240202_064108', './musdb_test.csv')
-    # Create a box and whisker plot for each column
-    df_result.boxplot(grid=False)
-    # Save the figure
-    plt.savefig('boxplot_all_last_musdb.png')
-    df_result.to_csv('result_all_last_musdb.csv', index=False)
-
-    summary_df = pd.DataFrame(columns=['Mean', 'SD', 'Min', 'Max', 'Median'])
-    for column in df_result.columns[1:]:
-        summary_df.loc[column] = [
-            df_result[column].mean(),
-            df_result[column].std(),
-            df_result[column].min(),
-            df_result[column].max(),
-            df_result[column].median()
-        ]
-    summary_df.to_csv('summary_all_last_musdb.csv')
-
-
-if __name__ == "__main__":
-    main()

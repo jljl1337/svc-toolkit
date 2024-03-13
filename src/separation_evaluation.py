@@ -1,4 +1,5 @@
 import os
+import argparse
 from argparse import ArgumentParser
 
 import torch
@@ -12,12 +13,13 @@ def main():
     parser.add_argument('-t', '--test_csv', type=str, required=True)
     parser.add_argument('-e', '--experiment', type=str, required=True)
     parser.add_argument('-o', '--output_dir', type=str, default='./evaluation')
+    parser.add_argument('-l', '--last', default=False, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     evaluator = Evaluator(device)
-    df_result = evaluator.evaluate(args.model_dir, args.test_csv)
+    df_result = evaluator.evaluate(args.model_dir, args.test_csv, args.last)
 
     df_result.boxplot(grid=False)
 
