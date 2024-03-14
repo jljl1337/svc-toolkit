@@ -62,14 +62,14 @@ def get_df(root, stem):
 
 def preprocess(musdb_dir, moisesdb_wav_dir, val_size, csv_dir, stem, seed):
     df_musdb = get_df(os.path.join(musdb_dir, 'train'), stem)
-    df_musdb_train, df_musdb_val = train_test_split(df_musdb, test_size=val_size, random_state=seed, shuffle=False)
+    df_musdb_train, df_musdb_val = train_test_split(df_musdb, test_size=val_size, random_state=seed)
     df_musdb_train.to_csv(os.path.join(csv_dir, 'musdb_train.csv'), index=False)
     df_musdb_val.to_csv(os.path.join(csv_dir, 'musdb_val.csv'), index=False)
     df_musdb_test = get_df(os.path.join(musdb_dir, 'test'), stem)
     df_musdb_test.to_csv(os.path.join(csv_dir, 'musdb_test.csv'), index=False)
 
     df_moisesdb = get_df(moisesdb_wav_dir, stem)
-    df_moisesdb_train, df_moisesdb_val = train_test_split(df_moisesdb, test_size=val_size, random_state=seed, shuffle=False)
+    df_moisesdb_train, df_moisesdb_val = train_test_split(df_moisesdb, test_size=val_size, random_state=seed)
     df_moisesdb_train.to_csv(os.path.join(csv_dir, 'moisesdb_train.csv'), index=False)
     df_moisesdb_val.to_csv(os.path.join(csv_dir, 'moisesdb_val.csv'), index=False)
 
