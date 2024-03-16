@@ -93,7 +93,7 @@ def main():
     callbacks=[model_checkpoint_best, model_checkpoint_last]
     logger = MyLogger(save_dir, resume_path)
 
-    trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger, devices=[0])
+    trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger, devices=[0], deterministic=True)
 
     if resume_path != '':
         model_path = os.path.join(resume_path, 'last.ckpt')
