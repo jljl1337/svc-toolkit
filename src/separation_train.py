@@ -56,7 +56,6 @@ def main():
     learning_rate = config['learning_rate']
     weight_decay = config['weight_decay']
     deeper = config['deeper']
-    use_lr_finder = config['use_lr_finder']
 
     # Set seed
     pl.seed_everything(constants.SEED, workers=True)
