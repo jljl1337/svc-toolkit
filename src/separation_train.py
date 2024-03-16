@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
-from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateFinder
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 from separation import constants
 from separation import utility
@@ -91,10 +91,7 @@ def main():
                                             mode='min', filename='best-{epoch}',
                                             dirpath=save_dir)
     model_checkpoint_last = ModelCheckpoint(filename='last-{epoch}', dirpath=save_dir)
-    lr_finder = LearningRateFinder()
     callbacks=[model_checkpoint_best, model_checkpoint_last]
-    if use_lr_finder:
-        callbacks.append(lr_finder)
     logger = MyLogger(save_dir, resume_path)
 
     trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger, devices=[0])
