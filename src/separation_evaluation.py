@@ -19,13 +19,17 @@ def main():
     evaluator = Evaluator(device)
     df_result = evaluator.evaluate(args.model_dir, args.test_csv, args.last)
 
+    boxplot_file_name = f'boxplot{"_last" if args.last else ""}.png'
+    result_file_name = f'result{"_last" if args.last else ""}.csv'
+    summary_file_name = f'summary{"_last" if args.last else ""}.csv'
+
     df_result.boxplot(grid=False)
 
-    plt.savefig(os.path.join(args.model_dir, f'boxplot{"_last" if args.last else ""}.png'))
-    df_result.to_csv(os.path.join(args.model_dir, f'result{"_last" if args.last else ""}.csv'), index=False)
+    plt.savefig(os.path.join(args.model_dir, boxplot_file_name))
+    df_result.to_csv(os.path.join(args.model_dir, result_file_name), index=False)
 
     summary_df = evaluator.summary(df_result)
-    summary_df.to_csv(os.path.join(args.model_dir, f'summary{"_last" if args.last else ""}.csv'))
+    summary_df.to_csv(os.path.join(args.model_dir, summary_file_name))
 
 
 if __name__ == '__main__':

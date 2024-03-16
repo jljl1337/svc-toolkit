@@ -43,6 +43,7 @@ class Evaluator:
 
     def summary(self, df: pd.DataFrame):
         summary_df = pd.DataFrame(columns=['Mean', 'SD', 'Min', 'Max', 'Median'])
+
         for column in df.columns[1:]:
             summary_df.loc[column] = [
                 df[column].mean(),
@@ -51,4 +52,5 @@ class Evaluator:
                 df[column].max(),
                 df[column].median()
             ]
+
         return summary_df
