@@ -74,6 +74,7 @@ def main():
     loader_train_kwargs = {
         'batch_size': batch_size,
         'num_workers': loader_num_workers,
+        'persistent_workers': True,
         'pin_memory': True,
         'shuffle': True,
     }
@@ -93,7 +94,7 @@ def main():
     callbacks=[model_checkpoint_best, model_checkpoint_last]
     logger = MyLogger(save_dir, resume_path)
 
-    trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger, devices=[0], deterministic=True)
+    trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger, devices=[0], deterministic=True, precision='bf16-mixed')
 
     if resume_path != '':
         model_path = os.path.join(resume_path, 'last.ckpt')
