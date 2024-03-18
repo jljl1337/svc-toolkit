@@ -1,6 +1,5 @@
 import torch
 import pandas as pd
-import matplotlib.pyplot as plt
 from torchmetrics.audio import SignalDistortionRatio, ScaleInvariantSignalDistortionRatio
 from tqdm import tqdm
 
