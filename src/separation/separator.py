@@ -1,5 +1,6 @@
 import os
 import math
+
 import numpy as np
 import torch
 
@@ -73,7 +74,9 @@ class Separator():
 
                 # Predict mask
                 with torch.no_grad():
-                    mask = self.model(segment_tensor)
+                    # TODO: MPS case
+                    with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
+                        mask = self.model(segment_tensor)
 
                 # Invert mask if needed
                 if invert:
