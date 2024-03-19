@@ -55,6 +55,7 @@ def main():
 
     learning_rate = config['learning_rate']
     weight_decay = config['weight_decay']
+    optimizer = config['optimizer']
     deeper = config['deeper']
 
     # Set seed
@@ -85,7 +86,7 @@ def main():
     loader_val = DataLoader(dataset_val, **loader_val_kwargs)
 
     # Train model
-    model = UNetLightning(lr=learning_rate, weight_decay=weight_decay, deeper=deeper)
+    model = UNetLightning(lr=learning_rate, weight_decay=weight_decay, deeper=deeper, optimizer=optimizer)
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
     model_checkpoint_best = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
                                             mode='min', filename='best-{epoch}',

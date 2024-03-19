@@ -205,12 +205,13 @@ class DeeperUNet(nn.Module):
         return x_up8
 
 class UNetLightning(pl.LightningModule):
-    def __init__(self, in_channels=1, lr=0.0001, weight_decay=0.00001, deeper=False):
+    def __init__(self, in_channels=1, lr=0.0001, weight_decay=0.00001, deeper=False, optimizer='adam'):
         super(UNetLightning, self).__init__()
         self.save_hyperparameters()
 
         self.lr = lr
         self.weight_decay = weight_decay
+        self.optimizer = optimizer
 
         self.model = DeeperUNet(in_channels) if deeper else UNet(in_channels)
         self.loss = nn.L1Loss()
@@ -221,7 +222,12 @@ class UNetLightning(pl.LightningModule):
         return self.model(x)
 
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        if self.optimizer == 'adam':
+            return torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        elif self.optimizer == 'adamw':
+            return torch.optim.AdamW(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        else:
+            raise ValueError(f'Invalid optimizer: {self.optimizer}')
 
     def get_loss(self, batch):
         x, y = batch

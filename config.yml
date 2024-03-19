@@ -9,4 +9,5 @@ patch_length: 512
 expand_factor: 12
 learning_rate: 1.0e-3
 weight_decay: 1.0e-6
+optimizer: adam
 deeper: False
