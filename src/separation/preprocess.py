@@ -14,7 +14,7 @@ import separation.audio as audio
 
 def mix_track(track: MoisesDBTrack, stem, save_dir):
     if stem in track.stems:
-        track_dir = f'{track.artist} - {track.name}'
+        track_dir = f'{track.artist} - {track.name}'.strip().replace('ö', 'o')
 
         output_stems = {
             "mixture": all_stems,
