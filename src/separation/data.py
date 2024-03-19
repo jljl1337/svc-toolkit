@@ -10,13 +10,15 @@ from numpy import random
 from torch.utils.data import Dataset
 
 from separation.audio import load, to_mag_phase
+from separation import constants
 
 class MagnitudeDataset(Dataset):
-    def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length, sample_rate) -> None:
+    def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length, neglect_frequency, sample_rate) -> None:
         self.win_length = win_length
         self.hop_length = hop_length
         self.patch_length = patch_length
         self.expand_factor = expand_factor
+        self.neglect_frequency = neglect_frequency
         self.sample_rate = sample_rate
 
         df = pd.read_csv(csv_path)
@@ -64,8 +66,15 @@ class MagnitudeDataset(Dataset):
         mix_magnitude, stem_magnitude = self.magnitudes[actual_index]
         start = random.randint(0, mix_magnitude.shape[1] - self.patch_length + 1)
 
-        mix_magnitude = mix_magnitude[np.newaxis, : -1, start: start + self.patch_length]
-        stem_magnitude = stem_magnitude[np.newaxis, : -1, start: start + self.patch_length]
+        mix_magnitude = mix_magnitude[np.newaxis, :, start: start + self.patch_length]
+        stem_magnitude = stem_magnitude[np.newaxis, :, start: start + self.patch_length]
+
+        if self.neglect_frequency == constants.NYQUIST:
+            mix_magnitude = mix_magnitude[:, : -1]
+            stem_magnitude = stem_magnitude[:, : -1]
+        elif self.neglect_frequency == constants.ZERO:
+            mix_magnitude = mix_magnitude[:, 1:]
+            stem_magnitude = stem_magnitude[:, 1:]
 
         mix_tensor = torch.from_numpy(mix_magnitude)
         stem_tensor = torch.from_numpy(stem_magnitude)

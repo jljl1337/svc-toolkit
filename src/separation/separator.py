@@ -4,9 +4,7 @@ import math
 import numpy as np
 import torch
 
-from separation import utility
-from separation import models
-from separation import audio
+from separation import utility, models, audio, constants
 
 class SeparatorFactory():
     def __init__(self) -> None:
@@ -27,6 +25,7 @@ class Separator():
         self.window_length = config['win_length']
         self.hop_length = config['hop_length']
         self.patch_length = config['patch_length']
+        self.neglect_frequency = config['neglect_frequency']
 
         self.model = models.UNetLightning.load_from_checkpoint(model_path, map_location=device, hparams_file=hparams_path)
         self.model.eval()
@@ -64,15 +63,22 @@ class Separator():
                 # Extract segment
                 start = segment_index * self.patch_length
                 end = start + self.patch_length
-                segment = magnitude[np.newaxis, channel, :-1, start: end]
+                segment = magnitude[np.newaxis, channel, :, start: end]
+
+
+                if self.neglect_frequency == constants.NYQUIST:
+                    segment = segment[:, : -1]
+                elif self.neglect_frequency == constants.ZERO:
+                    segment = segment[:, 1:]
+
                 segment_tensor = torch.from_numpy(segment)
                 segment_tensor = torch.unsqueeze(segment_tensor, 0).to(self.device)
 
                 # Predict mask
                 with torch.no_grad():
                     # TODO: MPS case
-                    with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
-                        mask = self.model(segment_tensor)
+                    # with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
+                    mask = self.model(segment_tensor)
 
                 # Invert mask if needed
                 if invert:
@@ -82,7 +88,10 @@ class Separator():
                 masked = segment_tensor * mask
 
                 # Save masked segment
-                magnitude[channel, :-1, start: end] = masked.squeeze().cpu().numpy()
+                if self.neglect_frequency == constants.NYQUIST:
+                    magnitude[channel, :-1, start: end] = masked.squeeze().cpu().numpy()
+                elif self.neglect_frequency == constants.ZERO:
+                    magnitude[channel, 1:, start: end] = masked.squeeze().cpu().numpy()
 
                 # Update progress
                 if emit is not None:

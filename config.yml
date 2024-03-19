@@ -1,13 +1,14 @@
 resume_path: ''
-batch_size: 16
+batch_size: 32
 epochs: 1000
-loader_num_workers: 1
-deterministic: False
+loader_num_workers: 4
+deterministic: True
 sample_rate: 44100
 win_length: 4096
 hop_length: 1024
 patch_length: 512
 expand_factor: 12
+neglect_frequency: nyquist
 learning_rate: 1.0e-3
 weight_decay: 1.0e-6
 optimizer: adam

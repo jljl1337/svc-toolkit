@@ -57,6 +57,7 @@ def main():
     hop_length = config['hop_length']
     patch_length = config['patch_length']
     expand_factor = config['expand_factor']
+    neglect_frequency = config['neglect_frequency']
 
     learning_rate = config['learning_rate']
     weight_decay = config['weight_decay']
@@ -72,6 +73,7 @@ def main():
         'win_length': win_length,
         'hop_length': hop_length,
         'patch_length': patch_length,
+        'neglect_frequency': neglect_frequency,
         'sample_rate': sample_rate
     }
     dataset_train = MagnitudeDataset(args.train_csv, **dataset_kwargs)
