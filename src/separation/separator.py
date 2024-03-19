@@ -17,11 +17,7 @@ class SeparatorFactory():
 
 class Separator():
     def __init__(self, model_dir, device, last=False) -> None:
-        model_path = ''
-        for file in os.listdir(model_dir):
-            if file.startswith('last' if last else 'best') and file.endswith('.ckpt'):
-                model_path = os.path.join(model_dir, file)
-                break
+        model_path = utility.get_checkpoint_path(model_dir, prefix='last' if last else 'best')
 
         hparams_path = os.path.join(model_dir, 'hparams.yaml')
         config_path = os.path.join(model_dir, 'config.yml')

@@ -97,7 +97,7 @@ def main():
     trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger, devices=[0], deterministic=True, precision='bf16-mixed')
 
     if resume_path != '':
-        model_path = os.path.join(resume_path, 'last.ckpt')
+        model_path = utility.get_checkpoint_path(resume_path, prefix='last')
         trainer.fit(model, loader_train, loader_val, ckpt_path=model_path)
     else:
         trainer.fit(model, loader_train, loader_val)
