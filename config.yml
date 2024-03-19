@@ -1,5 +1,4 @@
 resume_path: ''
-model_dir: './model/'
 batch_size: 16
 epochs: 1000
 loader_num_workers: 1
