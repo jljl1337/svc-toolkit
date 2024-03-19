@@ -51,6 +51,7 @@ def main():
     batch_size = config['batch_size']
     epochs = config['epochs']
     loader_num_workers = config['loader_num_workers']
+    deterministic = config['deterministic']
 
     win_length = config['win_length']
     hop_length = config['hop_length']
@@ -99,7 +100,8 @@ def main():
     callbacks=[model_checkpoint_best, model_checkpoint_last]
     logger = MyLogger(model_dir, resume_path)
 
-    trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger, devices=[0], deterministic=True, precision='bf16-mixed')
+    trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger,
+                         devices=[0], deterministic=deterministic, precision='bf16-mixed')
 
     if resume_path != '':
         model_path = utility.get_checkpoint_path(resume_path, prefix='last')
