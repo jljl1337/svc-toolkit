@@ -77,8 +77,8 @@ class Separator():
                 # Predict mask
                 with torch.no_grad():
                     # TODO: MPS case
-                    # with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
-                    mask = self.model(segment_tensor)
+                    with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
+                        mask = self.model(segment_tensor)
 
                 # Invert mask if needed
                 if invert:
