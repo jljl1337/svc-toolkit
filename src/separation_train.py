@@ -42,6 +42,7 @@ def main():
     # Save config
     utility.save_yaml(config, os.path.join(model_dir, 'config.yml'))
 
+    # Save song lists
     utility.save_song_list(args.train_csv, model_dir, 'train_songs.csv')
     utility.save_song_list(args.val_csv, model_dir, 'val_songs.csv')
 
