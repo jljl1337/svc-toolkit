@@ -1,10 +1,10 @@
-from math import ceil
+import math
 from multiprocessing import cpu_count
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from numpy import newaxis, random
+import torch
+import numpy as np
 from pandas import read_csv
-from torch import from_numpy
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -56,7 +56,7 @@ class MagnitudeDataset(Dataset):
 
         # Expand dataset by duration of each song
         duration = mixture_wave.shape[0] / self.sample_rate
-        weight = ceil(duration / self.expand_factor)
+        weight = math.ceil(duration / self.expand_factor)
 
         return index, mix_magnitude, stem_magnitude, weight
 
@@ -66,10 +66,10 @@ class MagnitudeDataset(Dataset):
     def __getitem__(self, index):
         actual_index = self.expanded_magnitudes[index]
         mix_magnitude, stem_magnitude = self.magnitudes[actual_index]
-        start = random.randint(0, mix_magnitude.shape[1] - self.patch_length + 1)
+        start = np.random.randint(0, mix_magnitude.shape[1] - self.patch_length + 1)
 
-        mix_magnitude = mix_magnitude[newaxis, :, start: start + self.patch_length]
-        stem_magnitude = stem_magnitude[newaxis, :, start: start + self.patch_length]
+        mix_magnitude = mix_magnitude[np.newaxis, :, start: start + self.patch_length]
+        stem_magnitude = stem_magnitude[np.newaxis, :, start: start + self.patch_length]
 
         if self.neglect_frequency == NYQUIST:
             mix_magnitude = mix_magnitude[:, : -1]
@@ -78,8 +78,8 @@ class MagnitudeDataset(Dataset):
             mix_magnitude = mix_magnitude[:, 1:]
             stem_magnitude = stem_magnitude[:, 1:]
 
-        mix_tensor = from_numpy(mix_magnitude)
-        stem_tensor = from_numpy(stem_magnitude)
+        mix_tensor = torch.from_numpy(mix_magnitude)
+        stem_tensor = torch.from_numpy(stem_magnitude)
 
         return mix_tensor, stem_tensor
 
