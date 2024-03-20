@@ -1,16 +1,15 @@
-import math
+from math import ceil
 from multiprocessing import cpu_count
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import numpy as np
-import pandas as pd
-import torch
-from tqdm import tqdm
-from numpy import random
+from numpy import newaxis, random
+from pandas import read_csv
+from torch import from_numpy
 from torch.utils.data import Dataset
+from tqdm import tqdm
 
 from separation.audio import load, to_mag_phase
-from separation import constants
+from separation.constants import NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
 
 class MagnitudeDataset(Dataset):
     def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length, neglect_frequency, sample_rate) -> None:
@@ -21,7 +20,10 @@ class MagnitudeDataset(Dataset):
         self.neglect_frequency = neglect_frequency
         self.sample_rate = sample_rate
 
-        df = pd.read_csv(csv_path)
+        if self.neglect_frequency not in NEGLECT_FREQUENCY_OPTIONS:
+            raise ValueError(f'Invalid neglect_frequency: {self.neglect_frequency}')
+
+        df = read_csv(csv_path)
 
         self.magnitudes = [None] * len(df)
         self.expanded_magnitudes = []
@@ -41,7 +43,7 @@ class MagnitudeDataset(Dataset):
         # Load audio
         mixture_path = row['mixture_path']
         stem_path = row['stem_path']
-        mixture_wave, mixture_sr = load(mixture_path, sr=self.sample_rate)
+        mixture_wave, _mixture_sr = load(mixture_path, sr=self.sample_rate)
         stem_wave, _stem_sr = load(stem_path, sr=self.sample_rate)
 
         # Get magnitude
@@ -53,8 +55,8 @@ class MagnitudeDataset(Dataset):
         stem_magnitude /= mix_magnitude_max
 
         # Expand dataset by duration of each song
-        duration = mixture_wave.shape[0] / mixture_sr
-        weight = math.ceil(duration / self.expand_factor)
+        duration = mixture_wave.shape[0] / self.sample_rate
+        weight = ceil(duration / self.expand_factor)
 
         return index, mix_magnitude, stem_magnitude, weight
 
@@ -66,18 +68,18 @@ class MagnitudeDataset(Dataset):
         mix_magnitude, stem_magnitude = self.magnitudes[actual_index]
         start = random.randint(0, mix_magnitude.shape[1] - self.patch_length + 1)
 
-        mix_magnitude = mix_magnitude[np.newaxis, :, start: start + self.patch_length]
-        stem_magnitude = stem_magnitude[np.newaxis, :, start: start + self.patch_length]
+        mix_magnitude = mix_magnitude[newaxis, :, start: start + self.patch_length]
+        stem_magnitude = stem_magnitude[newaxis, :, start: start + self.patch_length]
 
-        if self.neglect_frequency == constants.NYQUIST:
+        if self.neglect_frequency == NYQUIST:
             mix_magnitude = mix_magnitude[:, : -1]
             stem_magnitude = stem_magnitude[:, : -1]
-        elif self.neglect_frequency == constants.ZERO:
+        elif self.neglect_frequency == ZERO:
             mix_magnitude = mix_magnitude[:, 1:]
             stem_magnitude = stem_magnitude[:, 1:]
 
-        mix_tensor = torch.from_numpy(mix_magnitude)
-        stem_tensor = torch.from_numpy(stem_magnitude)
+        mix_tensor = from_numpy(mix_magnitude)
+        stem_tensor = from_numpy(stem_magnitude)
 
         return mix_tensor, stem_tensor
 
