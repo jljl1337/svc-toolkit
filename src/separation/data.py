@@ -50,9 +50,18 @@ class MagnitudeDataset(Dataset):
         mix_magnitude, _mix_phase = to_mag_phase(mixture_wave, self.win_length, self.hop_length)
         stem_magnitude, _stem_phase = to_mag_phase(stem_wave, self.win_length, self.hop_length)
 
+        # Normalize magnitude
         mix_magnitude_max = mix_magnitude.max()
         mix_magnitude /= mix_magnitude_max
         stem_magnitude /= mix_magnitude_max
+
+        # Neglect frequency to match model input
+        if self.neglect_frequency == NYQUIST:
+            mix_magnitude = mix_magnitude[: -1]
+            stem_magnitude = stem_magnitude[: -1]
+        elif self.neglect_frequency == ZERO:
+            mix_magnitude = mix_magnitude[1:]
+            stem_magnitude = stem_magnitude[1:]
 
         # Expand dataset by duration of each song
         duration = mixture_wave.shape[0] / self.sample_rate
@@ -64,20 +73,16 @@ class MagnitudeDataset(Dataset):
         return len(self.expanded_magnitudes)
     
     def __getitem__(self, index):
+        # Get a magnitude from the expanded list
         actual_index = self.expanded_magnitudes[index]
         mix_magnitude, stem_magnitude = self.magnitudes[actual_index]
-        start = np.random.randint(0, mix_magnitude.shape[1] - self.patch_length + 1)
 
+        # Randomly select a patch
+        start = np.random.randint(0, mix_magnitude.shape[1] - self.patch_length + 1)
         mix_magnitude = mix_magnitude[np.newaxis, :, start: start + self.patch_length]
         stem_magnitude = stem_magnitude[np.newaxis, :, start: start + self.patch_length]
 
-        if self.neglect_frequency == NYQUIST:
-            mix_magnitude = mix_magnitude[:, : -1]
-            stem_magnitude = stem_magnitude[:, : -1]
-        elif self.neglect_frequency == ZERO:
-            mix_magnitude = mix_magnitude[:, 1:]
-            stem_magnitude = stem_magnitude[:, 1:]
-
+        # Convert to tensor
         mix_tensor = torch.from_numpy(mix_magnitude)
         stem_tensor = torch.from_numpy(stem_magnitude)
 
