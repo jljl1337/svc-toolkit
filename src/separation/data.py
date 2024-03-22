@@ -8,7 +8,7 @@ from pandas import read_csv
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
-from separation.audio import load, to_mag_phase
+from separation.audio import load, to_magnitude
 from separation.constants import NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
 
 class MagnitudeDataset(Dataset):
@@ -65,8 +65,8 @@ class MagnitudeDataset(Dataset):
         stem_wave, _stem_sr = load(stem_path, sr=self.sample_rate)
 
         # Get magnitude
-        mix_magnitude, _mix_phase = to_mag_phase(mixture_wave, self.win_length, self.hop_length)
-        stem_magnitude, _stem_phase = to_mag_phase(stem_wave, self.win_length, self.hop_length)
+        mix_magnitude = to_magnitude(mixture_wave, self.win_length, self.hop_length)
+        stem_magnitude = to_magnitude(stem_wave, self.win_length, self.hop_length)
 
         # Normalize magnitude
         mix_magnitude_max = mix_magnitude.max()
