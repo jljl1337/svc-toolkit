@@ -12,7 +12,21 @@ from separation.audio import load, to_mag_phase
 from separation.constants import NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
 
 class MagnitudeDataset(Dataset):
-    def __init__(self, csv_path, expand_factor, win_length, hop_length, patch_length, neglect_frequency, sample_rate) -> None:
+    def __init__(
+        self,
+        csv_path: str,
+        expand_factor: float,
+        win_length: int,
+        hop_length: int,
+        patch_length: int,
+        neglect_frequency: str,
+        sample_rate: int,
+    ):
+        # Validate neglect_frequency
+        if neglect_frequency not in NEGLECT_FREQUENCY_OPTIONS:
+            raise ValueError(f'Invalid neglect_frequency: {self.neglect_frequency}')
+
+        # Save parameters
         self.win_length = win_length
         self.hop_length = hop_length
         self.patch_length = patch_length
@@ -20,23 +34,27 @@ class MagnitudeDataset(Dataset):
         self.neglect_frequency = neglect_frequency
         self.sample_rate = sample_rate
 
-        if self.neglect_frequency not in NEGLECT_FREQUENCY_OPTIONS:
-            raise ValueError(f'Invalid neglect_frequency: {self.neglect_frequency}')
-
+        # Load CSV
         df = read_csv(csv_path)
 
+        # Set up magnitudes
         self.magnitudes = [None] * len(df)
         self.expanded_magnitudes = []
 
+        # Load magnitudes in parallel
         with ThreadPoolExecutor(max_workers=cpu_count()) as executor:
+            # Submit tasks
             futures = [executor.submit(self.load_magnitude, index, row) for index, row in df.iterrows()]
 
+            # For each finished task
             for future in tqdm(as_completed(futures), total=len(df)):
                 index, mix_magnitude, stem_magnitude, weight = future.result()
-                self.magnitudes[index] = (mix_magnitude, stem_magnitude)
 
+                # Save magnitude
+                self.magnitudes[index] = (mix_magnitude, stem_magnitude)
                 self.expanded_magnitudes.extend([index] * weight)
 
+            # Sort expanded magnitudes since they are not executed in order
             self.expanded_magnitudes = sorted(self.expanded_magnitudes)
 
     def load_magnitude(self, index, row):
