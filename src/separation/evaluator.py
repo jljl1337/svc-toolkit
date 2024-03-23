@@ -4,6 +4,7 @@ from torchmetrics.audio import SignalDistortionRatio, ScaleInvariantSignalDistor
 from tqdm import tqdm
 
 from separation.separator import Separator
+from separation.constants import CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
 
 class Evaluator:
     def __init__(self, device):
@@ -21,8 +22,8 @@ class Evaluator:
         df_result = pd.DataFrame(columns=['song', 'SDR', 'SI-SDR', 'NSDR', 'NSI-SDR'])
 
         for _index, row in tqdm(df_test.iterrows(), total=len(df_test)):
-            mixture_path = row['mixture_path']
-            stem_path = row['stem_path']
+            mixture_path = row[CSV_MIXTURE_PATH_COLUMN]
+            stem_path = row[CSV_STEM_PATH_COLUMN]
             mixture_wave, _ = separator.load_file(mixture_path)
             stem_wave, _ = separator.load_file(stem_path)
             mixture_tensor = self._flatten_tensor(mixture_wave)

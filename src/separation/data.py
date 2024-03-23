@@ -10,7 +10,7 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 
 from separation.audio import load, to_magnitude, to_mag_phase, pad_wave
-from separation.constants import NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
+from separation.constants import CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN, NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
 
 class MagnitudeRandomDataset(Dataset):
     def __init__(
@@ -60,8 +60,8 @@ class MagnitudeRandomDataset(Dataset):
 
     def load_magnitude(self, index, row):
         # Load audio
-        mixture_path = row['mixture_path']
-        stem_path = row['stem_path']
+        mixture_path = row[CSV_MIXTURE_PATH_COLUMN]
+        stem_path = row[CSV_STEM_PATH_COLUMN]
         mixture_wave, _mixture_sr = load(mixture_path, sr=self.sample_rate)
         stem_wave, _stem_sr = load(stem_path, sr=self.sample_rate)
 

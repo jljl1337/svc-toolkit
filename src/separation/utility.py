@@ -3,6 +3,8 @@ import os
 import yaml
 import pandas as pd
 
+from separation.constants import CSV_SONG_COLUMN
+
 def load_yaml(path):
     with open(path) as file:
         data = yaml.safe_load(file)
@@ -28,6 +30,6 @@ def save_song_list(csv_path, model_dir, file_name):
     song_list_pd = pd.read_csv(csv_path)
 
     # Select only the song column
-    song_list_pd = song_list_pd[['song']]
+    song_list_pd = song_list_pd[[CSV_SONG_COLUMN]]
 
     song_list_pd.to_csv(os.path.join(model_dir, file_name), index=False)

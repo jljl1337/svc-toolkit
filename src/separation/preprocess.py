@@ -9,8 +9,8 @@ from moisesdb.dataset import MoisesDB
 from moisesdb.track import MoisesDBTrack
 from moisesdb.defaults import all_stems, default_sample_rate
 
-import separation.constants as constants
 import separation.audio as audio
+from separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
 
 def mix_track(track: MoisesDBTrack, stem, save_dir):
     if stem in track.stems:
@@ -50,7 +50,7 @@ def moisesdb_mix(root, save_dir, stem):
             pass
 
 def get_df(root, stem):
-    df = pd.DataFrame(columns=['song', 'mixture_path', 'stem_path'])
+    df = pd.DataFrame(columns=[CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN])
 
     for dir in sorted(os.listdir(root)):
         mixture_path = os.path.join(root, dir, 'mixture.wav')

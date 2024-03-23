@@ -1,5 +1,9 @@
 SEED = 56615230
 
+CSV_SONG_COLUMN = 'song'
+CSV_MIXTURE_PATH_COLUMN = 'mixture_path'
+CSV_STEM_PATH_COLUMN = 'stem_path'
+
 NYQUIST = 'nyquist'
 ZERO = 'zero'
 NEGLECT_FREQUENCY_OPTIONS = [NYQUIST, ZERO]
