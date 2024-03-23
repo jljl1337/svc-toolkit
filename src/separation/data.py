@@ -12,7 +12,7 @@ from tqdm import tqdm
 from separation.audio import load, to_magnitude, to_mag_phase, pad_wave
 from separation.constants import NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
 
-class MagnitudeDataset(Dataset):
+class MagnitudeRandomDataset(Dataset):
     def __init__(
         self,
         csv_path: str,
@@ -107,7 +107,7 @@ class MagnitudeDataset(Dataset):
 
         return mix_tensor, stem_tensor
 
-class MagnitudePredictDataset(Dataset):
+class MagnitudeDataset(Dataset):
     def __init__(
         self,
         paths: Iterable[str],
@@ -213,4 +213,4 @@ class MagnitudePredictDataset(Dataset):
 
 if __name__ == "__main__":
     print('test')
-    dataset = MagnitudeDataset('train.csv', 30, 1024, 768, 128)
+    dataset = MagnitudeRandomDataset('train.csv', 30, 1024, 768, 128)

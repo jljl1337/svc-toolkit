@@ -8,7 +8,7 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 from separation import constants
 from separation import utility
-from separation.data import MagnitudeDataset
+from separation.data import MagnitudeRandomDataset
 from separation.logger import MyLogger
 from separation.models import UNetLightning
 
@@ -76,8 +76,8 @@ def main():
         'neglect_frequency': neglect_frequency,
         'sample_rate': sample_rate
     }
-    dataset_train = MagnitudeDataset(args.train_csv, **dataset_kwargs)
-    dataset_val = MagnitudeDataset(args.val_csv, **dataset_kwargs)
+    dataset_train = MagnitudeRandomDataset(args.train_csv, **dataset_kwargs)
+    dataset_val = MagnitudeRandomDataset(args.val_csv, **dataset_kwargs)
 
     loader_train_kwargs = {
         'batch_size': batch_size,
