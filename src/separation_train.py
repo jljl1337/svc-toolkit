@@ -3,12 +3,11 @@ from argparse import ArgumentParser
 from datetime import datetime
 
 import pytorch_lightning as pl
-from torch.utils.data import DataLoader
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 from separation import constants
 from separation import utility
-from separation.data import MagnitudeRandomDataset
+from separation.data import MagnitudeDataModule
 from separation.logger import MyLogger
 from separation.models import UNetLightning
 
@@ -68,29 +67,18 @@ def main():
     pl.seed_everything(constants.SEED, workers=True)
 
     # Load dataset
-    dataset_kwargs = {
-        'expand_factor': expand_factor,
-        'win_length': win_length,
-        'hop_length': hop_length,
-        'patch_length': patch_length,
-        'neglect_frequency': neglect_frequency,
-        'sample_rate': sample_rate
-    }
-    dataset_train = MagnitudeRandomDataset(args.train_csv, **dataset_kwargs)
-    dataset_val = MagnitudeRandomDataset(args.val_csv, **dataset_kwargs)
-
-    loader_train_kwargs = {
-        'batch_size': batch_size,
-        'num_workers': loader_num_workers,
-        'persistent_workers': True,
-        'pin_memory': True,
-        'shuffle': True,
-    }
-    loader_val_kwargs = loader_train_kwargs.copy()
-    loader_val_kwargs['shuffle'] = False
-
-    loader_train = DataLoader(dataset_train, **loader_train_kwargs)
-    loader_val = DataLoader(dataset_val, **loader_val_kwargs)
+    data_module = MagnitudeDataModule(
+        train_csv=args.train_csv,
+        val_csv=args.val_csv,
+        win_length=win_length,
+        hop_length=hop_length,
+        patch_length=patch_length,
+        expand_factor=expand_factor,
+        neglect_frequency=neglect_frequency,
+        sample_rate=sample_rate,
+        batch_size=batch_size,
+        loader_num_workers=loader_num_workers
+    )
 
     # Train model
     model = UNetLightning(lr=learning_rate, weight_decay=weight_decay, deeper=deeper, optimizer=optimizer)
@@ -107,9 +95,9 @@ def main():
 
     if resume_path != '':
         model_path = utility.get_checkpoint_path(resume_path, prefix='last')
-        trainer.fit(model, loader_train, loader_val, ckpt_path=model_path)
+        trainer.fit(model, datamodule=data_module, ckpt_path=model_path)
     else:
-        trainer.fit(model, loader_train, loader_val)
+        trainer.fit(model, datamodule=data_module)
     
 if __name__ == '__main__':
     main()
