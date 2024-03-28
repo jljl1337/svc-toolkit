@@ -15,7 +15,10 @@ class SeparatorFactory():
 
 class Separator():
     def __init__(self, model_dir, device, last=False) -> None:
-        model_path = utility.get_checkpoint_path(model_dir, prefix='last' if last else 'best')
+        if last:
+            model_path = utility.get_last_checkpoint_path(model_dir)
+        else:
+            model_path = utility.get_best_checkpoint_path(model_dir)
 
         hparams_path = os.path.join(model_dir, 'hparams.yaml')
         config_path = os.path.join(model_dir, 'config.yml')

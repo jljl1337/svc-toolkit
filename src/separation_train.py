@@ -94,7 +94,7 @@ def main():
                          devices=[0], deterministic=deterministic, precision='bf16-mixed')
 
     if resume_path != '':
-        model_path = utility.get_checkpoint_path(resume_path, prefix='last')
+        model_path = utility.get_last_checkpoint_path(resume_path)
         trainer.fit(model, datamodule=data_module, ckpt_path=model_path)
     else:
         trainer.fit(model, datamodule=data_module)
