@@ -17,7 +17,8 @@ from separation.constants import CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN, 
 class MagnitudeRandomDataset(Dataset):
     def __init__(
         self,
-        csv_path: str,
+        mixture_path_list: list[str],
+        stem_path_list: list[str],
         expand_factor: float,
         win_length: int,
         hop_length: int,
@@ -29,6 +30,12 @@ class MagnitudeRandomDataset(Dataset):
         if neglect_frequency not in NEGLECT_FREQUENCY_OPTIONS:
             raise ValueError(f'Invalid neglect_frequency: {self.neglect_frequency}')
 
+        # Check if the length of the lists are equal
+        if not len(mixture_path_list) == len(stem_path_list):
+            raise ValueError('Length of mixture and stem lists must be equal')
+
+        self.song_num = len(mixture_path_list)
+
         # Save parameters
         self.win_length = win_length
         self.hop_length = hop_length
@@ -37,20 +44,18 @@ class MagnitudeRandomDataset(Dataset):
         self.neglect_frequency = neglect_frequency
         self.sample_rate = sample_rate
 
-        # Load CSV
-        df = read_csv(csv_path)
-
         # Set up magnitudes
-        self.magnitudes = [None] * len(df)
+        self.magnitudes = [None] * self.song_num
         self.expanded_magnitudes = []
 
         # Load magnitudes in parallel
         with ThreadPoolExecutor(max_workers=cpu_count()) as executor:
             # Submit tasks
-            futures = [executor.submit(self.load_magnitude, index, row) for index, row in df.iterrows()]
+            zipped = zip(range(self.song_num), mixture_path_list, stem_path_list)
+            futures = [executor.submit(self.load_magnitude, index, mixture_path, stem_path) for index, mixture_path, stem_path in zipped]
 
             # For each finished task
-            for future in tqdm(as_completed(futures), total=len(df)):
+            for future in tqdm(as_completed(futures), total=self.song_num):
                 index, mix_magnitude, stem_magnitude, weight = future.result()
 
                 # Save magnitude
@@ -60,10 +65,8 @@ class MagnitudeRandomDataset(Dataset):
             # Sort expanded magnitudes since they are not executed in order
             self.expanded_magnitudes = sorted(self.expanded_magnitudes)
 
-    def load_magnitude(self, index, row):
+    def load_magnitude(self, index, mixture_path, stem_path):
         # Load audio
-        mixture_path = row[CSV_MIXTURE_PATH_COLUMN]
-        stem_path = row[CSV_STEM_PATH_COLUMN]
         mixture_wave, _mixture_sr = load(mixture_path, sr=self.sample_rate)
         stem_wave, _stem_sr = load(stem_path, sr=self.sample_rate)
 
@@ -317,18 +320,23 @@ class MagnitudeDataModule(pl.LightningDataModule):
     def setup(self, stage: str = None):
         if stage == TrainerFn.FITTING and self.train_dataset is None and self.val_dataset is None:
             print('Loading training datasets')
+            df_train = read_csv(self.train_csv)
             self.train_dataset = MagnitudeRandomDataset(
-                self.train_csv,
+                df_train[CSV_MIXTURE_PATH_COLUMN].tolist(),
+                df_train[CSV_STEM_PATH_COLUMN].tolist(),
                 **self._dataset_kwargs(fit=True)
             )
 
             print('Loading validation datasets')
+            df_val = read_csv(self.val_csv)
             self.val_dataset = MagnitudeRandomDataset(
-                self.val_csv,
+                df_val[CSV_MIXTURE_PATH_COLUMN].tolist(),
+                df_val[CSV_STEM_PATH_COLUMN].tolist(),
                 **self._dataset_kwargs(fit=True)
             )
 
         elif stage == TrainerFn.PREDICTING and self.predict_dataset is None:
+            print('Loading prediction datasets')
             self.predict_dataset = MagnitudeDataset(
                 self.predict_path_list,
                 **self._dataset_kwargs(fit=False)
