@@ -25,7 +25,7 @@ def main():
     # If resuming, use the old config
     resume_path = config['resume_path']
     if resume_path != '':
-        config_old = utility.load_yaml(os.path.join(args.resume, 'config.yml'))
+        config_old = utility.load_yaml(os.path.join(resume_path, 'config.yml'))
 
         # Only use the epochs from the new config
         new_epochs = config['epochs']
