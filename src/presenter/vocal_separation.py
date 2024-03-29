@@ -8,9 +8,9 @@ VOCAL_FILE_NAME = 'vocal.wav'
 NON_VOCAL_FILE_NAME = 'instrument.wav'
 
 class VocalSeparationPresenter:
-    def __init__(self, view: VocalSeparationWidget, model: SeparatorFactory):
+    def __init__(self, view: VocalSeparationWidget, model_factory: SeparatorFactory):
         self.view = view
-        self.model = model
+        self.model_factory = model_factory
 
         self.view.set_model_list(self._get_model_list())
         self.view.set_device_list(get_available_device())
@@ -19,8 +19,8 @@ class VocalSeparationPresenter:
     def _get_model_list(self):
         return [('Small', 'model/small')]
 
-    def start_separation(self, emit, file, output_dir, vocal, non_vocal, model, device):
-        separator = self.model.create(model, device)
+    def start_separation(self, emit, file, output_dir, vocal, non_vocal, model_dir, device):
+        separator = self.model_factory.create(model_dir, device)
         vocal_file_path = os.path.join(output_dir, VOCAL_FILE_NAME)
         non_vocal_file_path = os.path.join(output_dir, NON_VOCAL_FILE_NAME)
 
