@@ -1,7 +1,8 @@
 import os
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFileDialog, QCheckBox, QComboBox, QMessageBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFileDialog, QCheckBox, QComboBox, QMessageBox, QSlider, QLineEdit
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIntValidator, QDoubleValidator
 
 def info_message_box(message):
     message_box = QMessageBox()
@@ -72,20 +73,26 @@ class DirectoryWidget(QWidget):
         return self.dir_name
 
 class CheckboxWidget(QWidget):
-    def __init__(self, name):
+    def __init__(self, name, on_change=None):
         super().__init__()
 
         layout = QHBoxLayout(self)
         self.name = name
+        self.on_change = on_change
 
         self.label = QLabel(f'{name}:')
         self.checkbox = QCheckBox()
+        self.checkbox.stateChanged.connect(self._on_checkbox_changed)
 
         layout.addWidget(self.label, alignment=Qt.AlignLeft)
         layout.addWidget(self.checkbox, alignment=Qt.AlignCenter)
 
         self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
+
+    def _on_checkbox_changed(self, state):
+        if self.on_change:
+            self.on_change(state == Qt.CheckState.Checked)
 
     def get_checked(self):
         return self.checkbox.isChecked()
@@ -101,7 +108,7 @@ class DropdownWidget(QWidget):
         self.dropdown = QComboBox()
 
         for option in options:
-            self.dropdown.addItem(option)
+            self.dropdown.addItem(*option)
 
         layout.addWidget(self.label, alignment=Qt.AlignLeft)
         layout.addWidget(self.dropdown)
@@ -116,3 +123,85 @@ class DropdownWidget(QWidget):
 
     def get_data(self):
         return self.dropdown.currentData()
+
+# Slider widget with label, and a text box to show the value, and the slider and text box are connected
+class SliderWidget(QWidget):
+    def __init__(self, name, min_value, max_value, default_value):
+        super().__init__()
+
+        layout = QVBoxLayout(self)
+        self.name = name
+
+        self.label = QLabel(f'{name}:')
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setRange(min_value, max_value)
+        self.slider.setValue(default_value)
+
+        self.textbox = QLineEdit(str(default_value))
+        self.textbox.setFixedWidth(50)
+        self.textbox.setValidator(QIntValidator(min_value, max_value))
+
+        self.slider.valueChanged.connect(self.update_textbox)
+        self.textbox.textChanged.connect(self.update_slider)
+
+        # Create a QHBoxLayout for the slider and the line edit
+        slider_layout = QHBoxLayout()
+        slider_layout.addWidget(self.slider)
+        slider_layout.addWidget(self.textbox)
+
+        layout.addWidget(self.label)
+        layout.addLayout(slider_layout)
+
+        self.setLayout(layout)
+        self.setFixedHeight(self.sizeHint().height())
+
+    def update_textbox(self, value):
+        self.textbox.setText(str(value))
+
+    def update_slider(self, text):
+        if text:
+            self.slider.setValue(float(text))
+
+    def get_value(self):
+        return self.slider.value()
+
+class FloatSliderWidget(QWidget):
+    def __init__(self, name, min_value, max_value, default_value, decimals=2):
+        super().__init__()
+
+        layout = QVBoxLayout(self)
+        self.name = name
+        self.multiplier = 10 ** decimals
+
+        self.label = QLabel(f'{name}:')
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setRange(min_value * self.multiplier, max_value * self.multiplier)
+        self.slider.setValue(default_value * self.multiplier)
+
+        self.textbox = QLineEdit(str(default_value))
+        self.textbox.setFixedWidth(50)
+        self.textbox.setValidator(QDoubleValidator(min_value, max_value, decimals))
+
+        self.slider.valueChanged.connect(self.update_textbox)
+        self.textbox.textChanged.connect(self.update_slider)
+
+        # Create a QHBoxLayout for the slider and the line edit
+        slider_layout = QHBoxLayout()
+        slider_layout.addWidget(self.slider)
+        slider_layout.addWidget(self.textbox)
+
+        layout.addWidget(self.label)
+        layout.addLayout(slider_layout)
+
+        self.setLayout(layout)
+        self.setFixedHeight(self.sizeHint().height())
+
+    def update_textbox(self, value):
+        self.textbox.setText(str(value / self.multiplier))
+
+    def update_slider(self, text):
+        if text:
+            self.slider.setValue(float(text) * self.multiplier)
+
+    def get_value(self):
+        return self.slider.value() / self.multiplier
