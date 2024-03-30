@@ -126,7 +126,7 @@ class DropdownWidget(QWidget):
 
 # Slider widget with label, and a text box to show the value, and the slider and text box are connected
 class SliderWidget(QWidget):
-    def __init__(self, name, min_value, max_value, default_value):
+    def __init__(self, name, min_value, max_value, default_value, tick_interval=None):
         super().__init__()
 
         layout = QVBoxLayout(self)
@@ -136,6 +136,10 @@ class SliderWidget(QWidget):
         self.slider = QSlider(Qt.Horizontal)
         self.slider.setRange(min_value, max_value)
         self.slider.setValue(default_value)
+
+        if tick_interval:
+            self.slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+            self.slider.setTickInterval(tick_interval)
 
         self.textbox = QLineEdit(str(default_value))
         self.textbox.setFixedWidth(50)
