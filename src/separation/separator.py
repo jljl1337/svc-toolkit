@@ -10,11 +10,11 @@ class SeparatorFactory():
     def __init__(self) -> None:
         pass
 
-    def create(self, model_dir, device):
-        return Separator(model_dir, device)
+    def create(self, model_dir, device, precision):
+        return Separator(model_dir, device, precision)
 
 class Separator():
-    def __init__(self, model_dir, device, last=False) -> None:
+    def __init__(self, model_dir, device, precision, last=False) -> None:
         if last:
             model_path = utility.get_last_checkpoint_path(model_dir)
         else:
@@ -33,6 +33,7 @@ class Separator():
         self.model = models.UNetLightning.load_from_checkpoint(model_path, map_location=device, hparams_file=hparams_path)
         self.model.eval()
         self.device = device
+        self.precision = precision
 
     def load_file(self, file):
         wave, _sr = audio.load(file, sr=self.sample_rate, mono=False)
@@ -79,8 +80,10 @@ class Separator():
 
                 # Predict mask
                 with torch.no_grad():
-                    # TODO: MPS case
-                    with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
+                    if self.precision == 'bf16':
+                        with torch.autocast(device_type=str(self.device), dtype=torch.float):
+                            mask = self.model(segment_tensor)
+                    elif self.precision == '32':
                         mask = self.model(segment_tensor)
 
                 # Invert mask if needed

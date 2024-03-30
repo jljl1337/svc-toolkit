@@ -19,8 +19,8 @@ class VocalSeparationPresenter:
     def _get_model_list(self):
         return [('Small', 'model/small')]
 
-    def start_separation(self, emit, file, output_dir, vocal, non_vocal, model_dir, device):
-        separator = self.model_factory.create(model_dir, device)
+    def start_separation(self, emit, file, output_dir, vocal, non_vocal, model_dir, device, precision):
+        separator = self.model_factory.create(model_dir, device, precision)
         vocal_file_path = os.path.join(output_dir, VOCAL_FILE_NAME)
         non_vocal_file_path = os.path.join(output_dir, NON_VOCAL_FILE_NAME)
 

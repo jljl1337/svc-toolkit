@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QProgressBar, QGroupBox
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QProgressBar, QGroupBox
 from PySide6.QtCore import QThread, Signal
 
 from widget.common import info_message_box, error_message_box, FileWidget, DirectoryWidget, CheckboxWidget, DropdownWidget
@@ -11,11 +11,16 @@ class SeparationThread(QThread):
         self.separation_function = separation_function
         self.kwargs = kwargs
 
-    def signal_connect(self, slot):
+    def progress_signal_connect(self, slot):
         self.progress_signal.connect(slot)
 
     def run(self):
-        self.separation_function(self.progress_signal.emit, **self.kwargs)
+        try:
+            self.error_message = None
+            self.separation_function(self.progress_signal.emit, **self.kwargs)
+
+        except Exception as e:
+            self.error_message = str(e)
 
 class VocalSeparationWidget(QWidget):
     def __init__(self):
@@ -23,7 +28,7 @@ class VocalSeparationWidget(QWidget):
 
         layout = QVBoxLayout(self)
 
-        self.file_group_box = QGroupBox('File')
+        self.file_group_box = QGroupBox('Files')
         self.file_layout = QVBoxLayout(self.file_group_box)
 
         self.file_widget = FileWidget('Input File')
@@ -32,18 +37,25 @@ class VocalSeparationWidget(QWidget):
         self.file_layout.addWidget(self.file_widget)
         self.file_layout.addWidget(self.dir_widget)
 
-        self.setting_group_box = QGroupBox('Settings')
-        self.setting_layout = QVBoxLayout(self.setting_group_box)
+        self.option_group_box = QGroupBox('Options')
+        self.option_layout = QVBoxLayout(self.option_group_box)
 
         self.vocal_checkbox = CheckboxWidget('Output a vocal-only file (vocal.wav)')
         self.non_vocal_checkbox = CheckboxWidget('Output a non-vocal file (instrument.wav)')
-        self.model_dropdown = DropdownWidget('Model', ['Model 1', 'Model 2'])
+        self.model_dropdown = DropdownWidget('Model', [])
 
-        self.setting_layout.addWidget(self.vocal_checkbox)
-        self.setting_layout.addWidget(self.non_vocal_checkbox)
-        self.setting_layout.addWidget(self.model_dropdown)
+        self.option_layout.addWidget(self.vocal_checkbox)
+        self.option_layout.addWidget(self.non_vocal_checkbox)
+        self.option_layout.addWidget(self.model_dropdown)
 
-        self.device_dropdown = DropdownWidget('Device', ['Device 1', 'Device 2'])
+        self.setting_group_box = QGroupBox('Settings')
+        self.setting_layout = QVBoxLayout(self.setting_group_box)
+
+        self.device_dropdown = DropdownWidget('Device', [])
+        self.precision_dropdown = DropdownWidget('Precision', [('BFloat16', 'bf16'), ('Float32', '32')])
+
+        self.setting_layout.addWidget(self.device_dropdown)
+        self.setting_layout.addWidget(self.precision_dropdown)
 
         self.start_button = QPushButton('Start Separation')
         self.start_button.clicked.connect(self.start_separation)
@@ -53,8 +65,8 @@ class VocalSeparationWidget(QWidget):
         self.progress_bar.setValue(0)
 
         layout.addWidget(self.file_group_box)
+        layout.addWidget(self.option_group_box)
         layout.addWidget(self.setting_group_box)
-        layout.addWidget(self.device_dropdown)
         layout.addWidget(self.start_button)
         layout.addWidget(self.progress_bar)
 
@@ -75,7 +87,10 @@ class VocalSeparationWidget(QWidget):
     def separation_end(self):
         self.start_button.setEnabled(True)
         self.progress_bar.setValue(0)
-        info_message_box('Separation finished.')
+        if self.separation_thread.error_message is not None:
+            error_message_box(self.separation_thread.error_message)
+        else:
+            info_message_box('Separation finished.')
 
     def start_separation(self):
         error_message = ''
@@ -96,13 +111,15 @@ class VocalSeparationWidget(QWidget):
             'output_dir': self.dir_widget.get_directory(),
             'vocal': self.vocal_checkbox.get_checked(),
             'non_vocal': self.non_vocal_checkbox.get_checked(),
-            'model': self.model_dropdown.get_data(),
-            'device': self.device_dropdown.get_data()
+            'model_dir': self.model_dropdown.get_data(),
+            'device': self.device_dropdown.get_data(),
+            'precision': self.precision_dropdown.get_data()
         }
 
         self.separation_thread = SeparationThread(self.separation_function, kwargs)
-        self.separation_thread.signal_connect(self.update_progress)
+        self.separation_thread.progress_signal_connect(self.update_progress)
         self.separation_thread.finished.connect(self.separation_end)
         self.separation_thread.start()
+
         self.start_button.setEnabled(False)
 
