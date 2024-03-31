@@ -60,7 +60,7 @@ class VoiceConversionWidget(QWidget):
         self.start_button.clicked.connect(self.start_conversion)
 
         self.loading_label = QLabel()
-        self.loading_movie = QMovie(f'{os.path.dirname(__file__)}/../../img/loading.gif')
+        self.loading_movie = QMovie(os.path.join(os.path.dirname(__file__), '../../img/loading.gif'))
         self.loading_movie.setScaledSize(QSize(165, 30))
         self.loading_label.setMovie(self.loading_movie)
         self.loading_movie.start()
