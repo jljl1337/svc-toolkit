@@ -139,11 +139,11 @@ class VoiceConversionWidget(QWidget):
             error_message += 'Model file is not chosen.\n'
         if self.config_widget.get_file() is None:
             error_message += 'Config file is not chosen.\n'
-        
+
         if error_message != '':
             error_message_box(error_message)
             return
-        
+
         kwargs = {
             'model_path': self.model_widget.get_file(),
             'config_path': self.config_widget.get_file(),
