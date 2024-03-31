@@ -63,7 +63,6 @@ class VoiceConversionWidget(QWidget):
         self.loading_movie = QMovie(os.path.join(os.path.dirname(__file__), '../../img/loading.gif'))
         self.loading_movie.setScaledSize(QSize(165, 30))
         self.loading_label.setMovie(self.loading_movie)
-        self.loading_movie.start()
         self.loading_label.hide()
 
         layout.addWidget(self.file_group_box)
@@ -121,6 +120,7 @@ class VoiceConversionWidget(QWidget):
 
     def _conversion_end(self):
         self.start_button.setEnabled(True)
+        self.loading_movie.stop()
         self.loading_label.hide()
 
         if self.conversion_thread.error_message is not None:
@@ -169,3 +169,4 @@ class VoiceConversionWidget(QWidget):
 
         self.start_button.setEnabled(False)
         self.loading_label.show()
+        self.loading_movie.start()
