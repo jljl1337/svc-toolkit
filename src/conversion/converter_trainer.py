@@ -46,6 +46,10 @@ class VoiceConverterTrainer:
         filelist_dir = os.path.join(tmp_dir, 'filelists_44k')
         config_path = os.path.join(output_dir, 'config.json')
 
+        filelist_train_path = os.path.join(filelist_dir, 'train.txt')
+        filelist_val_path = os.path.join(filelist_dir, 'val.txt')
+        filelist_test_path = os.path.join(filelist_dir, 'test.txt')
+
         if split:
             raw_dir = os.path.join(tmp_dir, 'dataset_raw')
             preprocess_split(
@@ -59,10 +63,6 @@ class VoiceConverterTrainer:
             output_dir=dataset_44k_dir,
             sampling_rate=44100
         )
-
-        filelist_train_path = os.path.join(filelist_dir, 'train.txt')
-        filelist_val_path = os.path.join(filelist_dir, 'val.txt')
-        filelist_test_path = os.path.join(filelist_dir, 'test.txt')
 
         preprocess_config(
             input_dir=dataset_44k_dir,
