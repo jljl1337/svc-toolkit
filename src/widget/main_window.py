@@ -10,7 +10,7 @@ class MainWindow(QMainWindow):
             self.tab_widget.addTab(tab, name)
 
         # self.tab_widget.setCurrentIndex(len(tab_list) // 2)
-        self.tab_widget.setCurrentIndex(0)
+        self.tab_widget.setCurrentIndex(1)
 
         self.setWindowTitle('Voice Conversion Toolkit')
 

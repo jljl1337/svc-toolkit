@@ -19,12 +19,13 @@ def error_message_box(message):
     message_box.exec()
 
 class FileWidget(QWidget):
-    def __init__(self, name):
+    def __init__(self, name, on_change=None):
         super().__init__()
 
         layout = QHBoxLayout(self)
         self.name = name
         self.file_name = None
+        self.on_change = on_change
 
         self.label = QLabel(f'{name}: Not chosen')
         self.button = QPushButton('Choose File')
@@ -37,6 +38,40 @@ class FileWidget(QWidget):
 
     def _choose_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self, 'Choose File')
+        if file_name:
+            self.file_name = file_name
+            self.label.setText(f'{self.name}: {os.path.basename(file_name)}')
+            self.label.setToolTip(file_name)
+
+            if self.on_change:
+                self.on_change(file_name)
+
+    def get_file(self):
+        return self.file_name
+
+
+# Save as file widget
+class SaveFileWidget(QWidget):
+    def __init__(self, name, file_types):
+        super().__init__()
+
+        layout = QHBoxLayout(self)
+        self.name = name
+        self.file_name = None
+
+        self.label = QLabel(f'{name}: Not chosen')
+        self.button = QPushButton('Choose File')
+        self.button.clicked.connect(self._choose_file)
+        layout.addWidget(self.label, alignment=Qt.AlignLeft)
+        layout.addWidget(self.button)
+
+        self.file_types = file_types
+
+        self.setLayout(layout)
+        self.setFixedHeight(self.sizeHint().height())
+
+    def _choose_file(self):
+        file_name, _ = QFileDialog.getSaveFileName(self, 'Choose File', '~/', self.file_types)
         if file_name:
             self.file_name = file_name
             self.label.setText(f'{self.name}: {os.path.basename(file_name)}')
@@ -73,7 +108,7 @@ class DirectoryWidget(QWidget):
         return self.dir_name
 
 class CheckboxWidget(QWidget):
-    def __init__(self, name, on_change=None):
+    def __init__(self, name, on_change=None, default_checked=False):
         super().__init__()
 
         layout = QHBoxLayout(self)
@@ -83,6 +118,9 @@ class CheckboxWidget(QWidget):
         self.label = QLabel(f'{name}:')
         self.checkbox = QCheckBox()
         self.checkbox.stateChanged.connect(self._on_checkbox_changed)
+
+        if default_checked:
+            self.checkbox.setChecked(True)
 
         layout.addWidget(self.label, alignment=Qt.AlignLeft)
         layout.addWidget(self.checkbox, alignment=Qt.AlignCenter)
@@ -129,7 +167,7 @@ class SliderWidget(QWidget):
     def __init__(self, name, min_value, max_value, default_value, tick_interval=None):
         super().__init__()
 
-        layout = QVBoxLayout(self)
+        layout = QHBoxLayout(self)
         self.name = name
 
         self.label = QLabel(f'{name}:')
@@ -156,6 +194,9 @@ class SliderWidget(QWidget):
         layout.addWidget(self.label)
         layout.addLayout(slider_layout)
 
+        layout.setStretch(0, 1)
+        layout.setStretch(1, 1)
+
         self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
 
@@ -173,7 +214,7 @@ class FloatSliderWidget(QWidget):
     def __init__(self, name, min_value, max_value, default_value, decimals=2):
         super().__init__()
 
-        layout = QVBoxLayout(self)
+        layout = QHBoxLayout(self)
         self.name = name
         self.multiplier = 10 ** decimals
 
@@ -196,6 +237,9 @@ class FloatSliderWidget(QWidget):
 
         layout.addWidget(self.label)
         layout.addLayout(slider_layout)
+
+        layout.setStretch(0, 1)
+        layout.setStretch(1, 1)
 
         self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())

@@ -14,13 +14,20 @@ def main():
     from widget.voice_conversion import VoiceConversionWidget
     from widget.training import TrainingWidget
     from separation.separator import SeparatorFactory
+    from conversion.voice_converter import VoiceConverterFactory
     from presenter.vocal_separation import VocalSeparationPresenter
+    from presenter.voice_conversion import VoiceConversionPresenter
 
     vocal_separation_widget = VocalSeparationWidget()
     voice_conversion_widget = VoiceConversionWidget()
     training_widget = TrainingWidget()
+
     separator_factory = SeparatorFactory()
     vocal_separation_presenter = VocalSeparationPresenter(vocal_separation_widget, separator_factory)
+
+    converter_factory = VoiceConverterFactory()
+    vocal_conversion_presenter = VoiceConversionPresenter(voice_conversion_widget, converter_factory)
+
     tab_list = [
         (vocal_separation_widget, 'Separation'),
         (voice_conversion_widget, 'Conversion'),
