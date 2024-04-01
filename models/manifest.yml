@@ -1,0 +1,9 @@
+models:
+
+  Small:
+    repo_id: jljl1337/singing-voice-conversion-gui
+    subfolder: small
+    assets:
+      model_filename: best-epoch=575.ckpt
+      config_filename: config.yml
+      hparams_filename: hparams.yaml

@@ -112,7 +112,7 @@ class VocalSeparationWidget(QWidget):
             'output_dir': self.dir_widget.get_directory(),
             'vocal': self.vocal_checkbox.get_checked(),
             'non_vocal': self.non_vocal_checkbox.get_checked(),
-            'model_dir': self.model_dropdown.get_data(),
+            'model': self.model_dropdown.get_data(),
             'device': self.device_dropdown.get_data(),
             'precision': self.precision_dropdown.get_data()
         }
