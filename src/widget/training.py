@@ -23,13 +23,14 @@ class PreprocessThread(QThread):
             self.error_message = str(e)
 
 class TrainingThread(QThread):
-    def __init__(self, train_function, model_output_dir, config_file):
+    def __init__(self, train_function, config_file, model_output_dir):
         super().__init__()
         self.train_function = train_function
-        self.model_output_dir = model_output_dir
         self.config_file = config_file
+        self.model_output_dir = model_output_dir
 
     def run(self):
+        self.train_function(self.config_file, self.model_output_dir)
         try:
             self.error_message = None
             self.train_function(self.model_output_dir, self.config_file)
@@ -134,8 +135,8 @@ class TrainingWidget(QWidget):
 
         self.train_thread = TrainingThread(
             self._train,
-            model_output_dir=model_output_dir,
-            config_file=config_file
+            config_file=config_file,
+            model_output_dir=model_output_dir
         )
         self.train_thread.finished.connect(self._train_end)
         self.train_thread.start()
