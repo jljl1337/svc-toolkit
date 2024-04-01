@@ -10,8 +10,11 @@ class LoadingWindow(QMainWindow):
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
+        # Create a QWidget, set its layout and set it as central widget
+        widget = QWidget()
+
         # Create a QHBoxLayout
-        layout = QHBoxLayout()
+        layout = QHBoxLayout(widget)
 
         # Add stretchable space before the label
         layout.addStretch()
@@ -27,8 +30,4 @@ class LoadingWindow(QMainWindow):
 
         # Add stretchable space after the label
         layout.addStretch()
-
-        # Create a QWidget, set its layout and set it as central widget
-        widget = QWidget()
-        widget.setLayout(layout)
         self.setCentralWidget(widget)

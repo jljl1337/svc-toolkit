@@ -70,8 +70,6 @@ class VoiceConversionWidget(QWidget):
         layout.addWidget(self.advance_settings_show_button)
         layout.addWidget(self.start_button)
         layout.addWidget(self.loading_label, alignment=Qt.AlignCenter)
-
-        self.setLayout(layout)
         
         # Advanced Settings Window
         self.advanced_settings_widget = QWidget()

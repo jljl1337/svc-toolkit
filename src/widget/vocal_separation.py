@@ -70,8 +70,6 @@ class VocalSeparationWidget(QWidget):
         layout.addWidget(self.start_button)
         layout.addWidget(self.progress_bar)
 
-        self.setLayout(layout)
-
     def set_model_list(self, model_list):
         self.model_dropdown.set_options(model_list)
 

@@ -33,7 +33,6 @@ class FileWidget(QWidget):
         layout.addWidget(self.label, alignment=Qt.AlignLeft)
         layout.addWidget(self.button)
 
-        self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
 
     def _choose_file(self):
@@ -67,7 +66,6 @@ class SaveFileWidget(QWidget):
 
         self.file_types = file_types
 
-        self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
 
     def _choose_file(self):
@@ -94,7 +92,6 @@ class DirectoryWidget(QWidget):
         layout.addWidget(self.label, alignment=Qt.AlignLeft)
         layout.addWidget(self.button)
 
-        self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
 
     def _choose_directory(self):
@@ -125,7 +122,6 @@ class CheckboxWidget(QWidget):
         layout.addWidget(self.label, alignment=Qt.AlignLeft)
         layout.addWidget(self.checkbox, alignment=Qt.AlignCenter)
 
-        self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
 
     def _on_checkbox_changed(self, state):
@@ -151,7 +147,6 @@ class DropdownWidget(QWidget):
         layout.addWidget(self.label, alignment=Qt.AlignLeft)
         layout.addWidget(self.dropdown)
 
-        self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
 
     def set_options(self, options):
@@ -197,7 +192,6 @@ class SliderWidget(QWidget):
         layout.setStretch(0, 1)
         layout.setStretch(1, 1)
 
-        self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
 
     def update_textbox(self, value):
@@ -241,7 +235,6 @@ class FloatSliderWidget(QWidget):
         layout.setStretch(0, 1)
         layout.setStretch(1, 1)
 
-        self.setLayout(layout)
         self.setFixedHeight(self.sizeHint().height())
 
     def update_textbox(self, value):

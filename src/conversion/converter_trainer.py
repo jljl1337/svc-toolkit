@@ -10,8 +10,8 @@ class VoiceConverterTrainerFactory:
     def __init__(self) -> None:
         pass
 
-    def create(self, config_path: str, device: str):
-        return VoiceConverterTrainer(config_path, device)
+    def create(self, config_path: str):
+        return VoiceConverterTrainer(config_path)
     
 class VoiceConverterTrainer:
     def __init__(self):
