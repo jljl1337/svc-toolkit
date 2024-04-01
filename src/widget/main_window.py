@@ -1,8 +1,13 @@
+import os
+
 from PySide6.QtWidgets import QMainWindow, QTabWidget
+from PySide6.QtGui import QIcon
 
 class MainWindow(QMainWindow):
     def __init__(self, tab_list):
         super().__init__()
+
+        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), '../../img/icon.png')))
 
         self.tab_widget = QTabWidget()
 
