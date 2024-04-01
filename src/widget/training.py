@@ -1,10 +1,12 @@
 import os
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QGroupBox
+from PySide6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QGroupBox
 from PySide6.QtCore import Qt, QThread, QSize
 from PySide6.QtGui import QMovie
+from pyside6_utils.widgets import OverlayWidget
 
 from .common import FileWidget, DirectoryWidget, CheckboxWidget, info_message_box, error_message_box
+from .loading_overlay_window import LoadingOverlayWidget
 
 class PreprocessThread(QThread):
     def __init__(self, preprocess_function, dataset_dir, output_dir, split=False):
@@ -37,9 +39,9 @@ class TrainingThread(QThread):
         except Exception as e:
             self.error_message = str(e)
 
-class TrainingWidget(QWidget):
+class TrainingWidget(OverlayWidget):
     def __init__(self):
-        super().__init__()
+        super().__init__(parent=None)
 
         layout = QVBoxLayout(self)
 
@@ -75,15 +77,16 @@ class TrainingWidget(QWidget):
         self.loading_label.setMovie(self.loading_movie)
         self.loading_label.hide()
 
+        self.loading_overlay = LoadingOverlayWidget(self)
+        self.set_overlay_widget(self.loading_overlay)
+        self.set_overlay_hidden(True)
+
         layout.addWidget(self.preprocess_group_box)
         layout.addWidget(self.train_group_box)
         layout.addWidget(self.loading_label, alignment=Qt.AlignCenter)
 
     def _preprocess_end(self):
-        self.loading_label.hide()
-        self.loading_movie.stop()
-        self.start_preprocess_button.setEnabled(True)
-        self.start_train_button.setEnabled(True)
+        self._long_process_end()
 
         if self.preprocess_thread.error_message:
             error_message_box(self.preprocess_thread.error_message)
@@ -91,15 +94,18 @@ class TrainingWidget(QWidget):
             info_message_box('Preprocessing is done')
 
     def _train_end(self):
-        self.loading_label.hide()
-        self.loading_movie.stop()
-        self.start_preprocess_button.setEnabled(True)
-        self.start_train_button.setEnabled(True)
+        self._long_process_end()
 
         if self.train_thread.error_message:
             error_message_box(self.train_thread.error_message)
         else:
             info_message_box('Training is done')
+
+    def _long_process_end(self):
+        self.start_preprocess_button.setEnabled(True)
+        self.start_train_button.setEnabled(True)
+        self.loading_overlay.stop_movie()
+        self.set_overlay_hidden(True)
 
     def _start_preprocess(self):
         dataset_dir = self.dataset_dir_widget.get_directory()
@@ -119,10 +125,7 @@ class TrainingWidget(QWidget):
         self.preprocess_thread.finished.connect(self._preprocess_end)
         self.preprocess_thread.start()
 
-        self.loading_label.show()
-        self.loading_movie.start()
-        self.start_preprocess_button.setEnabled(False)
-        self.start_train_button.setEnabled(False)
+        self._long_process_start()
 
     def _start_train(self):
         model_output_dir = self.model_output_dir_widget.get_directory()
@@ -140,8 +143,11 @@ class TrainingWidget(QWidget):
         self.train_thread.finished.connect(self._train_end)
         self.train_thread.start()
 
-        self.loading_label.show()
-        self.loading_movie.start()
+        self._long_process_start()
+
+    def _long_process_start(self):
+        self.loading_overlay.start_movie()
+        self.set_overlay_hidden(False)
         self.start_preprocess_button.setEnabled(False)
         self.start_train_button.setEnabled(False)
 
