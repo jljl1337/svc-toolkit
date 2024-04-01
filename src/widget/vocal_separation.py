@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QProgressBar, QGroupBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QProgressBar, QGroupBox
 from PySide6.QtCore import QThread, Signal
 
 from widget.common import info_message_box, error_message_box, FileWidget, DirectoryWidget, CheckboxWidget, DropdownWidget
