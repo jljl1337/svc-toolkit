@@ -82,7 +82,7 @@ class Separator():
                 # Predict mask
                 with torch.no_grad():
                     if self.precision == 'bf16':
-                        with torch.autocast(device_type=str(self.device), dtype=torch.float):
+                        with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
                             mask = self.model(segment_tensor)
                     elif self.precision == '32':
                         mask = self.model(segment_tensor)
