@@ -22,18 +22,18 @@ def main():
     from presenter.mixing import MixingPresenter
 
     vocal_separation_widget = VocalSeparationWidget()
-    voice_conversion_widget = VoiceConversionWidget()
-    mixing_widget = MixingWidget()
-    training_widget = TrainingWidget()
-
     separator_factory = SeparatorFactory()
     vocal_separation_presenter = VocalSeparationPresenter(vocal_separation_widget, separator_factory)
 
+    voice_conversion_widget = VoiceConversionWidget()
     converter_factory = VoiceConverterFactory()
     vocal_conversion_presenter = VoiceConversionPresenter(voice_conversion_widget, converter_factory)
 
+    mixing_widget = MixingWidget()
     mixer_factory = MixerFactory()
     mixer_presenter = MixingPresenter(mixing_widget, mixer_factory)
+
+    training_widget = TrainingWidget()
 
     tab_list = [
         (vocal_separation_widget, 'Separation'),
