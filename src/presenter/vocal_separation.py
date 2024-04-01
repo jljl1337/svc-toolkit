@@ -21,7 +21,7 @@ class VocalSeparationPresenter:
         manifest_path = os.path.join(os.path.dirname(__file__), '../../models/manifest.yml')
         manifest = load_yaml(manifest_path)
 
-        return [(key, manifest['models'][key]['subfolder']) for key in manifest['models']]
+        return [(model_name, manifest['models'][model_name]['subfolder']) for model_name in manifest['models']]
 
     def start_separation(self, emit, file, output_dir, vocal, non_vocal, model_dir, device, precision):
         separator = self.model_factory.create(model_dir, device, precision)
