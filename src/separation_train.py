@@ -5,6 +5,7 @@ from datetime import datetime
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
+from utility.functions import load_yaml, save_yaml
 from separation import constants
 from separation import utility
 from separation.data import MagnitudeDataModule
@@ -20,12 +21,12 @@ def main():
     parser.add_argument('-c', '--config', type=str, default='./config.yml')
     args = parser.parse_args()
 
-    config = utility.load_yaml(args.config)
+    config = load_yaml(args.config)
 
     # If resuming, use the old config
     resume_path = config['resume_path']
     if resume_path != '':
-        config_old = utility.load_yaml(os.path.join(resume_path, 'config.yml'))
+        config_old = load_yaml(os.path.join(resume_path, 'config.yml'))
 
         # Only use the epochs from the new config
         new_epochs = config['epochs']
@@ -39,7 +40,7 @@ def main():
     os.makedirs(model_dir, exist_ok=True)
 
     # Save config
-    utility.save_yaml(config, os.path.join(model_dir, 'config.yml'))
+    save_yaml(config, os.path.join(model_dir, 'config.yml'))
 
     # Save song lists
     utility.save_song_list(args.train_csv, model_dir, 'train_songs.csv')

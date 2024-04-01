@@ -1,18 +1,8 @@
 import os
 
-import yaml
 import pandas as pd
 
 from separation.constants import CSV_SONG_COLUMN
-
-def load_yaml(path):
-    with open(path) as file:
-        data = yaml.safe_load(file)
-    return data
-
-def save_yaml(data, save_path):
-    with open(save_path, 'w') as file:
-        yaml.safe_dump(data, file, sort_keys=False)
 
 def get_best_checkpoint_path(model_dir):
     return get_checkpoint_path(model_dir, 'best')

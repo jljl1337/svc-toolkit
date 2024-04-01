@@ -1,5 +1,6 @@
 import os
 
+from utility.functions import load_yaml
 from widget.vocal_separation import VocalSeparationWidget
 from separation.separator import SeparatorFactory
 from presenter.common import get_available_device
@@ -17,7 +18,10 @@ class VocalSeparationPresenter:
         self.view.set_separation_function(self.start_separation)
 
     def _get_model_list(self):
-        return [('Small', 'model/small')]
+        manifest_path = os.path.join(os.path.dirname(__file__), '../../models/manifest.yml')
+        manifest = load_yaml(manifest_path)
+
+        return [(key, manifest['models'][key]['subfolder']) for key in manifest['models']]
 
     def start_separation(self, emit, file, output_dir, vocal, non_vocal, model_dir, device, precision):
         separator = self.model_factory.create(model_dir, device, precision)

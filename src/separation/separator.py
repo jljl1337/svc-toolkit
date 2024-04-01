@@ -4,6 +4,7 @@ import math
 import numpy as np
 import torch
 
+from utility.functions import load_yaml
 from separation import utility, models, audio, constants
 
 class SeparatorFactory():
@@ -23,7 +24,7 @@ class Separator():
         hparams_path = os.path.join(model_dir, 'hparams.yaml')
         config_path = os.path.join(model_dir, 'config.yml')
 
-        config = utility.load_yaml(config_path)
+        config = load_yaml(config_path)
         self.sample_rate = config['sample_rate']
         self.window_length = config['win_length']
         self.hop_length = config['hop_length']
