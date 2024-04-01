@@ -87,10 +87,11 @@ class VocalSeparationWidget(QWidget):
     def separation_end(self):
         self.start_button.setEnabled(True)
         self.progress_bar.setValue(0)
-        if self.separation_thread.error_message is not None:
-            error_message_box(self.separation_thread.error_message)
-        else:
+
+        if self.separation_thread.error_message is None:
             info_message_box('Separation finished.')
+        else:
+            error_message_box(self.separation_thread.error_message)
 
     def start_separation(self):
         error_message = ''

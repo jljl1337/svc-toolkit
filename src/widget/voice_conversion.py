@@ -123,10 +123,10 @@ class VoiceConversionWidget(QWidget):
         self.loading_movie.stop()
         self.loading_label.hide()
 
-        if self.conversion_thread.error_message is not None:
-            error_message_box(self.conversion_thread.error_message)
-        else:
+        if self.conversion_thread.error_message is None:
             info_message_box('Conversion finished.')
+        else:
+            error_message_box(self.conversion_thread.error_message)
 
     def start_conversion(self):
         error_message = ''
