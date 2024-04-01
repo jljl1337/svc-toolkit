@@ -30,7 +30,6 @@ class TrainingThread(QThread):
         self.model_output_dir = model_output_dir
 
     def run(self):
-        self.train_function(self.config_file, self.model_output_dir)
         try:
             self.error_message = None
             self.train_function(self.model_output_dir, self.config_file)
