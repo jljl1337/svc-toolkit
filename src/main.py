@@ -11,19 +11,25 @@ def main():
 
     from widget.main_window import MainWindow
     from widget.vocal_separation import VocalSeparationWidget
+    from widget.training import TrainingWidget
     from widget.voice_conversion import VoiceConversionWidget
     from widget.mixing import MixingWidget
-    from widget.training import TrainingWidget
     from separation.separator import SeparatorFactory
+    from conversion.converter_trainer import VoiceConverterTrainerFactory
     from conversion.voice_converter import VoiceConverterFactory
     from conversion.mixer import MixerFactory
     from presenter.vocal_separation import VocalSeparationPresenter
+    from presenter.training import TrainingPresenter
     from presenter.voice_conversion import VoiceConversionPresenter
     from presenter.mixing import MixingPresenter
 
     vocal_separation_widget = VocalSeparationWidget()
     separator_factory = SeparatorFactory()
     vocal_separation_presenter = VocalSeparationPresenter(vocal_separation_widget, separator_factory)
+
+    training_widget = TrainingWidget()
+    trainer_factory = VoiceConverterTrainerFactory()
+    trainer_presenter = TrainingPresenter(training_widget, trainer_factory)
 
     voice_conversion_widget = VoiceConversionWidget()
     converter_factory = VoiceConverterFactory()
@@ -33,13 +39,11 @@ def main():
     mixer_factory = MixerFactory()
     mixer_presenter = MixingPresenter(mixing_widget, mixer_factory)
 
-    training_widget = TrainingWidget()
-
     tab_list = [
         (vocal_separation_widget, 'Separation'),
+        (training_widget, 'Training'),
         (voice_conversion_widget, 'Conversion'),
         (mixing_widget, 'Mixing'),
-        (training_widget, 'Training')
     ]
 
     # Close loading window after main window is ready
