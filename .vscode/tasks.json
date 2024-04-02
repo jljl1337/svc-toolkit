@@ -67,9 +67,9 @@
             "problemMatcher": []
         },
         {
-            "label": "Generate .env.example",
+            "label": "Generate test coverage report",
             "type": "shell",
-            "command": "awk -F '=' '{print $1 \"=\"}' .env > .env.example",
+            "command": "pytest --cov=src/ --cov-report=html --cov-report=xml -W ignore::DeprecationWarning tests/",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
