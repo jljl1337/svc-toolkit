@@ -21,8 +21,8 @@ def test_mixer_mix():
 
         # Mix two audio files
         mixer.mix(
-            os.path.join(current_dir, 'source.wav'),
-            os.path.join(current_dir, 'source_8k.wav'),
+            os.path.join(current_dir, '../source.wav'),
+            os.path.join(current_dir, '../source_8k.wav'),
             '',
             0.5
         )
@@ -36,8 +36,8 @@ def test_mixer_mix():
 
         # Mix two audio files
         mixer.mix(
-            os.path.join(current_dir, 'source.wav'),
-            os.path.join(current_dir, 'source_shorter.wav'),
+            os.path.join(current_dir, '../source.wav'),
+            os.path.join(current_dir, '../source_shorter.wav'),
             '',
             0.5
         )
@@ -51,8 +51,8 @@ def test_mixer_mix():
 
         # Mix two audio files
         mixer.mix(
-            os.path.join(current_dir, 'source.wav'),
-            os.path.join(current_dir, 'source.wav'),
+            os.path.join(current_dir, '../source.wav'),
+            os.path.join(current_dir, '../source.wav'),
             '',
             -0.5
         )
@@ -67,8 +67,8 @@ def test_mixer_mix():
     output_path = os.path.join(current_dir, 'output.wav')
 
     mixer.mix(
-        os.path.join(current_dir, 'source.wav'),
-        os.path.join(current_dir, 'source.wav'),
+        os.path.join(current_dir, '../source.wav'),
+        os.path.join(current_dir, '../source.wav'),
         output_path,
         0.5,
         normalize=True
