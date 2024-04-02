@@ -22,7 +22,7 @@ class SeparationThread(QThread):
         except Exception as e:
             self.error_message = str(e)
 
-class VocalSeparationWidget(QWidget):
+class SeparationWidget(QWidget):
     def __init__(self):
         super().__init__()
 

@@ -3,15 +3,15 @@ import os
 from huggingface_hub import hf_hub_download
 
 from utility.functions import load_yaml
-from widget.separation import VocalSeparationWidget
+from widget.separation import SeparationWidget
 from separation.separator import SeparatorFactory
 from presenter.common import get_available_device
 
 VOCAL_FILE_NAME = 'vocal.wav'
 NON_VOCAL_FILE_NAME = 'instrument.wav'
 
-class VocalSeparationPresenter:
-    def __init__(self, view: VocalSeparationWidget, model_factory: SeparatorFactory):
+class SeparationPresenter:
+    def __init__(self, view: SeparationWidget, model_factory: SeparatorFactory):
         self.view = view
         self.model_factory = model_factory
         self.manifest = self._get_manifest()

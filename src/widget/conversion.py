@@ -21,7 +21,7 @@ class ConversionThread(QThread):
         except Exception as e:
             self.error_message = str(e)
 
-class VoiceConversionWidget(OverlayWidget):
+class ConversionWidget(OverlayWidget):
     def __init__(self):
         super().__init__(parent=None)
 

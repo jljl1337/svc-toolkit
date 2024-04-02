@@ -10,30 +10,30 @@ def main():
     app.processEvents()
 
     from widget.main_window import MainWindow
-    from widget.separation import VocalSeparationWidget
+    from widget.separation import SeparationWidget
     from widget.training import TrainingWidget
-    from widget.conversion import VoiceConversionWidget
+    from widget.conversion import ConversionWidget
     from widget.mixing import MixingWidget
     from separation.separator import SeparatorFactory
     from conversion.converter_trainer import VoiceConverterTrainerFactory
     from conversion.voice_converter import VoiceConverterFactory
     from conversion.mixer import MixerFactory
-    from presenter.separation import VocalSeparationPresenter
+    from presenter.separation import SeparationPresenter
     from presenter.training import TrainingPresenter
-    from presenter.conversion import VoiceConversionPresenter
+    from presenter.conversion import ConversionPresenter
     from presenter.mixing import MixingPresenter
 
-    vocal_separation_widget = VocalSeparationWidget()
+    vocal_separation_widget = SeparationWidget()
     separator_factory = SeparatorFactory()
-    vocal_separation_presenter = VocalSeparationPresenter(vocal_separation_widget, separator_factory)
+    vocal_separation_presenter = SeparationPresenter(vocal_separation_widget, separator_factory)
 
     training_widget = TrainingWidget()
     trainer_factory = VoiceConverterTrainerFactory()
     trainer_presenter = TrainingPresenter(training_widget, trainer_factory)
 
-    voice_conversion_widget = VoiceConversionWidget()
+    voice_conversion_widget = ConversionWidget()
     converter_factory = VoiceConverterFactory()
-    vocal_conversion_presenter = VoiceConversionPresenter(voice_conversion_widget, converter_factory)
+    vocal_conversion_presenter = ConversionPresenter(voice_conversion_widget, converter_factory)
 
     mixing_widget = MixingWidget()
     mixer_factory = MixerFactory()

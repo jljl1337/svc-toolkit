@@ -1,4 +1,4 @@
-from presenter.separation import VocalSeparationPresenter
+from presenter.separation import SeparationPresenter
 
 # Create a VocalSeparationWidget dummy class
 class VocalSeparationWidgetDummy:
@@ -33,7 +33,7 @@ class SeparatorFactoryDummy:
 def test_vocal_separation_presenter_constructor():
     vocal_separation_widget = VocalSeparationWidgetDummy()
     separator_factory = SeparatorFactoryDummy()
-    vocal_separation_presenter = VocalSeparationPresenter(vocal_separation_widget, separator_factory)
+    vocal_separation_presenter = SeparationPresenter(vocal_separation_widget, separator_factory)
 
     assert vocal_separation_widget.model_list == vocal_separation_presenter._get_model_list()
     assert vocal_separation_widget.device_list[-1] == ('CPU', 'cpu')
@@ -43,7 +43,7 @@ def test_vocal_separation_presenter_constructor():
 def test_vocal_separation_presenter_start_separation():
     vocal_separation_widget = VocalSeparationWidgetDummy()
     separator_factory = SeparatorFactoryDummy()
-    vocal_separation_presenter = VocalSeparationPresenter(vocal_separation_widget, separator_factory)
+    vocal_separation_presenter = SeparationPresenter(vocal_separation_widget, separator_factory)
     vocal_separation_presenter.start_separation(lambda x: x, 'file', 'output_dir', True, False, 'model', 'device')
 
     assert separator_factory.model == 'model'
@@ -59,7 +59,7 @@ def test_vocal_separation_presenter_start_separation():
 def test_vocal_separation_presenter_start_separation_non_vocal():
     vocal_separation_widget = VocalSeparationWidgetDummy()
     separator_factory = SeparatorFactoryDummy()
-    vocal_separation_presenter = VocalSeparationPresenter(vocal_separation_widget, separator_factory)
+    vocal_separation_presenter = SeparationPresenter(vocal_separation_widget, separator_factory)
     vocal_separation_presenter.start_separation(lambda x: x, 'file', 'output_dir', False, True, 'model', 'device')
 
     assert separator_factory.model == 'model'
@@ -75,7 +75,7 @@ def test_vocal_separation_presenter_start_separation_non_vocal():
 def test_vocal_separation_presenter_start_separation_vocal_non_vocal():
     vocal_separation_widget = VocalSeparationWidgetDummy()
     separator_factory = SeparatorFactoryDummy()
-    vocal_separation_presenter = VocalSeparationPresenter(vocal_separation_widget, separator_factory)
+    vocal_separation_presenter = SeparationPresenter(vocal_separation_widget, separator_factory)
     vocal_separation_presenter.start_separation(lambda x: x, 'file', 'output_dir', True, True, 'model', 'device')
 
     assert separator_factory.model == 'model'
