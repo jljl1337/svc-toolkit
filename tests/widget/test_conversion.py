@@ -1,6 +1,16 @@
 import os
 
-from widget.conversion import ConversionWidget
+from widget.conversion import ConversionThread, ConversionWidget
+
+def test_conversion_thread_run(qtbot):
+    def test_function():
+        pass
+
+    conversion_thread = ConversionThread(test_function, {'key1': 'value1'})
+
+    conversion_thread.run()
+
+    assert conversion_thread.isRunning() == False
 
 def test_conversion_widget_constructor(qtbot):
     conversion_widget = ConversionWidget()

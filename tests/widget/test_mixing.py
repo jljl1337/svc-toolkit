@@ -1,6 +1,16 @@
 import time
 
-from widget.mixing import MixingWidget
+from widget.mixing import MixingThread, MixingWidget
+
+def test_mixing_thread_run(qtbot):
+    def test_function():
+        pass
+
+    mixing_thread = MixingThread(test_function, {'key1': 'value1'})
+
+    mixing_thread.run()
+
+    assert mixing_thread.isRunning() == False
 
 def test_mixing_widget_constructor(qtbot):
     mixing_widget = MixingWidget()
