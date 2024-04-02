@@ -25,7 +25,7 @@ class Evaluator:
             mixture_tensor = torch.from_numpy(mixture_wave)
             stem_tensor = torch.from_numpy(stem_wave)
 
-            estimate_wave = separator.separate(mixture_wave)
+            estimate_wave, _sr = separator.separate(mixture_wave)
             estimate_tensor = torch.from_numpy(estimate_wave)
 
             sdr_num = float(self.sdr(estimate_tensor, stem_tensor))
