@@ -1,6 +1,7 @@
 import os
 
 import pandas as pd
+import torch
 from pytorch_lightning.trainer.states import TrainerFn
 from torch.utils.data import DataLoader
 
@@ -89,7 +90,7 @@ def test_random_dataset_get_item():
 
     assert mix_mag_new.shape == stem_mag_new.shape
 
-    assert not (mix_mag == mix_mag_new).all()
+    assert torch.equal(mix_mag, mix_mag_new) == False
 
 def test_magnitude_data_module_constructor():
     # Create a MagnitudeDataModule object
