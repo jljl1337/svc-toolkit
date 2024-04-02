@@ -3,7 +3,7 @@ from PySide6.QtCore import QThread
 from pyside6_utils.widgets import OverlayWidget
 
 from .common import FileWidget, DirectoryWidget, CheckboxWidget, info_message_box, error_message_box
-from .loading_overlay_window import LoadingOverlayWidget
+from .loading_overlay import LoadingOverlayWidget
 
 class PreprocessThread(QThread):
     def __init__(self, preprocess_function, dataset_dir, output_dir, split=False):
