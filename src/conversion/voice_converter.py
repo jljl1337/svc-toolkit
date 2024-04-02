@@ -1,13 +1,13 @@
 from so_vits_svc_fork.inference.main import infer
 
-class VoiceConverterFactory:
+class ConverterFactory:
     def __init__(self) -> None:
         pass
 
     def create(self, model_path: str, config_path: str, device: str):
-        return VoiceConverter(model_path, config_path, device)
+        return Converter(model_path, config_path, device)
 
-class VoiceConverter:
+class Converter:
     def __init__(self, model_path: str, config_path: str, device: str):
         self.model_path = model_path
         self.config_path = config_path

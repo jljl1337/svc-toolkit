@@ -1,8 +1,8 @@
 from widget.training import TrainingWidget
-from conversion.converter_trainer import VoiceConverterTrainerFactory
+from conversion.converter_trainer import ConverterTrainerFactory
 
 class TrainingPresenter:
-    def __init__(self, view: TrainingWidget, trainer_factory: VoiceConverterTrainerFactory):
+    def __init__(self, view: TrainingWidget, trainer_factory: ConverterTrainerFactory):
         self.view = view
         self.trainer = trainer_factory.create()
 

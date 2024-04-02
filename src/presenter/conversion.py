@@ -1,9 +1,9 @@
 from widget.conversion import ConversionWidget
-from conversion.voice_converter import VoiceConverterFactory
+from conversion.voice_converter import ConverterFactory
 from presenter.common import get_available_device
 
 class ConversionPresenter:
-    def __init__(self, view: ConversionWidget, model_factory: VoiceConverterFactory):
+    def __init__(self, view: ConversionWidget, model_factory: ConverterFactory):
         self.view = view
         self.model_factory = model_factory
 

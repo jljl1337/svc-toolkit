@@ -6,14 +6,14 @@ from so_vits_svc_fork.preprocessing.preprocess_flist_config import preprocess_co
 from so_vits_svc_fork.preprocessing.preprocess_hubert_f0 import preprocess_hubert_f0
 from so_vits_svc_fork.train import train
 
-class VoiceConverterTrainerFactory:
+class ConverterTrainerFactory:
     def __init__(self) -> None:
         pass
 
     def create(self):
-        return VoiceConverterTrainer()
+        return ConverterTrainer()
     
-class VoiceConverterTrainer:
+class ConverterTrainer:
     def __init__(self):
         pass
 

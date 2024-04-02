@@ -15,8 +15,8 @@ def main():
     from widget.conversion import ConversionWidget
     from widget.mixing import MixingWidget
     from separation.separator import SeparatorFactory
-    from conversion.converter_trainer import VoiceConverterTrainerFactory
-    from conversion.voice_converter import VoiceConverterFactory
+    from conversion.converter_trainer import ConverterTrainerFactory
+    from conversion.voice_converter import ConverterFactory
     from conversion.mixer import MixerFactory
     from presenter.separation import SeparationPresenter
     from presenter.training import TrainingPresenter
@@ -28,11 +28,11 @@ def main():
     vocal_separation_presenter = SeparationPresenter(vocal_separation_widget, separator_factory)
 
     training_widget = TrainingWidget()
-    trainer_factory = VoiceConverterTrainerFactory()
+    trainer_factory = ConverterTrainerFactory()
     trainer_presenter = TrainingPresenter(training_widget, trainer_factory)
 
     voice_conversion_widget = ConversionWidget()
-    converter_factory = VoiceConverterFactory()
+    converter_factory = ConverterFactory()
     vocal_conversion_presenter = ConversionPresenter(voice_conversion_widget, converter_factory)
 
     mixing_widget = MixingWidget()
