@@ -28,5 +28,6 @@ dependencies:
     - pyside6-utils==1.2.2
     - huggingface-hub==0.20.3
     - pytest==8.0.0
+    - pytest-qt==4.4.0
     - pytest-cov==4.1.0
     - git+https://github.com/moises-ai/moises-db.git
