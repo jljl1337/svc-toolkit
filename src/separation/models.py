@@ -256,9 +256,3 @@ class UNetLightning(pl.LightningModule):
 
     def predict_step(self, batch, batch_idx: int, dataloader_idx: int = None):
         return self.forward(batch)
-
-# Test the model
-if __name__ == '__main__':
-    model = UNetLightning()
-    print(model)
-    print(model(torch.randn(1, 1, 2048, 512)).shape)
