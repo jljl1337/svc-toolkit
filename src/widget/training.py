@@ -1,8 +1,5 @@
-import os
-
-from PySide6.QtWidgets import QVBoxLayout, QPushButton, QLabel, QGroupBox
-from PySide6.QtCore import Qt, QThread, QSize
-from PySide6.QtGui import QMovie
+from PySide6.QtWidgets import QVBoxLayout, QPushButton, QGroupBox
+from PySide6.QtCore import QThread
 from pyside6_utils.widgets import OverlayWidget
 
 from .common import FileWidget, DirectoryWidget, CheckboxWidget, info_message_box, error_message_box
@@ -71,19 +68,12 @@ class TrainingWidget(OverlayWidget):
         self.train_layout.addWidget(self.config_file_widget)
         self.train_layout.addWidget(self.start_train_button)
 
-        self.loading_label = QLabel()
-        self.loading_movie = QMovie(os.path.join(os.path.dirname(__file__), '../../img/loading.gif'))
-        self.loading_movie.setScaledSize(QSize(165, 30))
-        self.loading_label.setMovie(self.loading_movie)
-        self.loading_label.hide()
-
         self.loading_overlay = LoadingOverlayWidget(self)
         self.set_overlay_widget(self.loading_overlay)
         self.set_overlay_hidden(True)
 
         layout.addWidget(self.preprocess_group_box)
         layout.addWidget(self.train_group_box)
-        layout.addWidget(self.loading_label, alignment=Qt.AlignCenter)
 
     def _preprocess_end(self):
         self._long_process_end()
@@ -102,8 +92,6 @@ class TrainingWidget(OverlayWidget):
             info_message_box('Training is done.')
 
     def _long_process_end(self):
-        self.start_preprocess_button.setEnabled(True)
-        self.start_train_button.setEnabled(True)
         self.loading_overlay.stop_movie()
         self.set_overlay_hidden(True)
 
@@ -148,8 +136,6 @@ class TrainingWidget(OverlayWidget):
     def _long_process_start(self):
         self.loading_overlay.start_movie()
         self.set_overlay_hidden(False)
-        self.start_preprocess_button.setEnabled(False)
-        self.start_train_button.setEnabled(False)
 
     def set_preprocess_function(self, preprocess_function):
         self._preprocess = preprocess_function
