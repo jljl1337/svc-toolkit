@@ -28,7 +28,7 @@ class MagnitudeRandomDataset(Dataset):
     ):
         # Validate neglect_frequency
         if neglect_frequency not in NEGLECT_FREQUENCY_OPTIONS:
-            raise ValueError(f'Invalid neglect_frequency: {self.neglect_frequency}')
+            raise ValueError(f'Invalid neglect_frequency, available options: {NEGLECT_FREQUENCY_OPTIONS}')
 
         # Check if the length of the lists are equal
         if not len(mixture_path_list) == len(stem_path_list):
