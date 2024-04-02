@@ -2,6 +2,7 @@ import os
 
 import pandas as pd
 import torch
+import pytorch_lightning as pl
 from pytorch_lightning.trainer.states import TrainerFn
 from torch.utils.data import DataLoader
 
@@ -77,6 +78,8 @@ def test_random_dataset_len():
     assert len(dataset) == 2
 
 def test_random_dataset_get_item():
+    pl.seed_everything(56615230)
+
     test_audio_path = os.path.join(CURRENT_DIR, '../source.wav')
 
     # Create a MagnitudeRandomDataset object
