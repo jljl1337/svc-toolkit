@@ -7,8 +7,6 @@ class MainWindow(QMainWindow):
     def __init__(self, tab_list):
         super().__init__()
 
-        self.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), '../../img/icon.png')))
-
         self.tab_widget = QTabWidget()
 
         for tab, name in tab_list:
