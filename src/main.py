@@ -10,17 +10,17 @@ def main():
     app.processEvents()
 
     from widget.main_window import MainWindow
-    from widget.vocal_separation import VocalSeparationWidget
+    from widget.separation import VocalSeparationWidget
     from widget.training import TrainingWidget
-    from widget.voice_conversion import VoiceConversionWidget
+    from widget.conversion import VoiceConversionWidget
     from widget.mixing import MixingWidget
     from separation.separator import SeparatorFactory
     from conversion.converter_trainer import VoiceConverterTrainerFactory
     from conversion.voice_converter import VoiceConverterFactory
     from conversion.mixer import MixerFactory
-    from presenter.vocal_separation import VocalSeparationPresenter
+    from presenter.separation import VocalSeparationPresenter
     from presenter.training import TrainingPresenter
-    from presenter.voice_conversion import VoiceConversionPresenter
+    from presenter.conversion import VoiceConversionPresenter
     from presenter.mixing import MixingPresenter
 
     vocal_separation_widget = VocalSeparationWidget()

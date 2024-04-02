@@ -1,4 +1,4 @@
-from widget.voice_conversion import VoiceConversionWidget
+from widget.conversion import VoiceConversionWidget
 from conversion.voice_converter import VoiceConverterFactory
 from presenter.common import get_available_device
 

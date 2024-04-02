@@ -3,7 +3,7 @@ import os
 from huggingface_hub import hf_hub_download
 
 from utility.functions import load_yaml
-from widget.vocal_separation import VocalSeparationWidget
+from widget.separation import VocalSeparationWidget
 from separation.separator import SeparatorFactory
 from presenter.common import get_available_device
 

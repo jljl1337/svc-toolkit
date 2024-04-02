@@ -1,4 +1,4 @@
-from src.presenter.vocal_separation import VocalSeparationPresenter
+from presenter.separation import VocalSeparationPresenter
 
 # Create a VocalSeparationWidget dummy class
 class VocalSeparationWidgetDummy:
