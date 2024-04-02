@@ -16,7 +16,7 @@ def main():
     from widget.mixing import MixingWidget
     from separation.separator import SeparatorFactory
     from conversion.converter_trainer import ConverterTrainerFactory
-    from conversion.voice_converter import ConverterFactory
+    from conversion.converter import ConverterFactory
     from conversion.mixer import MixerFactory
     from presenter.separation import SeparationPresenter
     from presenter.training import TrainingPresenter

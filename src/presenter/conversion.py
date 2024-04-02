@@ -1,5 +1,5 @@
 from widget.conversion import ConversionWidget
-from conversion.voice_converter import ConverterFactory
+from conversion.converter import ConverterFactory
 from presenter.common import get_available_device
 
 class ConversionPresenter:
