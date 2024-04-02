@@ -124,13 +124,3 @@ class Separator():
         wave = self.load_file(file)
         new_wave, sample_rate = self.separate(wave, invert=invert, emit=emit)
         audio.save(output_path, new_wave.T, sample_rate)
-
-def main():
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    separator = Separator('/home/jljl1337/git/singing-voice-conversion-gui/model/all_deeper/20240131_041926', device)
-    wave = separator.load_file('/home/jljl1337/dataset/musdb18hq/test/Al James - Schoolboy Facination/mixture.wav')
-    new_wave, sample_rate = separator.separate(wave, invert=True)
-    audio.save('test123.wav', new_wave.T, sample_rate)
-
-if __name__ == "__main__":
-    main()
