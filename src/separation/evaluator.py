@@ -7,25 +7,24 @@ from separation.separator import Separator
 from separation.constants import CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
 
 class Evaluator:
-    def __init__(self, device):
-        self.device = device
+    def __init__(self, model_dir: str, device: str, precision: str, last: bool):
+        self.separator = Separator(model_dir, device, precision, last)
         self.sdr = SignalDistortionRatio()
         self.sisdr = ScaleInvariantSignalDistortionRatio()
 
-    def evaluate(self, model_dir, test_csv, last):
-        separator = Separator(model_dir, self.device, precision='bf16', last=last)
+    def evaluate(self, test_csv: str):
         df_test = pd.read_csv(test_csv)
         df_result = pd.DataFrame(columns=['song', 'SDR', 'SI-SDR', 'NSDR', 'NSI-SDR'])
 
         for _index, row in tqdm(df_test.iterrows(), total=len(df_test)):
             mixture_path = row[CSV_MIXTURE_PATH_COLUMN]
             stem_path = row[CSV_STEM_PATH_COLUMN]
-            mixture_wave = separator.load_file(mixture_path)
-            stem_wave = separator.load_file(stem_path)
+            mixture_wave = self.separator.load_file(mixture_path)
+            stem_wave = self.separator.load_file(stem_path)
             mixture_tensor = torch.from_numpy(mixture_wave)
             stem_tensor = torch.from_numpy(stem_wave)
 
-            estimate_wave, _sr = separator.separate(mixture_wave)
+            estimate_wave, _sr = self.separator.separate(mixture_wave)
             estimate_tensor = torch.from_numpy(estimate_wave)
 
             sdr_num = float(self.sdr(estimate_tensor, stem_tensor))

@@ -11,13 +11,14 @@ def main():
     parser = ArgumentParser()
     parser.add_argument('-m', '--model_dir', type=str, required=True)
     parser.add_argument('-t', '--test_csv', type=str, required=True)
+    parser.add_argument('-p', '--precision', type=str, default='bf16')
     parser.add_argument('-l', '--last', default=False, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    evaluator = Evaluator(device)
-    df_result = evaluator.evaluate(args.model_dir, args.test_csv, args.last)
+    evaluator = Evaluator(args.model_dir, device, args.precision, args.last)
+    df_result = evaluator.evaluate(args.test_csv)
 
     boxplot_file_name = f'boxplot{"_last" if args.last else ""}.png'
     result_file_name = f'result{"_last" if args.last else ""}.csv'
