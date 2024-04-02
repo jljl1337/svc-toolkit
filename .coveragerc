@@ -1,0 +1,5 @@
+[run]
+omit = 
+     src/main.py
+     src/separation_*.py
+     *tmp*.py
