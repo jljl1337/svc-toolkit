@@ -1,11 +1,11 @@
 import json
-import os
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QGroupBox
-from PySide6.QtCore import Qt, QThread, QSize
-from PySide6.QtGui import QMovie
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QGroupBox
+from PySide6.QtCore import QThread
+from pyside6_utils.widgets import OverlayWidget
 
 from widget.common import SliderWidget, FloatSliderWidget, FileWidget, SaveFileWidget, DropdownWidget, CheckboxWidget, DropdownWidget, info_message_box, error_message_box
+from .loading_overlay_window import LoadingOverlayWidget
 
 class ConversionThread(QThread):
     def __init__(self, conversion_function, kwargs):
@@ -21,9 +21,9 @@ class ConversionThread(QThread):
         except Exception as e:
             self.error_message = str(e)
 
-class VoiceConversionWidget(QWidget):
+class VoiceConversionWidget(OverlayWidget):
     def __init__(self):
-        super().__init__()
+        super().__init__(parent=None)
 
         layout = QVBoxLayout(self)
 
@@ -59,17 +59,14 @@ class VoiceConversionWidget(QWidget):
         self.start_button = QPushButton('Start Conversion')
         self.start_button.clicked.connect(self.start_conversion)
 
-        self.loading_label = QLabel()
-        self.loading_movie = QMovie(os.path.join(os.path.dirname(__file__), '../../img/loading.gif'))
-        self.loading_movie.setScaledSize(QSize(165, 30))
-        self.loading_label.setMovie(self.loading_movie)
-        self.loading_label.hide()
+        self.loading_overlay = LoadingOverlayWidget(self)
+        self.set_overlay_widget(self.loading_overlay)
+        self.set_overlay_hidden(True)
 
         layout.addWidget(self.file_group_box)
         layout.addWidget(self.option_group_box)
         layout.addWidget(self.advance_settings_show_button)
         layout.addWidget(self.start_button)
-        layout.addWidget(self.loading_label, alignment=Qt.AlignCenter)
         
         # Advanced Settings Window
         self.advanced_settings_widget = QWidget()
@@ -105,10 +102,14 @@ class VoiceConversionWidget(QWidget):
         self.advanced_settings_widget.hide()
 
     def _set_speaker_list(self, config_path: str):
-        # Read the config json file and set the speaker list
-        with open(config_path) as f:
-            config = json.load(f)
-            self.speaker_dropdown.set_options(list(config['spk'].items()))
+        try:
+            # Read the config json file and set the speaker list
+            with open(config_path) as f:
+                config = json.load(f)
+                self.speaker_dropdown.set_options(list(config['spk'].items()))
+        except Exception as e:
+            self.speaker_dropdown.set_options([])
+            error_message_box(str(e))
 
     def set_device_list(self, device_list):
         self.device_dropdown.set_options(device_list)
@@ -117,9 +118,8 @@ class VoiceConversionWidget(QWidget):
         self.conversion_function = conversion_function
 
     def _conversion_end(self):
-        self.start_button.setEnabled(True)
-        self.loading_movie.stop()
-        self.loading_label.hide()
+        self.loading_overlay.stop_movie()
+        self.set_overlay_hidden(True)
 
         if self.conversion_thread.error_message is None:
             info_message_box('Conversion finished.')
@@ -165,6 +165,5 @@ class VoiceConversionWidget(QWidget):
         self.conversion_thread.finished.connect(self._conversion_end)
         self.conversion_thread.start()
 
-        self.start_button.setEnabled(False)
-        self.loading_label.show()
-        self.loading_movie.start()
+        self.set_overlay_hidden(False)
+        self.loading_overlay.start_movie()
