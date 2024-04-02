@@ -64,6 +64,19 @@ class MixingWidget(QWidget):
             info_message_box('Mixing completed')
 
     def start_mixing(self):
+        error_message = ''
+
+        if not self.source_1_file_widget.get_file():
+            error_message += 'Source 1 file is not selected.\n'
+        if not self.source_2_file_widget.get_file():
+            error_message += 'Source 2 file is not selected.\n'
+        if not self.save_file_widget.get_file():
+            error_message += 'Output file is not selected.\n'
+
+        if error_message:
+            error_message_box(error_message)
+            return
+
         self.mixing_thread = MixingThread(self.mixer_function, {
             'source_1_path': self.source_1_file_widget.get_file(),
             'source_2_path': self.source_2_file_widget.get_file(),
