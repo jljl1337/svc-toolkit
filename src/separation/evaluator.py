@@ -12,25 +12,21 @@ class Evaluator:
         self.sdr = SignalDistortionRatio()
         self.sisdr = ScaleInvariantSignalDistortionRatio()
 
-    def _flatten_tensor(self, wave):
-        wave = wave.reshape(-1)
-        return torch.from_numpy(wave)
-
     def evaluate(self, model_dir, test_csv, last):
-        separator = Separator(model_dir, self.device, last)
+        separator = Separator(model_dir, self.device, precision='bf16', last=last)
         df_test = pd.read_csv(test_csv)
         df_result = pd.DataFrame(columns=['song', 'SDR', 'SI-SDR', 'NSDR', 'NSI-SDR'])
 
         for _index, row in tqdm(df_test.iterrows(), total=len(df_test)):
             mixture_path = row[CSV_MIXTURE_PATH_COLUMN]
             stem_path = row[CSV_STEM_PATH_COLUMN]
-            mixture_wave, _ = separator.load_file(mixture_path)
-            stem_wave, _ = separator.load_file(stem_path)
-            mixture_tensor = self._flatten_tensor(mixture_wave)
-            stem_tensor = self._flatten_tensor(stem_wave)
+            mixture_wave = separator.load_file(mixture_path)
+            stem_wave = separator.load_file(stem_path)
+            mixture_tensor = torch.from_numpy(mixture_wave)
+            stem_tensor = torch.from_numpy(stem_wave)
 
             estimate_wave, _ = separator.separate(mixture_wave)
-            estimate_tensor = self._flatten_tensor(estimate_wave)
+            estimate_tensor = torch.from_numpy(estimate_wave)
 
             sdr_num = float(self.sdr(estimate_tensor, stem_tensor))
             sisdr_num = float(self.sisdr(estimate_tensor, stem_tensor))
