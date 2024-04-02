@@ -70,7 +70,7 @@
             "label": "Generate test coverage report",
             "type": "shell",
             // "command": "pytest --cov=src/ --cov-report=html --cov-report=xml -W ignore::DeprecationWarning tests/",
-            "command": "pytest --cov=src/ --cov-config=.converagerc --cov-report=html --cov-report=xml -W ignore::DeprecationWarning tests/",
+            "command": "pytest --cov=src/ --cov-config=.coveragerc --cov-report=html --cov-report=xml -W ignore::DeprecationWarning tests/",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
