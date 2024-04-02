@@ -1,7 +1,4 @@
-import os
-
 from PySide6.QtWidgets import QMainWindow, QTabWidget
-from PySide6.QtGui import QIcon
 
 class MainWindow(QMainWindow):
     def __init__(self, tab_list):
