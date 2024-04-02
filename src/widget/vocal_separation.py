@@ -95,11 +95,11 @@ class VocalSeparationWidget(QWidget):
         error_message = ''
 
         if self.file_widget.get_file() is None:
-            error_message += 'No file chosen\n'
+            error_message += 'No file chosen.\n'
         if self.dir_widget.get_directory() is None:
-            error_message += 'No output directory chosen\n'
+            error_message += 'No output directory chosen.\n'
         if not self.vocal_checkbox.get_checked() and not self.non_vocal_checkbox.get_checked():
-            error_message += 'Choose at least one output option\n'
+            error_message += 'Choose at least one output option.\n'
 
         if error_message != '':
             error_message_box(error_message)

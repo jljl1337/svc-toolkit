@@ -91,7 +91,7 @@ class TrainingWidget(OverlayWidget):
         if self.preprocess_thread.error_message:
             error_message_box(self.preprocess_thread.error_message)
         else:
-            info_message_box('Preprocessing is done')
+            info_message_box('Preprocessing is done.')
 
     def _train_end(self):
         self._long_process_end()
@@ -99,7 +99,7 @@ class TrainingWidget(OverlayWidget):
         if self.train_thread.error_message:
             error_message_box(self.train_thread.error_message)
         else:
-            info_message_box('Training is done')
+            info_message_box('Training is done.')
 
     def _long_process_end(self):
         self.start_preprocess_button.setEnabled(True)
@@ -113,7 +113,7 @@ class TrainingWidget(OverlayWidget):
         split = self.split_checkbox.get_checked()
 
         if not dataset_dir or not output_dir:
-            error_message_box('Please select dataset directory and output directory')
+            error_message_box('Please select dataset directory and output directory.')
             return
 
         self.preprocess_thread = PreprocessThread(
@@ -132,7 +132,7 @@ class TrainingWidget(OverlayWidget):
         config_file = self.config_file_widget.get_file()
 
         if not model_output_dir or not config_file:
-            error_message_box('Please select model output directory and config file')
+            error_message_box('Please select model output directory and config file.')
             return
 
         self.train_thread = TrainingThread(
