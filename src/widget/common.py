@@ -114,10 +114,11 @@ class CheckboxWidget(QWidget):
 
         self.label = QLabel(f'{name}:')
         self.checkbox = QCheckBox()
-        self.checkbox.stateChanged.connect(self._on_checkbox_changed)
 
         if default_checked:
             self.checkbox.setChecked(True)
+
+        self.checkbox.stateChanged.connect(self._on_checkbox_changed)
 
         layout.addWidget(self.label, alignment=Qt.AlignLeft)
         layout.addWidget(self.checkbox, alignment=Qt.AlignCenter)
