@@ -21,7 +21,7 @@ class SeparationPresenter:
         self.view.set_separation_function(self.start_separation)
 
     def _get_manifest(self):
-        manifest_path = os.path.join(os.path.dirname(__file__), '../../models/manifest.yml')
+        manifest_path = os.path.join(os.path.dirname(__file__), '../models/manifest.yml')
         manifest = load_yaml(manifest_path)
 
         return manifest
@@ -50,7 +50,7 @@ class SeparationPresenter:
             separator.separate_file(file, non_vocal_file_path, invert=True, emit=fn2)
 
     def _get_model_dir(self, model: str):
-        return os.path.join(os.path.dirname(__file__), '../../models', self.manifest['models'][model]['subfolder'])
+        return os.path.join(os.path.dirname(__file__), '../models', self.manifest['models'][model]['subfolder'])
 
     def _download_model_if_needed(self, model, model_dir):
         if os.path.exists(model_dir):

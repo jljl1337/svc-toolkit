@@ -7,7 +7,7 @@ from widget.loading_window import LoadingWindow
 def main():
     app = QApplication([])
 
-    app.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), '../img/icon.png')))
+    app.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'img/icon.png')))
 
     # Show loading window before importing other modules and creating main window
     loading_window = LoadingWindow()

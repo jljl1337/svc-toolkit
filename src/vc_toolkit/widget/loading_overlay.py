@@ -9,7 +9,7 @@ class LoadingOverlayWidget(QWidget):
         super(LoadingOverlayWidget, self).__init__(parent)
 
         self.loading_label = QLabel(self)
-        self.loading_movie = QMovie(os.path.join(os.path.dirname(__file__), '../../img/loading.gif'))
+        self.loading_movie = QMovie(os.path.join(os.path.dirname(__file__), 'img/loading.gif'))
         self.loading_movie.setScaledSize(QSize(165, 30))
         self.loading_label.setMovie(self.loading_movie)
 
