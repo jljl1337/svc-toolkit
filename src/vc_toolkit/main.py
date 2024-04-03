@@ -15,19 +15,19 @@ def main():
     loading_window.show()
     app.processEvents()
 
-    from widget.main_window import MainWindow
-    from widget.separation import SeparationWidget
-    from widget.training import TrainingWidget
-    from widget.conversion import ConversionWidget
-    from widget.mixing import MixingWidget
-    from separation.separator import SeparatorFactory
-    from conversion.converter_trainer import ConverterTrainerFactory
-    from conversion.converter import ConverterFactory
-    from conversion.mixer import MixerFactory
-    from presenter.separation import SeparationPresenter
-    from presenter.training import TrainingPresenter
-    from presenter.conversion import ConversionPresenter
-    from presenter.mixing import MixingPresenter
+    from vc_toolkit.widget.main_window import MainWindow
+    from vc_toolkit.widget.separation import SeparationWidget
+    from vc_toolkit.widget.training import TrainingWidget
+    from vc_toolkit.widget.conversion import ConversionWidget
+    from vc_toolkit.widget.mixing import MixingWidget
+    from vc_toolkit.separation.separator import SeparatorFactory
+    from vc_toolkit.conversion.converter_trainer import ConverterTrainerFactory
+    from vc_toolkit.conversion.converter import ConverterFactory
+    from vc_toolkit.conversion.mixer import MixerFactory
+    from vc_toolkit.presenter.separation import SeparationPresenter
+    from vc_toolkit.presenter.training import TrainingPresenter
+    from vc_toolkit.presenter.conversion import ConversionPresenter
+    from vc_toolkit.presenter.mixing import MixingPresenter
 
     vocal_separation_widget = SeparationWidget()
     separator_factory = SeparatorFactory()
