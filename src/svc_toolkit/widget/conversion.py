@@ -1,4 +1,3 @@
-import time
 import json
 
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QGroupBox
@@ -17,8 +16,7 @@ class ConversionThread(QThread):
     def run(self):
         try:
             self.error_message = None
-            time.sleep(5)
-            # self.conversion_function(**self.kwargs)
+            self.conversion_function(**self.kwargs)
 
         except Exception as e:
             self.error_message = str(e)
