@@ -39,11 +39,10 @@ jobs:
         run: poetry install
         shell: bash
 
-      - name: Test with Pytest
-        run: |
-          if [[ "$RUNNER_OS" == "Linux" ]]; then
-            sudo catchsegv xvfb-run --auto-servernum `which poetry` run pytest --cov-report=xml
-          else
-            poetry run pytest --cov-report=xml
-          fi
-        shell: bash
+      - name: Test with Pytest (Linux)
+        if: runner.os == 'Linux'
+        run: sudo catchsegv xvfb-run --auto-servernum `which poetry` run pytest --cov-report=xml
+
+      - name: Test with Pytest (non Linux)
+        if: runner.os != 'Linux'
+        run: poetry run pytest --cov-report=xml
