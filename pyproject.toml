@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "vc-toolkit"
+name = "voice-conversion-toolkit"
 version = "1.0.0"
 description = "A self-contained singing voice conversion toolkit."
 authors = ["jljl1337 <lckjack123@gmail.com>"]
 license = ""
 readme = "README.md"
-#repository = "https://github.com/34j/so-vits-svc-fork"
-#documentation = "https://so-vits-svc-fork.readthedocs.io"
+#repository = ""
+#documentation = ""
 classifiers = [
     "Operating System :: OS Independent",
 ]
@@ -14,8 +14,11 @@ packages = [
    { include = "vc_toolkit", from = "src" },
 ]
 
-# [tool.poetry.scripts]
-# svcg = "so_vits_svc_fork.gui:main"
+[tool.poetry.scripts]
+vct = "vc_toolkit.main:main"
+vspreprocess = "vc_toolkit.separation_preprocess:main"
+vstrain = "vc_toolkit.separation_train:main"
+vseval = "vc_toolkit.separation_train:main"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
