@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "svc-toolkit"
-version = "1.0.1"
+version = "1.0.2"
 description = "A self-contained singing voice conversion toolkit."
 authors = ["jljl1337 <lckjack123@gmail.com>"]
 license = ""
@@ -37,6 +37,7 @@ so-vits-svc-fork = "4.1.40"
 pyside6 = "6.6.1"
 pyside6-utils = "1.2.2"
 huggingface-hub = "0.20.3"
+moises-db = { git = "https://github.com/moises-ai/moises-db.git", branch = "main" }
 
 [tool.poetry.group.dev.dependencies]
 poetry = "^1.8"
@@ -46,7 +47,6 @@ pytest-qt = "^4.4"
 pytest-cov = "^4.1"
 pytest-xvfb = "^3.0.0"
 mkdocs-material = "^9.5"
-moises-db = { git = "https://github.com/moises-ai/moises-db.git", branch = "main" }
 
 [tool.pytest.ini_options]
 addopts = "--cov=src/ --cov-config=.coveragerc --cov-report=html --cov-report=xml -W ignore::DeprecationWarning "
