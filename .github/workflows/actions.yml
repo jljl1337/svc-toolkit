@@ -17,7 +17,11 @@ jobs:
           # - windows-latest
           # - macOS-latest
 
+    env:
+      DISPLAY: ':99.0'
+
     runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -28,7 +32,11 @@ jobs:
 
       - name: Setup xvfb (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt install -y xvfb x11-utils libxkbcommon-x11-0 libc-bin
+        uses: tlambert03/setup-qt-libs@v1
+
+      - name: Run xvfb (Linux)
+        if: runner.os == 'Linux'
+        run: /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX
 
       - name: Install Poetry
         uses: snok/install-poetry@v1.3.4
@@ -39,12 +47,15 @@ jobs:
         run: poetry install
         shell: bash
 
-      - name: Test with Pytest (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          ulimit -c unlimited
-          sudo catchsegv xvfb-run --auto-servernum `which coverage` run -m pytest
-
-      - name: Test with Pytest (non Linux)
-        if: runner.os != 'Linux'
+      - name: Test with Pytest
         run: poetry run pytest --cov-report=xml
+
+      # - name: Test with Pytest (Linux)
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     ulimit -c unlimited
+      #     sudo catchsegv xvfb-run --auto-servernum `which coverage` run -m pytest
+
+      # - name: Test with Pytest (non Linux)
+      #   if: runner.os != 'Linux'
+      #   run: poetry run pytest --cov-report=xml
