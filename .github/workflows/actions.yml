@@ -28,7 +28,7 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt install -y xvfb x11-utils libxkbcommon-x11-0
       - name: Install Poetry
-      - uses: snok/install-poetry@v1.3.4
+        uses: snok/install-poetry@v1.3.4
         with:
           version: 1.8.2
       - name: Install Dependencies
