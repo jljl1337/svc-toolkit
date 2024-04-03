@@ -28,7 +28,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt update 
-          sudo apt install -y xvfb x11-utils libxkbcommon-x11-0 libgl1
+          sudo apt install -y xvfb x11-utils libxkbcommon-x11-0 ffmpeg libsm6 libxext6 libgl1
       - name: Install Poetry
         uses: snok/install-poetry@v1.3.4
         with:
