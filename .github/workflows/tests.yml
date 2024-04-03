@@ -45,9 +45,11 @@ jobs:
         shell: bash
 
       - name: Test with Pytest
-        run: poetry run pytest --cov-report=json
+        run: poetry run pytest
         shell: bash
 
-      - name: Update Coverage Badge
-        if: runner.os == 'Linux'
-        uses: we-cli/coverage-badge-action@main
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: jljl1337/svc-toolkit

@@ -1,7 +1,7 @@
 # Singing Voice Conversion with GUI
 
 ![Tests](https://github.com/jljl1337/svc-toolkit/actions/workflows/tests.yml/badge.svg)
-[![Coverage](https://jljl1337.github.io/svc-toolkit/badges/coverage.svg)](https://github.com/jljl1337/svc-toolkit/actions)
+[![Codecov](https://codecov.io/gh/jljl1337/svc-toolkit/graph/badge.svg?token=QBM6OLIG00)](https://codecov.io/gh/jljl1337/svc-toolkit)
 
 ## Useful commands for singularity container
 
