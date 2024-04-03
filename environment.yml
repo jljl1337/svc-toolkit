@@ -7,7 +7,7 @@ channels:
 
 dependencies:
   - python=3.10.12
-  - pip=23.2.1
+  - pip==24.0
   - ipykernel=6.26.0
   - numpy==1.26.3
   - pyyaml=6.0.1
@@ -27,6 +27,8 @@ dependencies:
     - pyside6==6.6.1
     - pyside6-utils==1.2.2
     - huggingface-hub==0.20.3
+    - setuptools==69.2.0
+    - poetry==1.8.2
     - pytest==8.0.0
     - pytest-qt==4.4.0
     - pytest-cov==4.1.0
