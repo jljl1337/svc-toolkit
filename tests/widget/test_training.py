@@ -1,6 +1,6 @@
 import time
 
-from vc_toolkit.widget.training import TrainingThread, PreprocessThread, TrainingWidget
+from svc_toolkit.widget.training import TrainingThread, PreprocessThread, TrainingWidget
 
 def test_training_thread_run(qtbot):
     def test_function():

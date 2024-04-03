@@ -1,6 +1,6 @@
 import time
 
-from vc_toolkit.widget.mixing import MixingThread, MixingWidget
+from svc_toolkit.widget.mixing import MixingThread, MixingWidget
 
 def test_mixing_thread_run(qtbot):
     def test_function():

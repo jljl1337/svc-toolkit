@@ -1,6 +1,6 @@
 import os
 
-from vc_toolkit.conversion.mixer import MixerFactory, Mixer
+from svc_toolkit.conversion.mixer import MixerFactory, Mixer
 
 def test_mixer_factory():
     # Create a MixerFactory object

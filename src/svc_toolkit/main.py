@@ -3,7 +3,7 @@ import os
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
 
-from vc_toolkit.widget.loading_window import LoadingWindow
+from svc_toolkit.widget.loading_window import LoadingWindow
 
 def main():
     app = QApplication([])
@@ -15,19 +15,19 @@ def main():
     loading_window.show()
     app.processEvents()
 
-    from vc_toolkit.widget.main_window import MainWindow
-    from vc_toolkit.widget.separation import SeparationWidget
-    from vc_toolkit.widget.training import TrainingWidget
-    from vc_toolkit.widget.conversion import ConversionWidget
-    from vc_toolkit.widget.mixing import MixingWidget
-    from vc_toolkit.separation.separator import SeparatorFactory
-    from vc_toolkit.conversion.converter_trainer import ConverterTrainerFactory
-    from vc_toolkit.conversion.converter import ConverterFactory
-    from vc_toolkit.conversion.mixer import MixerFactory
-    from vc_toolkit.presenter.separation import SeparationPresenter
-    from vc_toolkit.presenter.training import TrainingPresenter
-    from vc_toolkit.presenter.conversion import ConversionPresenter
-    from vc_toolkit.presenter.mixing import MixingPresenter
+    from svc_toolkit.widget.main_window import MainWindow
+    from svc_toolkit.widget.separation import SeparationWidget
+    from svc_toolkit.widget.training import TrainingWidget
+    from svc_toolkit.widget.conversion import ConversionWidget
+    from svc_toolkit.widget.mixing import MixingWidget
+    from svc_toolkit.separation.separator import SeparatorFactory
+    from svc_toolkit.conversion.converter_trainer import ConverterTrainerFactory
+    from svc_toolkit.conversion.converter import ConverterFactory
+    from svc_toolkit.conversion.mixer import MixerFactory
+    from svc_toolkit.presenter.separation import SeparationPresenter
+    from svc_toolkit.presenter.training import TrainingPresenter
+    from svc_toolkit.presenter.conversion import ConversionPresenter
+    from svc_toolkit.presenter.mixing import MixingPresenter
 
     vocal_separation_widget = SeparationWidget()
     separator_factory = SeparatorFactory()

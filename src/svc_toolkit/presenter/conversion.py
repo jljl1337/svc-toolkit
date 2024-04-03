@@ -1,6 +1,6 @@
-from vc_toolkit.widget.conversion import ConversionWidget
-from vc_toolkit.conversion.converter import ConverterFactory
-from vc_toolkit.presenter.common import get_available_device
+from svc_toolkit.widget.conversion import ConversionWidget
+from svc_toolkit.conversion.converter import ConverterFactory
+from svc_toolkit.presenter.common import get_available_device
 
 class ConversionPresenter:
     def __init__(self, view: ConversionWidget, model_factory: ConverterFactory):

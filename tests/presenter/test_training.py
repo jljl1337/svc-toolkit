@@ -1,4 +1,4 @@
-from vc_toolkit.presenter.training import TrainingPresenter
+from svc_toolkit.presenter.training import TrainingPresenter
 
 class TrainingWidgetDummy:
     def set_preprocess_function(self, function):

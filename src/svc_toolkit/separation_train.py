@@ -5,12 +5,12 @@ from datetime import datetime
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
-from vc_toolkit.utility.functions import load_yaml, save_yaml
-from vc_toolkit.separation import constants
-from vc_toolkit.separation import utility
-from vc_toolkit.separation.data import MagnitudeDataModule
-from vc_toolkit.separation.logger import MyLogger
-from vc_toolkit.separation.models import UNetLightning
+from svc_toolkit.utility.functions import load_yaml, save_yaml
+from svc_toolkit.separation import constants
+from svc_toolkit.separation import utility
+from svc_toolkit.separation.data import MagnitudeDataModule
+from svc_toolkit.separation.logger import MyLogger
+from svc_toolkit.separation.models import UNetLightning
 
 def main():
     parser = ArgumentParser()

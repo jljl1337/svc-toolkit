@@ -3,7 +3,7 @@ import shutil
 
 import numpy as np
 
-from vc_toolkit.separation.preprocess import mix_track, get_df, preprocess
+from svc_toolkit.separation.preprocess import mix_track, get_df, preprocess
 
 CURRENT_DIR = os.path.dirname(__file__)
 

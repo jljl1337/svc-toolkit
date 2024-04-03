@@ -3,8 +3,8 @@ import pandas as pd
 from torchmetrics.audio import SignalDistortionRatio, ScaleInvariantSignalDistortionRatio
 from tqdm import tqdm
 
-from vc_toolkit.separation.separator import Separator
-from vc_toolkit.separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
+from svc_toolkit.separation.separator import Separator
+from svc_toolkit.separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
 
 class Evaluator:
     def __init__(self, model_dir: str, device: str, precision: str, last: bool):

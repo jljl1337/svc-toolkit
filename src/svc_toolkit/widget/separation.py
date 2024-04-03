@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QProgressBar, QGroupBox
 from PySide6.QtCore import QThread, Signal
 
-from vc_toolkit.widget.common import info_message_box, error_message_box, FileWidget, DirectoryWidget, CheckboxWidget, DropdownWidget
+from svc_toolkit.widget.common import info_message_box, error_message_box, FileWidget, DirectoryWidget, CheckboxWidget, DropdownWidget
 
 class SeparationThread(QThread):
     progress_signal = Signal(int)

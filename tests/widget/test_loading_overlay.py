@@ -2,7 +2,7 @@ import time
 
 from PySide6.QtGui import QMovie
 
-from vc_toolkit.widget.loading_overlay import LoadingOverlayWidget
+from svc_toolkit.widget.loading_overlay import LoadingOverlayWidget
 
 def test_loading_overlay(qtbot):
     loading_overlay = LoadingOverlayWidget()

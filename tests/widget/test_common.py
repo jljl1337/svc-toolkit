@@ -1,4 +1,4 @@
-from vc_toolkit.widget.common import FileWidget, SaveFileWidget, DirectoryWidget, CheckboxWidget, DropdownWidget, DropdownWidget, SliderWidget, FloatSliderWidget
+from svc_toolkit.widget.common import FileWidget, SaveFileWidget, DirectoryWidget, CheckboxWidget, DropdownWidget, DropdownWidget, SliderWidget, FloatSliderWidget
 
 def test_file_widget(qtbot):
     file_widget = FileWidget('Test File')

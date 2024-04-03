@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 import torch
 import matplotlib.pyplot as plt
 
-from vc_toolkit.separation.evaluator import Evaluator
+from svc_toolkit.separation.evaluator import Evaluator
 
 def main():
     parser = ArgumentParser()

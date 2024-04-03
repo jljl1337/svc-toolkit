@@ -9,8 +9,8 @@ from moisesdb.dataset import MoisesDB
 from moisesdb.track import MoisesDBTrack
 from moisesdb.defaults import all_stems, default_sample_rate
 
-import vc_toolkit.separation.audio as audio
-from vc_toolkit.separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
+import svc_toolkit.separation.audio as audio
+from svc_toolkit.separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
 
 def mix_track(track: MoisesDBTrack, stem, save_dir):
     if stem in track.stems:

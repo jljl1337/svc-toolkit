@@ -2,8 +2,8 @@ from PySide6.QtWidgets import QVBoxLayout, QPushButton, QGroupBox
 from PySide6.QtCore import QThread
 from pyside6_utils.widgets import OverlayWidget
 
-from vc_toolkit.widget.common import FileWidget, DirectoryWidget, CheckboxWidget, info_message_box, error_message_box
-from vc_toolkit.widget.loading_overlay import LoadingOverlayWidget
+from svc_toolkit.widget.common import FileWidget, DirectoryWidget, CheckboxWidget, info_message_box, error_message_box
+from svc_toolkit.widget.loading_overlay import LoadingOverlayWidget
 
 class PreprocessThread(QThread):
     def __init__(self, preprocess_function, dataset_dir, output_dir, split=False):

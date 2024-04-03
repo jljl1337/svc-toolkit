@@ -8,7 +8,7 @@
             "name": "Python Debugger: Main File",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/src/vc_toolkit/main.py",
+            "program": "${workspaceFolder}/src/svc_toolkit/main.py",
             "console": "integratedTerminal"
         },
         {

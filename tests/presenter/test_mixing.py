@@ -1,4 +1,4 @@
-from vc_toolkit.presenter.mixing import MixingPresenter
+from svc_toolkit.presenter.mixing import MixingPresenter
 
 class MixingWidgetDummy:
     def set_mixer_function(self, function):

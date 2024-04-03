@@ -1,11 +1,12 @@
+import time
 import json
 
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QGroupBox
 from PySide6.QtCore import QThread
 from pyside6_utils.widgets import OverlayWidget
 
-from vc_toolkit.widget.common import SliderWidget, FloatSliderWidget, FileWidget, SaveFileWidget, DropdownWidget, CheckboxWidget, DropdownWidget, info_message_box, error_message_box
-from vc_toolkit.widget.loading_overlay import LoadingOverlayWidget
+from svc_toolkit.widget.common import SliderWidget, FloatSliderWidget, FileWidget, SaveFileWidget, DropdownWidget, CheckboxWidget, DropdownWidget, info_message_box, error_message_box
+from svc_toolkit.widget.loading_overlay import LoadingOverlayWidget
 
 class ConversionThread(QThread):
     def __init__(self, conversion_function, kwargs):
@@ -16,7 +17,8 @@ class ConversionThread(QThread):
     def run(self):
         try:
             self.error_message = None
-            self.conversion_function(**self.kwargs)
+            time.sleep(5)
+            # self.conversion_function(**self.kwargs)
 
         except Exception as e:
             self.error_message = str(e)
@@ -129,14 +131,14 @@ class ConversionWidget(OverlayWidget):
     def start_conversion(self):
         error_message = ''
 
-        if self.input_file_widget.get_file() is None:
-            error_message += 'Input file is not chosen.\n'
-        if self.output_file_widget.get_file() is None:
-            error_message += 'Output file is not chosen.\n'
-        if self.model_widget.get_file() is None:
-            error_message += 'Model file is not chosen.\n'
-        if self.config_widget.get_file() is None:
-            error_message += 'Config file is not chosen.\n'
+        # if self.input_file_widget.get_file() is None:
+        #     error_message += 'Input file is not chosen.\n'
+        # if self.output_file_widget.get_file() is None:
+        #     error_message += 'Output file is not chosen.\n'
+        # if self.model_widget.get_file() is None:
+        #     error_message += 'Model file is not chosen.\n'
+        # if self.config_widget.get_file() is None:
+        #     error_message += 'Config file is not chosen.\n'
 
         if error_message != '':
             error_message_box(error_message)

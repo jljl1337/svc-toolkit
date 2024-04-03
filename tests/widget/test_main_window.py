@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget
 
-from vc_toolkit.widget.main_window import MainWindow
+from svc_toolkit.widget.main_window import MainWindow
 
 def test_main_window(qtbot):
     dummy_tab = QWidget()

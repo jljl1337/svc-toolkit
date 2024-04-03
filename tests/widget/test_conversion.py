@@ -1,6 +1,6 @@
 import os
 
-from vc_toolkit.widget.conversion import ConversionThread, ConversionWidget
+from svc_toolkit.widget.conversion import ConversionThread, ConversionWidget
 
 def test_conversion_thread_run(qtbot):
     def test_function():
