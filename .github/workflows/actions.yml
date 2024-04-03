@@ -41,7 +41,9 @@ jobs:
 
       - name: Test with Pytest (Linux)
         if: runner.os == 'Linux'
-        run: sudo catchsegv xvfb-run --auto-servernum `which poetry` run pytest --cov-report=xml
+        run: |
+          ulimit -c unlimited
+          sudo catchsegv xvfb-run --auto-servernum `which coverage` run -m pytest
 
       - name: Test with Pytest (non Linux)
         if: runner.os != 'Linux'
