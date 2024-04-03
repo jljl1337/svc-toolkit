@@ -1,4 +1,4 @@
-name: CI
+name: Tests
 
 on:
   push:
@@ -7,18 +7,6 @@ on:
   pull_request:
 
 jobs:
-
-  doc:
-      name: Deploy docs
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout main
-          uses: actions/checkout@v2
-
-        - name: Deploy docs
-          uses: mhausenblas/mkdocs-deploy-gh-pages@master
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
     strategy:
@@ -59,3 +47,7 @@ jobs:
       - name: Test with Pytest
         run: poetry run pytest --cov-report=xml
         shell: bash
+
+      - name: Update Coverage Badge
+        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        uses: we-cli/coverage-badge-action@main
