@@ -26,7 +26,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Setup xvfb (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt update && apt install -y xvfb x11-utils libxkbcommon-x11-0 ffmpeg libsm6 libxext6
+        run: |
+          sudo apt update 
+          sudo apt install -y xvfb x11-utils libxkbcommon-x11-0 ffmpeg libsm6 libxext6
       - name: Install Poetry
         uses: snok/install-poetry@v1.3.4
         with:
