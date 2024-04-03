@@ -1,8 +1,8 @@
 import os
 from argparse import ArgumentParser
 
-from separation import constants
-from separation.preprocess import moisesdb_mix, preprocess
+from vc_toolkit.separation import constants
+from vc_toolkit.separation.preprocess import moisesdb_mix, preprocess
 
 def main():
     parser = ArgumentParser()

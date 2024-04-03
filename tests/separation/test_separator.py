@@ -2,8 +2,8 @@ import os
 
 import numpy as np
 
-from separation.separator import Separator
-from separation.constants import ZERO, NYQUIST
+from vc_toolkit.separation.separator import Separator
+from vc_toolkit.separation.constants import ZERO, NYQUIST
 
 CURRENT_DIR = os.path.dirname(__file__)
 

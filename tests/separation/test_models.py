@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from separation.models import UNet, DeeperUNet, UNetLightning, _down_layer, _up_layer
+from vc_toolkit.separation.models import UNet, DeeperUNet, UNetLightning, _down_layer, _up_layer
 
 def test_down_layer():
     down_layer = _down_layer(10, 20)

@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-from separation.audio import load, save, to_mag_phase, to_magnitude, to_wave, pad_wave
+from vc_toolkit.separation.audio import load, save, to_mag_phase, to_magnitude, to_wave, pad_wave
 
 CURRENT_DIR = os.path.dirname(__file__)
 

@@ -1,4 +1,4 @@
-from widget.loading_window import LoadingWindow
+from vc_toolkit.widget.loading_window import LoadingWindow
 
 def test_loading_window(qtbot):
     loading_window = LoadingWindow()

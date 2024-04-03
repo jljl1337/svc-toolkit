@@ -2,10 +2,10 @@ import os
 
 from huggingface_hub import hf_hub_download
 
-from utility.functions import load_yaml
-from widget.separation import SeparationWidget
-from separation.separator import SeparatorFactory
-from presenter.common import get_available_device
+from vc_toolkit.utility.functions import load_yaml
+from vc_toolkit.widget.separation import SeparationWidget
+from vc_toolkit.separation.separator import SeparatorFactory
+from vc_toolkit.presenter.common import get_available_device
 
 VOCAL_FILE_NAME = 'vocal.wav'
 NON_VOCAL_FILE_NAME = 'instrument.wav'

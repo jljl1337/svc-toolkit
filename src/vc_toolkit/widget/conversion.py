@@ -4,8 +4,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QGroupBox
 from PySide6.QtCore import QThread
 from pyside6_utils.widgets import OverlayWidget
 
-from widget.common import SliderWidget, FloatSliderWidget, FileWidget, SaveFileWidget, DropdownWidget, CheckboxWidget, DropdownWidget, info_message_box, error_message_box
-from .loading_overlay import LoadingOverlayWidget
+from vc_toolkit.widget.common import SliderWidget, FloatSliderWidget, FileWidget, SaveFileWidget, DropdownWidget, CheckboxWidget, DropdownWidget, info_message_box, error_message_box
+from vc_toolkit.widget.loading_overlay import LoadingOverlayWidget
 
 class ConversionThread(QThread):
     def __init__(self, conversion_function, kwargs):

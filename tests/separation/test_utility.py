@@ -3,8 +3,8 @@ import shutil
 
 import pandas as pd
 
-from separation.utility import get_best_checkpoint_path, get_last_checkpoint_path, get_checkpoint_path, save_song_list
-from separation.constants import CSV_SONG_COLUMN
+from vc_toolkit.separation.utility import get_best_checkpoint_path, get_last_checkpoint_path, get_checkpoint_path, save_song_list
+from vc_toolkit.separation.constants import CSV_SONG_COLUMN
 
 CURRENT_DIR = os.path.dirname(__file__)
 

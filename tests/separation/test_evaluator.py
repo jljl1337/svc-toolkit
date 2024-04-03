@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 from torchmetrics.audio import SignalDistortionRatio, ScaleInvariantSignalDistortionRatio
 
-from separation.evaluator import Evaluator
-from separation.separator import Separator
-from separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
+from vc_toolkit.separation.evaluator import Evaluator
+from vc_toolkit.separation.separator import Separator
+from vc_toolkit.separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
 
 CURRENT_DIR = os.path.dirname(__file__)
 

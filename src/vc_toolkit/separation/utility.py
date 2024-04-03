@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from separation.constants import CSV_SONG_COLUMN
+from vc_toolkit.separation.constants import CSV_SONG_COLUMN
 
 def get_best_checkpoint_path(model_dir):
     return get_checkpoint_path(model_dir, 'best')

@@ -1,5 +1,5 @@
-from widget.mixing import MixingWidget
-from conversion.mixer import MixerFactory
+from vc_toolkit.widget.mixing import MixingWidget
+from vc_toolkit.conversion.mixer import MixerFactory
 
 class MixingPresenter:
     def __init__(self, view: MixingWidget, mixer_factory: MixerFactory):

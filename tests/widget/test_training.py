@@ -1,4 +1,6 @@
-from widget.training import TrainingThread, PreprocessThread, TrainingWidget
+import time
+
+from vc_toolkit.widget.training import TrainingThread, PreprocessThread, TrainingWidget
 
 def test_training_thread_run(qtbot):
     def test_function():
@@ -56,6 +58,8 @@ def test_training_widget_start_preprocess(qtbot):
 
     assert training_widget.overlayHidden == False
 
+    time.sleep(0.5)
+
 def test_training_widget_start_train(qtbot):
     training_widget = TrainingWidget()
     qtbot.addWidget(training_widget)
@@ -68,6 +72,8 @@ def test_training_widget_start_train(qtbot):
     training_widget._start_train()
 
     assert training_widget.overlayHidden == False
+
+    time.sleep(0.5)
 
 def test_training_widget_set_preprocess_function(qtbot):
     training_widget = TrainingWidget()

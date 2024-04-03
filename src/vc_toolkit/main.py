@@ -2,7 +2,8 @@ import os
 
 from PySide6.QtWidgets import QApplication
 from PySide6.QtGui import QIcon
-from widget.loading_window import LoadingWindow
+
+from vc_toolkit.widget.loading_window import LoadingWindow
 
 def main():
     app = QApplication([])

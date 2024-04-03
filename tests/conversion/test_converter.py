@@ -1,4 +1,4 @@
-from conversion.converter import ConverterFactory, Converter
+from vc_toolkit.conversion.converter import ConverterFactory, Converter
 
 def test_converter_factory_create():
     # Create a ConverterFactory object

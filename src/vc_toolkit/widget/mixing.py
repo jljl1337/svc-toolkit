@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QGroupBox
 from PySide6.QtCore import QThread, Signal
 
-from widget.common import info_message_box, error_message_box, FileWidget, SaveFileWidget, CheckboxWidget, FloatSliderWidget
+from vc_toolkit.widget.common import info_message_box, error_message_box, FileWidget, SaveFileWidget, CheckboxWidget, FloatSliderWidget
 
 class MixingThread(QThread):
     def __init__(self, mixer_function, kwargs):

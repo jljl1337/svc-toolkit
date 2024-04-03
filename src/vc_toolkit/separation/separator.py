@@ -4,8 +4,8 @@ import math
 import numpy as np
 import torch
 
-from utility.functions import load_yaml
-from separation import utility, models, audio, constants
+from vc_toolkit.utility.functions import load_yaml
+from vc_toolkit.separation import utility, models, audio, constants
 
 class SeparatorFactory():
     def __init__(self) -> None:

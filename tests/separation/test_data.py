@@ -6,8 +6,8 @@ import pytorch_lightning as pl
 from pytorch_lightning.trainer.states import TrainerFn
 from torch.utils.data import DataLoader
 
-from separation.data import MagnitudeRandomDataset, MagnitudeDataModule
-from separation.constants import NYQUIST, ZERO, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
+from vc_toolkit.separation.data import MagnitudeRandomDataset, MagnitudeDataModule
+from vc_toolkit.separation.constants import NYQUIST, ZERO, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
 
 CURRENT_DIR = os.path.dirname(__file__)
 

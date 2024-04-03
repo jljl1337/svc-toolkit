@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from presenter.separation import SeparationPresenter
+from vc_toolkit.presenter.separation import SeparationPresenter
 
 # Create a VocalSeparationWidget dummy class
 class SeparationWidgetDummy:

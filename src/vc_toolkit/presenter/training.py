@@ -1,5 +1,5 @@
-from widget.training import TrainingWidget
-from conversion.converter_trainer import ConverterTrainerFactory
+from vc_toolkit.widget.training import TrainingWidget
+from vc_toolkit.conversion.converter_trainer import ConverterTrainerFactory
 
 class TrainingPresenter:
     def __init__(self, view: TrainingWidget, trainer_factory: ConverterTrainerFactory):

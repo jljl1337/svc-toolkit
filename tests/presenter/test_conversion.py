@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from presenter.conversion import ConversionPresenter
+from vc_toolkit.presenter.conversion import ConversionPresenter
 
 class ConversionWidgetDummy:
     def set_device_list(self, devices):

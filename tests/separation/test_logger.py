@@ -3,7 +3,7 @@ import shutil
 
 import pandas as pd
 
-from separation.logger import MyLogger
+from vc_toolkit.separation.logger import MyLogger
 
 CURRENT_DIR = os.path.dirname(__file__)
 

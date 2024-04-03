@@ -1,6 +1,6 @@
 import time
 
-from widget.separation import SeparationThread, SeparationWidget
+from vc_toolkit.widget.separation import SeparationThread, SeparationWidget
 
 def test_separation_thread_run(qtbot):
     def test_function():

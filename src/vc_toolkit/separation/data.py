@@ -10,8 +10,8 @@ from torch.utils.data import Dataset, DataLoader
 from pytorch_lightning.trainer.states import TrainerFn
 from tqdm import tqdm
 
-from separation.audio import load, to_magnitude
-from separation.constants import CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN, NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
+from vc_toolkit.separation.audio import load, to_magnitude
+from vc_toolkit.separation.constants import CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN, NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
 
 class MagnitudeRandomDataset(Dataset):
     def __init__(

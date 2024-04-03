@@ -1,0 +1,18 @@
+name: svc_dev
+
+channels:
+  - pytorch
+  - conda-forge
+  - nvidia
+
+dependencies:
+  - python=3.10.12
+  - pip==24.0
+  - ipykernel=6.26.0
+  - nvidia::cudatoolkit=11.7.0
+  - pytorch::pytorch=2.0.1
+  - pytorch::torchaudio=2.0.2
+  - pip:
+    - setuptools==69.2.0
+    - poetry==1.8.2
+    - wheel==0.42.0
