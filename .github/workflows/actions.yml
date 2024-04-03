@@ -28,7 +28,7 @@ jobs:
 
       - name: Setup xvfb (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt install -y xvfb x11-utils libxkbcommon-x11-0
+        run: sudo apt install -y xvfb x11-utils libxkbcommon-x11-0 libc-bin
 
       - name: Install Poetry
         uses: snok/install-poetry@v1.3.4
