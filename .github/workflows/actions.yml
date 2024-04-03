@@ -34,9 +34,9 @@ jobs:
         if: runner.os == 'Linux'
         uses: tlambert03/setup-qt-libs@v1
 
-      - name: Run xvfb (Linux)
-        if: runner.os == 'Linux'
-        run: /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX
+      # - name: Run xvfb (Linux)
+      #   if: runner.os == 'Linux'
+      #   run: /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX
 
       - name: Install Poetry
         uses: snok/install-poetry@v1.3.4

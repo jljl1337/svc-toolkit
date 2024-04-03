@@ -44,6 +44,7 @@ setuptools = "^69.2"
 pytest = "8.0.0"
 pytest-qt = "^4.4"
 pytest-cov = "^4.1"
+pytest-xvfb = "^3.0.0"
 mkdocs-material = "^9.5"
 moises-db = { git = "https://github.com/moises-ai/moises-db.git", branch = "main" }
 

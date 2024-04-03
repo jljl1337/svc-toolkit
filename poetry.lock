@@ -3474,6 +3474,21 @@ dev = ["pre-commit", "tox"]
 doc = ["sphinx", "sphinx-rtd-theme"]
 
 [[package]]
+name = "pytest-xvfb"
+version = "3.0.0"
+description = "A pytest plugin to run Xvfb (or Xephyr/Xvnc) for tests."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pytest-xvfb-3.0.0.tar.gz", hash = "sha256:3746ab1f4d1159f03f751638d053689ccd284291b38b8fb03d3ebbe7bf69cfc0"},
+    {file = "pytest_xvfb-3.0.0-py3-none-any.whl", hash = "sha256:352f247c788457ccdfcfeec8a47a2a6594c8eaf22f0302dae9e2635bb23975c2"},
+]
+
+[package.dependencies]
+pytest = ">=2.8.1"
+pyvirtualdisplay = ">=1.3"
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -3527,6 +3542,17 @@ python-versions = "*"
 files = [
     {file = "pytz-2024.1-py2.py3-none-any.whl", hash = "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"},
     {file = "pytz-2024.1.tar.gz", hash = "sha256:2a29735ea9c18baf14b448846bde5a48030ed267578472d8955cd0e7443a9812"},
+]
+
+[[package]]
+name = "pyvirtualdisplay"
+version = "3.0"
+description = "python wrapper for Xvfb, Xephyr and Xvnc"
+optional = false
+python-versions = "*"
+files = [
+    {file = "PyVirtualDisplay-3.0-py3-none-any.whl", hash = "sha256:40d4b8dfe4b8de8552e28eb367647f311f88a130bf837fe910e7f180d5477f0e"},
+    {file = "PyVirtualDisplay-3.0.tar.gz", hash = "sha256:09755bc3ceb6eb725fb07eca5425f43f2358d3bf08e00d2a9b792a1aedd16159"},
 ]
 
 [[package]]
@@ -5180,4 +5206,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "3d28442df88abdf9128f9b67cdc4c92d0908069a7788c3711ae57a142979eb6a"
+content-hash = "73692201c4ef32a07a4abb51737b52ba751f30c9a369c6cf7cdf6c5b686dfede"
