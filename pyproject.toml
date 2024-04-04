@@ -15,10 +15,10 @@ packages = [
 ]
 
 [tool.poetry.scripts]
-vct = "svc_toolkit.main:main"
-vspreprocess = "svc_toolkit.separation_preprocess:main"
-vstrain = "svc_toolkit.separation_train:main"
-vseval = "svc_toolkit.separation_train:main"
+svct = "svc_toolkit.main:main"
+vs-preprocess = "svc_toolkit.separation_preprocess:main"
+vs-train = "svc_toolkit.separation_train:main"
+vs-eval = "svc_toolkit.separation_train:main"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
