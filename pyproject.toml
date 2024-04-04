@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "svc-toolkit"
-version = "1.0.2"
+version = "1.0.3"
 description = "A self-contained singing voice conversion toolkit."
 authors = ["jljl1337 <lckjack123@gmail.com>"]
 license = ""
