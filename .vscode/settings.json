@@ -3,10 +3,5 @@
     "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": [
         "-v",
-        "--cov=src/",
-        "--cov-report=html",
-        "--cov-report=xml",
-        "-W ignore::DeprecationWarning",
-        "tests/"
     ],
 }
