@@ -1,12 +1,11 @@
 name: Tests
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+    types:
+      - opened
 
 jobs:
 
@@ -50,7 +49,8 @@ jobs:
         run: poetry run pytest
         shell: bash
 
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage reports to Codecov (Linux)
+        if: runner.os == 'Linux'
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
