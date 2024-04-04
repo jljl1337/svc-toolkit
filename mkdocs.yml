@@ -1,4 +1,10 @@
-site_name: Singing Voice Conversion Documentation
+site_name: Singing Voice Conversion Toolkit Documentation
+
+nav:
+  - Home: 'index.md'
+  - Usage: usage.md
+  - Installation: installation.md
+  - Development: development.md
 
 theme:
   name: material
