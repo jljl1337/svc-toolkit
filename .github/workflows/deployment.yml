@@ -5,12 +5,17 @@ on:
     branches:
       - main
   pull_request:
+    branches:
+      - main
+    types:
+      - closed
 
 jobs:
 
   doc:
     name: Deploy docs
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     steps:
       - name: Checkout main
         uses: actions/checkout@v2
@@ -23,6 +28,7 @@ jobs:
   publish:
     name: Build and publish to pypi
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v3
       - uses: JRubics/poetry-publish@v2.0
