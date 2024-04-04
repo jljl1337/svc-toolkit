@@ -30,20 +30,7 @@
         {
             "label": "Remove Conda Environment",
             "type": "shell",
-            "command": "conda env remove --name svc",
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Hard Reset Conda Environment",
-            "type": "shell",
-            "command": "conda env remove --name svc && conda env create --file environment.yml",
+            "command": "conda deactivate && conda env remove --name svc",
             "group": {
                 "kind": "build",
                 "isDefault": false
@@ -67,10 +54,88 @@
             "problemMatcher": []
         },
         {
-            "label": "Generate test coverage report",
+            "label": "Create Conda Environment (Development)",
+            "type": "shell",
+            "command": "conda env create --file environment_dev.yml",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Update Conda Environment (Development)",
+            "type": "shell",
+            "command": "conda env update --file environment_dev.yml --prune",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Remove Conda Environment (Development)",
+            "type": "shell",
+            "command": "conda deactivate && conda env remove --name svc_dev",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Freeze Conda Environment (Development)",
+            "type": "shell",
+            "command": "conda env export -n svc_dev > environment_dev_tmp.yml",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Poetry Install (Development)",
+            "type": "shell",
+            "command": "poetry install",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Poetry Update (Development)",
+            "type": "shell",
+            "command": "poetry update",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate Test Coverage Report",
             "type": "shell",
             // "command": "pytest --cov=src/ --cov-report=html --cov-report=xml -W ignore::DeprecationWarning tests/",
-            "command": "pytest --cov=src/ --cov-config=.coveragerc --cov-report=html --cov-report=xml -W ignore::DeprecationWarning tests/",
+            "command": "poetry run pytest",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
