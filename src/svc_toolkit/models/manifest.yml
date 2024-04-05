@@ -1,7 +1,7 @@
 models:
 
   Small:
-    repo_id: jljl1337/singing-voice-conversion-gui
+    repo_id: jljl1337/svc-toolkit
     subfolder: small
     assets:
       model_filename: best-epoch=575.ckpt

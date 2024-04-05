@@ -1,11 +1,11 @@
-# Singing Voice Conversion with GUI
+# Singing Voice Conversion Toolkit
 
 ![Tests](https://github.com/jljl1337/svc-toolkit/actions/workflows/tests.yml/badge.svg)
 ![Deployment](https://github.com/jljl1337/svc-toolkit/actions/workflows/deployments.yml/badge.svg)
 [![Codecov](https://codecov.io/gh/jljl1337/svc-toolkit/graph/badge.svg?token=QBM6OLIG00)](https://codecov.io/gh/jljl1337/svc-toolkit)
 
-A self-contained singing voice conversion using so-vits-svc, with vocal separation
-and easy to use GUI.
+A self-contained singing voice conversion using the so-vits-svc architecture, 
+with Deep U-Net model for vocal separation feature and easy to use GUI.
 
 ## Getting Started
 

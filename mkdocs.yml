@@ -1,10 +1,14 @@
 site_name: Singing Voice Conversion Toolkit Documentation
 
+site_url: https://jljl1337.github.io/svc-toolkit/
+repo_url: https://github.com/jljl1337/svc-toolkit
+
 nav:
   - Home: 'index.md'
   - Usage: usage.md
   - Installation: installation.md
   - Development: development.md
+  - Troubleshooting: troubleshooting.md
 
 theme:
   name: material

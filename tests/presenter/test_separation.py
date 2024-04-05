@@ -108,7 +108,7 @@ def test_separation_presenter_download_model_if_needed():
     presenter.manifest = {
         'models': {
             'Test Model': {
-                'repo_id': 'jljl1337/singing-voice-conversion-gui-test',
+                'repo_id': 'jljl1337/svc-toolkit-test',
                 'subfolder': 'test_model',
                 'assets': {
                     'model': 'model.tmp',
@@ -173,7 +173,7 @@ def test_vocal_separation_presenter_start_separation():
     presenter.manifest = {
         'models': {
             'Test': {
-                'repo_id': 'jljl1337/singing-voice-conversion-gui-test',
+                'repo_id': 'jljl1337/svc-toolkit-test',
                 'subfolder': 'test_model',
                 'assets': {
                     'model': 'model.tmp',
