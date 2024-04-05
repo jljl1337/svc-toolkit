@@ -7,3 +7,12 @@ models:
       model_filename: best-epoch=575.ckpt
       config_filename: config.yml
       hparams_filename: hparams.yaml
+      
+  Large:
+    repo_id: jljl1337/svc-toolkit
+    subfolder: large
+    assets:
+      model_filename: best-epoch=938.ckpt
+      config_filename: config.yml
+      hparams_filename: hparams.yaml
+      
