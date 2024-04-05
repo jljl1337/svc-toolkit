@@ -162,8 +162,8 @@ cython_debug/
 # Any filename including tmp
 *tmp*
 model/
-models/*/*
 input_csv/
 output/
 evaluation/
+src/svc_toolkit/models/*/*
 .DS_Store
