@@ -30,7 +30,7 @@
         {
             "label": "Remove Conda Environment",
             "type": "shell",
-            "command": "conda deactivate && conda env remove --name svc",
+            "command": "conda env remove --name svc",
             "group": {
                 "kind": "build",
                 "isDefault": false
@@ -82,7 +82,7 @@
         {
             "label": "Remove Conda Environment (Development)",
             "type": "shell",
-            "command": "conda deactivate && conda env remove --name svc_dev",
+            "command": "conda env remove --name svc_dev",
             "group": {
                 "kind": "build",
                 "isDefault": false
