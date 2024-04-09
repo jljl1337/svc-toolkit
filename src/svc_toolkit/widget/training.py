@@ -31,7 +31,7 @@ class TrainingThread(QThread):
     def run(self):
         try:
             self.error_message = None
-            self.train_function(self.model_output_dir, self.config_file)
+            self.train_function(self.config_file, self.model_output_dir)
 
         except Exception as e:
             self.error_message = str(e)
