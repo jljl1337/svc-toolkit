@@ -161,7 +161,7 @@ cython_debug/
 
 # Any filename including tmp
 *tmp*
-model/
+model_log/
 input_csv/
 output/
 evaluation/

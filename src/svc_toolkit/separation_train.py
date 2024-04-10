@@ -13,12 +13,12 @@ from svc_toolkit.separation.logger import MyLogger
 from svc_toolkit.separation.models import UNetLightning
 
 def main():
-    parser = ArgumentParser()
-    parser.add_argument('-t', '--train_csv', type=str, required=True)
-    parser.add_argument('-v', '--val_csv', type=str, required=True)
-    parser.add_argument('-e', '--experiment', type=str, default='exp')
-    parser.add_argument('-m', '--model_dir', type=str, default='./model/')
-    parser.add_argument('-c', '--config', type=str, default='./config.yml')
+    parser = ArgumentParser(description='Train a separation model')
+    parser.add_argument('-t', '--train_csv', type=str, required=True, help='Path to the training csv file')
+    parser.add_argument('-v', '--val_csv', type=str, required=True, help='Path to the validation csv file')
+    parser.add_argument('-e', '--experiment', type=str, default='exp', help='Name of the experiment')
+    parser.add_argument('-m', '--model_dir', type=str, default='./model_log/', help='Path to the model log directory')
+    parser.add_argument('-c', '--config', type=str, default='./config.yml', help='Path to the config file')
     args = parser.parse_args()
 
     config = load_yaml(args.config)
