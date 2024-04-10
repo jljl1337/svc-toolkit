@@ -13,7 +13,7 @@ from svc_toolkit.separation.logger import MyLogger
 from svc_toolkit.separation.models import UNetLightning
 
 def main():
-    parser = ArgumentParser(description='Train a separation model')
+    parser = ArgumentParser(description='Train a separation model.')
     parser.add_argument('-t', '--train_csv', type=str, required=True, help='Path to the training csv file')
     parser.add_argument('-v', '--val_csv', type=str, required=True, help='Path to the validation csv file')
     parser.add_argument('-e', '--experiment', type=str, default='exp', help='Name of the experiment')
