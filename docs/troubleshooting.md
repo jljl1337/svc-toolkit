@@ -7,7 +7,7 @@ again.
 
 If the package is installed using pipx, uninstall the package using this command:
 
-```bash
+```
 pipx uninstall svc-toolkit
 ```
 
@@ -26,7 +26,7 @@ the package and reinstall it with the correct version of PyTorch.
 
 If `poetry install` hangs, try running the command with the `-vvv` flag to see what's happening.
 
-```bash
+```
 poetry install -vvv
 ```
 
@@ -42,7 +42,7 @@ If it stop at something like this:
 
 Then you may run this command:
 
-```bash
+```
 poetry config keyring.enabled false
 ```
 
