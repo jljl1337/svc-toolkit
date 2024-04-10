@@ -5,13 +5,16 @@ repo_url: https://github.com/jljl1337/svc-toolkit
 
 nav:
   - Home: 'index.md'
-  - Usage: usage.md
   - Installation: installation.md
+  - Usage: usage.md
   - Development: development.md
   - Troubleshooting: troubleshooting.md
 
 theme:
   name: material
+
+  features:
+    - content.code.copy
 
   palette:
 

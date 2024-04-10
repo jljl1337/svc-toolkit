@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "svc-toolkit"
 version = "1.0.6"
-description = "A self-contained singing voice conversion using the so-vits-svc architecture, with Deep U-Net model for vocal separation feature and easy to use GUI."
+description = "A self-contained singing voice conversion application using the so-vits-svc architecture, with Deep U-Net model for vocal separation feature and easy to use GUI."
 authors = ["jljl1337 <lckjack123@gmail.com>"]
 license = "MIT"
 readme = "README.md"
