@@ -39,6 +39,7 @@ pyside6-utils = "1.2.2"
 huggingface-hub = "0.20.3"
 
 [tool.poetry.group.dev.dependencies]
+ipykernel = "^6.26"
 pytest = "8.0.0"
 pytest-qt = "^4.4"
 pytest-cov = "^4.1"
@@ -52,8 +53,3 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 omit = ["src/svc_toolkit/*.py"]
-
-[tool.coverage.report]
-exclude_lines = [
-    'if __name__ == "__main__":',
-]
