@@ -9,6 +9,7 @@ def test_conversion_thread_run(qtbot):
     conversion_thread = ConversionThread(test_function, {'key1': 'value1'})
 
     conversion_thread.run()
+    conversion_thread.wait()
 
     assert conversion_thread.isRunning() == False
 
@@ -73,5 +74,6 @@ def test_conversion_widget_start_conversion(qtbot):
     conversion_widget.config_widget.get_file = lambda: 'test_config.json'
 
     conversion_widget.start_conversion()
+    conversion_widget.conversion_thread.wait()
 
     assert conversion_widget.start_button.isEnabled() == True

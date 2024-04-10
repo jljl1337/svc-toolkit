@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "PKief.material-icon-theme",
+        "mhutchie.git-graph",
+        "eamodio.gitlens",
+        "ms-python.python",
+        "be5invis.toml",
+        "ryanluker.vscode-coverage-gutters",
+    ]
+}

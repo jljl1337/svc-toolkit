@@ -31,7 +31,7 @@ class TrainingThread(QThread):
     def run(self):
         try:
             self.error_message = None
-            self.train_function(self.model_output_dir, self.config_file)
+            self.train_function(self.config_file, self.model_output_dir)
 
         except Exception as e:
             self.error_message = str(e)
@@ -42,13 +42,13 @@ class TrainingWidget(OverlayWidget):
 
         layout = QVBoxLayout(self)
 
-        self.preprocess_group_box = QGroupBox('Preprocess')
+        self.preprocess_group_box = QGroupBox('Preprocessing')
         self.preprocess_layout = QVBoxLayout(self.preprocess_group_box)
 
         self.dataset_dir_widget = DirectoryWidget('Dataset Directory')
         self.Output_dir_widget = DirectoryWidget('Output Directory')
-        self.split_checkbox = CheckboxWidget('Split Dataset')
-        self.start_preprocess_button = QPushButton('Start Preprocess')
+        self.split_checkbox = CheckboxWidget('Split Audio Files')
+        self.start_preprocess_button = QPushButton('Start Preprocessing')
         self.start_preprocess_button.clicked.connect(self._start_preprocess)
 
         self.preprocess_layout.addWidget(self.dataset_dir_widget)

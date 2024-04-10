@@ -22,6 +22,12 @@ class SeparationThread(QThread):
         except Exception as e:
             self.error_message = str(e)
 
+            if 'autocast' in self.error_message:
+                new_error_message = 'Your device may not be compatible with the current precision. '
+                new_error_message += 'please choose another device or precision. '
+                new_error_message += 'This is prompted due to the following error:\n' + self.error_message
+                self.error_message = new_error_message
+
 class SeparationWidget(QWidget):
     def __init__(self):
         super().__init__()

@@ -5,13 +5,13 @@ from svc_toolkit.separation import constants
 from svc_toolkit.separation.preprocess import moisesdb_mix, preprocess
 
 def main():
-    parser = ArgumentParser()
-    parser.add_argument('-o', '--output_dir', type=str, default='./input_csv')
-    parser.add_argument('-v', '--val_size', type=float, default=0.2)
-    parser.add_argument('-s', '--stem', type=str, default='vocals')
-    parser.add_argument('-m', '--musdb_dir', type=str, required=True)
-    parser.add_argument('-M', '--moisesdb_dir', type=str, default='')
-    parser.add_argument('-w', '--moisesdb_wav_dir', type=str, required=True)
+    parser = ArgumentParser(description='Preprocess the dataset(s).')
+    parser.add_argument('-o', '--output_dir', type=str, default='./input_csv', help='Output directory')
+    parser.add_argument('-v', '--val_size', type=float, default=0.2, help='Validation size')
+    parser.add_argument('-s', '--stem', type=str, default='vocals', help='Stem to preprocess')
+    parser.add_argument('-m', '--musdb_dir', type=str, required=True, help='Path to the MUSDB18 directory')
+    parser.add_argument('-M', '--moisesdb_dir', type=str, default='', help='Path to the MoisesDB directory')
+    parser.add_argument('-w', '--moisesdb_wav_dir', type=str, required=True, help='Path to the MoisesDB wav directory')
     args = parser.parse_args()
 
     if args.moisesdb_dir != '':

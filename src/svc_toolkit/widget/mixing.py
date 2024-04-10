@@ -61,7 +61,7 @@ class MixingWidget(QWidget):
         if error_message:
             error_message_box(error_message)
         else:
-            info_message_box('Mixing completed')
+            info_message_box('Mixing completed.')
 
     def start_mixing(self):
         error_message = ''
