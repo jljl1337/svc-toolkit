@@ -27,13 +27,19 @@ To install with a specific Python version, use the `--python` flag. For example,
 pipx install svc-toolkit --python 3.10
 ```
 
-<details>
+<details markdown>
 <summary>Using NVIDIA GPU</summary>
 
 To use the package with NVIDIA GPU, you need to upgrade the following dependencies:
 
 ```
 pipx inject svc-toolkit torch==2.1.1 torchaudio==2.1.1 --pip-args="-U" --index-url https://download.pytorch.org/whl/cu121
+```
+
+For CUDA version 11.*, you can change the `cu121` to `cu118`. So the command will be:
+
+```
+pipx inject svc-toolkit torch==2.1.1 torchaudio==2.1.1 --pip-args="-U" --index-url https://download.pytorch.org/whl/cu118
 ```
 
 </details>

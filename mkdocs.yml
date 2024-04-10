@@ -10,11 +10,17 @@ nav:
   - Development: development.md
   - Troubleshooting: troubleshooting.md
 
+markdown_extensions:
+  - md_in_html
+
 theme:
   name: material
 
   features:
     - content.code.copy
+
+  icon:
+    repo: fontawesome/brands/github
 
   palette:
 
