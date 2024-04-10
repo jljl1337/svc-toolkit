@@ -47,8 +47,8 @@ class TrainingWidget(OverlayWidget):
 
         self.dataset_dir_widget = DirectoryWidget('Dataset Directory')
         self.Output_dir_widget = DirectoryWidget('Output Directory')
-        self.split_checkbox = CheckboxWidget('Split Dataset')
-        self.start_preprocess_button = QPushButton('Start Preprocess')
+        self.split_checkbox = CheckboxWidget('Split Audio Files')
+        self.start_preprocess_button = QPushButton('Start Preprocessing')
         self.start_preprocess_button.clicked.connect(self._start_preprocess)
 
         self.preprocess_layout.addWidget(self.dataset_dir_widget)
