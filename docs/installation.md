@@ -29,6 +29,8 @@ pipx inject svc-toolkit torch==2.1.1 torchaudio==2.1.1 --pip-args="-U" --index-u
 
 </details>
 
+For usage, see [here](./usage.md)
+
 ## Option 2: Virtual Environment
 
 Any virtual environment manager can be used to create a virtual environment for the package.
@@ -60,6 +62,8 @@ pip install -U torch==2.1.1 torchaudio==2.1.1 --index-url https://download.pytor
 ```
 
 </details>
+
+For usage, see [here](./usage.md)
 
 ## What is the difference between these two options? Which one should I choose?
 
