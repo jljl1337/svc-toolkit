@@ -42,7 +42,7 @@ class TrainingWidget(OverlayWidget):
 
         layout = QVBoxLayout(self)
 
-        self.preprocess_group_box = QGroupBox('Preprocess')
+        self.preprocess_group_box = QGroupBox('Preprocessing')
         self.preprocess_layout = QVBoxLayout(self.preprocess_group_box)
 
         self.dataset_dir_widget = DirectoryWidget('Dataset Directory')
