@@ -24,17 +24,23 @@ steps to install for GPU support might be different.
 
 To set up the development environment, follow these steps:
 
-1. Clone the repository and checkout a non-main branch
+1. Install [Python](https://www.python.org/downloads/) (3.10 is recommended, but 3.10 - 3.12 should work)
 
-2. Install Poetry
+2. Install [Poetry](https://python-poetry.org/docs/#installation)
 
-3. Install the package in editable mode
+3. Clone the repository and checkout a non-main branch
+
+4. Select the Python version to use with Poetry. For example, to use Python 3.10:
+
+        poetry env use 3.10
+
+5. Install the package in editable mode
 
         poetry install
 
-4. Select the Python interpreter in the IDE to the virtual environment created by Poetry
+6. Select the Python interpreter in the IDE to the virtual environment created by Poetry
 
-5. Upgrade the dependencies if you want to develop with NVIDIA GPU
+7. Upgrade the dependencies if you want to develop with NVIDIA GPU
 
     Activate the virtual environment created by Poetry if it is not activated:
 
@@ -48,4 +54,4 @@ To set up the development environment, follow these steps:
 
         pip install -U torch==2.1.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
 
-6. Good to go!
+8. Good to go!
