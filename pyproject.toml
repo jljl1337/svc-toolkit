@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "svc-toolkit"
-version = "1.0.9"
+version = "1.0.10"
 description = "A self-contained singing voice conversion application using the so-vits-svc architecture, with Deep U-Net model for vocal separation feature and easy to use GUI."
 authors = ["jljl1337 <lckjack123@gmail.com>"]
 license = "MIT"
@@ -18,7 +18,7 @@ packages = [
 svct = "svc_toolkit.main:main"
 vs-preprocess = "svc_toolkit.separation_preprocess:main"
 vs-train = "svc_toolkit.separation_train:main"
-vs-eval = "svc_toolkit.separation_train:main"
+vs-eval = "svc_toolkit.separation_evaluation:main"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
