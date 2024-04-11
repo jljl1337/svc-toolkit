@@ -41,7 +41,7 @@ class Converter:
 
         # Save the output file with the same number of channels
         for i in range(num_channels):
-            new_output_wave[i] = output_wave[i]
+            new_output_wave[i] = output_wave
 
         # Save the output file with the same number of channels
         sf.write(output_path, new_output_wave.T, _output_sr)
