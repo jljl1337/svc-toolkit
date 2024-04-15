@@ -67,3 +67,10 @@ For the detailed usage guide, see [Usage](https://jljl1337.github.io/svc-toolkit
 ## Development
 
 For the detailed development guide, see [Development](https://jljl1337.github.io/svc-toolkit/development/).
+
+## About
+
+This project is the implementation of the final year project for the Bachelor of
+Science in Computer Science, Department of Computer Science, City University of Hong
+Kong, named "Singing Voice Conversion from Fully Mixed Track with GUI", with project code
+`23CS062`.
