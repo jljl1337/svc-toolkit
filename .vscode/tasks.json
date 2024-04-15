@@ -2,111 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Create Conda Environment",
-            "type": "shell",
-            "command": "conda env create --file environment.yml",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Update Conda Environment",
-            "type": "shell",
-            "command": "conda env update --file environment.yml --prune",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Remove Conda Environment",
-            "type": "shell",
-            "command": "conda env remove --name svc",
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Freeze Conda Environment",
-            "type": "shell",
-            "command": "conda env export -n svc > environment_tmp.yml",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Create Conda Environment (Development)",
-            "type": "shell",
-            "command": "conda env create --file environment_dev.yml",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Update Conda Environment (Development)",
-            "type": "shell",
-            "command": "conda env update --file environment_dev.yml --prune",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Remove Conda Environment (Development)",
-            "type": "shell",
-            "command": "conda env remove --name svc_dev",
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Freeze Conda Environment (Development)",
-            "type": "shell",
-            "command": "conda env export -n svc_dev > environment_dev_tmp.yml",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Poetry Install (Development)",
+            "label": "Poetry Install",
             "type": "shell",
             "command": "poetry install",
             "group": {
@@ -119,7 +15,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Poetry Update (Development)",
+            "label": "Poetry Update",
             "type": "shell",
             "command": "poetry update",
             "group": {
@@ -134,7 +30,6 @@
         {
             "label": "Generate Test Coverage Report",
             "type": "shell",
-            // "command": "pytest --cov=src/ --cov-report=html --cov-report=xml -W ignore::DeprecationWarning tests/",
             "command": "poetry run pytest",
             "problemMatcher": [],
             "group": {
