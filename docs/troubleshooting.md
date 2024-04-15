@@ -5,14 +5,14 @@
 If the package is not working as expected, try uninstalling and installing the package
 again.
 
-If the package is installed using pipx, uninstall the package using this command:
+If the package is installed using `pipx`, uninstall the package using this command:
 
 ```
 pipx uninstall svc-toolkit
 ```
 
 If the package is installed using virtual environment, uninstall the package by 
-deactivating the virtual environment and delete it.
+deactivating the virtual environment and removing it.
 
 Then, install the package again. For installation instructions, see [here](./installation.md).
 
