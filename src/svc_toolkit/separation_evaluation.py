@@ -9,9 +9,9 @@ from svc_toolkit.separation.evaluator import Evaluator
 
 def main():
     parser = ArgumentParser(description='Evaluate a separation model.')
-    parser.add_argument('-m', '--model_dir', type=str, required=True, help='Path to the model directory')
-    parser.add_argument('-t', '--test_csv', type=str, required=True, help='Path to the test csv file')
-    parser.add_argument('-p', '--precision', type=str, default='bf16', choices=['bf16', '32'], help='Precision')
+    parser.add_argument('-m', '--model_dir', type=str, required=True, help='Path to the model directory (required)')
+    parser.add_argument('-t', '--test_csv', type=str, required=True, help='Path to the test csv file (required)')
+    parser.add_argument('-p', '--precision', type=str, default='bf16', choices=['bf16', '32'], help='Precision (default: bf16, choices: bf16, 32)')
     parser.add_argument('-l', '--last', default=False, action=argparse.BooleanOptionalAction, help='Use the last model')
     args = parser.parse_args()
 
