@@ -17,7 +17,7 @@ def main():
     parser.add_argument('-t', '--train_csv', type=str, required=True, help='Path to the training csv file')
     parser.add_argument('-v', '--val_csv', type=str, required=True, help='Path to the validation csv file')
     parser.add_argument('-e', '--experiment', type=str, default='exp', help='Name of the experiment')
-    parser.add_argument('-m', '--model_dir', type=str, default='./model_log/', help='Path to the model log directory')
+    parser.add_argument('-m', '--model_log_dir', type=str, default='./model_log/', help='Path to the model log directory')
     parser.add_argument('-c', '--config', type=str, default='./config.yml', help='Path to the config file')
     args = parser.parse_args()
 
@@ -36,15 +36,15 @@ def main():
     # Create directory for this experiment
     now = datetime.now()
     date_time = now.strftime("%Y%m%d_%H%M%S")
-    model_dir = os.path.join(args.model_dir, args.experiment, date_time)
-    os.makedirs(model_dir, exist_ok=True)
+    model_log_dir = os.path.join(args.model_log_dir, args.experiment, date_time)
+    os.makedirs(model_log_dir, exist_ok=True)
 
     # Save config
-    save_yaml(config, os.path.join(model_dir, 'config.yml'))
+    save_yaml(config, os.path.join(model_log_dir, 'config.yml'))
 
     # Save song lists
-    utility.save_song_list(args.train_csv, model_dir, 'train_songs.csv')
-    utility.save_song_list(args.val_csv, model_dir, 'val_songs.csv')
+    utility.save_song_list(args.train_csv, model_log_dir, 'train_songs.csv')
+    utility.save_song_list(args.val_csv, model_log_dir, 'val_songs.csv')
 
     # Load config
     sample_rate = config['sample_rate']
@@ -86,10 +86,10 @@ def main():
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
     model_checkpoint_best = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
                                             mode='min', filename='best-{epoch}',
-                                            dirpath=model_dir)
-    model_checkpoint_last = ModelCheckpoint(filename='last-{epoch}', dirpath=model_dir)
+                                            dirpath=model_log_dir)
+    model_checkpoint_last = ModelCheckpoint(filename='last-{epoch}', dirpath=model_log_dir)
     callbacks=[model_checkpoint_best, model_checkpoint_last]
-    logger = MyLogger(model_dir, resume_path)
+    logger = MyLogger(model_log_dir, resume_path)
 
     trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger,
                          devices=[0], deterministic=deterministic, precision='bf16-mixed')
