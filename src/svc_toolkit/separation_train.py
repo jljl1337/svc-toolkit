@@ -52,6 +52,7 @@ def main():
     epochs = config['epochs']
     loader_num_workers = config['loader_num_workers']
     deterministic = config['deterministic']
+    precision = config['precision']
 
     win_length = config['win_length']
     hop_length = config['hop_length']
@@ -63,6 +64,10 @@ def main():
     weight_decay = config['weight_decay']
     optimizer = config['optimizer']
     deeper = config['deeper']
+
+    # Check input parameters
+    if not constants.Precision.has(precision):
+        raise ValueError(f"Precision {precision} is not supported.")
 
     # Set seed
     pl.seed_everything(constants.SEED, workers=True)
@@ -91,8 +96,10 @@ def main():
     callbacks=[model_checkpoint_best, model_checkpoint_last]
     logger = MyLogger(model_log_dir, resume_path)
 
+    parsed_precision = 'bf16-mixed' if precision == constants.Precision.BF16 else '32'
+
     trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger,
-                         devices=[0], deterministic=deterministic, precision='bf16-mixed')
+                         devices=[0], deterministic=deterministic, precision=parsed_precision)
 
     if resume_path != '':
         model_path = utility.get_last_checkpoint_path(resume_path)
