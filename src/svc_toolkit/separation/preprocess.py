@@ -23,13 +23,9 @@ def mix_track(track: MoisesDBTrack, stem: str, save_dir: str) -> None:
         waves = track.mix_stems(output_stems)
 
         if waves['mixture'].shape != waves[stem].shape:
-            print(f"{track.artist} - {track.name}")
-            print(track.id)
-            print(waves['mixture'].shape, waves[stem].shape)
             min_len = min(waves['mixture'].shape[1], waves[stem].shape[1])
             waves['mixture'] = waves['mixture'][:, :min_len]
             waves[stem] = waves[stem][:, :min_len]
-            print(waves['mixture'].shape, waves[stem].shape)
 
         os.makedirs(os.path.join(save_dir, track_dir), exist_ok=True)
         mixture_path = os.path.join(save_dir, track_dir, 'mixture.wav')
@@ -40,13 +36,11 @@ def mix_track(track: MoisesDBTrack, stem: str, save_dir: str) -> None:
 
 def moisesdb_mix(root: str, save_dir: str, stem: str) -> None:
     db = MoisesDB(root)
-    # db = [db[i] for i in [52, 71, 95, 113, 117, 167, 177, 220]]
     os.makedirs(save_dir, exist_ok=True)
 
     with ThreadPoolExecutor(max_workers=cpu_count()) as executor:
         futures = {executor.submit(mix_track, track, stem, save_dir): track for track in db}
         for future in tqdm(as_completed(futures), total=len(db), desc="Processing tracks"):
-        # for future in as_completed(futures):
             pass
 
 def get_df(root: str, stem: str) -> pd.DataFrame:

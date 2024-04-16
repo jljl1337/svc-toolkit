@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import pytorch_lightning as pl
 from torchmetrics.aggregation import MeanMetric
 
@@ -102,18 +101,6 @@ class UNet(nn.Module):
         x_up6 = self.up6(x_up6)
         x_up6 = x_up6[:, :, : -1, : -1]
 
-        # print(x_down1.shape)
-        # print(x_down2.shape)
-        # print(x_down3.shape)
-        # print(x_down4.shape)
-        # print(x_down5.shape)
-        # print(x_down6.shape)
-        # print(x_up1.shape)
-        # print(x_up2.shape)
-        # print(x_up3.shape)
-        # print(x_up4.shape)
-        # print(x_up5.shape)
-
         return x_up6
 
 class DeeperUNet(nn.Module):
@@ -199,22 +186,6 @@ class DeeperUNet(nn.Module):
         x_up8 = torch.cat((x_up7, x_down1), 1)
         x_up8 = self.up8(x_up8)
         x_up8 = x_up8[:, :, : -1, : -1]
-
-        # print(x_down1.shape)
-        # print(x_down2.shape)
-        # print(x_down3.shape)
-        # print(x_down4.shape)
-        # print(x_down5.shape)
-        # print(x_down6.shape)
-        # print(x_down7.shape)
-        # print(x_down8.shape)
-        # print(x_up1.shape)
-        # print(x_up2.shape)
-        # print(x_up3.shape)
-        # print(x_up4.shape)
-        # print(x_up5.shape)
-        # print(x_up6.shape)
-        # print(x_up7.shape)
 
         return x_up8
 
