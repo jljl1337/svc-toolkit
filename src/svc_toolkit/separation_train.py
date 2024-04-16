@@ -6,7 +6,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 from svc_toolkit.utility.functions import load_yaml, save_yaml
-from svc_toolkit.separation import constants
+from svc_toolkit.separation.constants import SEED, Precision, ConfigKeys
 from svc_toolkit.separation import utility
 from svc_toolkit.separation.data import MagnitudeDataModule
 from svc_toolkit.separation.logger import MyLogger
@@ -47,30 +47,30 @@ def main():
     utility.save_song_list(args.val_csv, model_log_dir, 'val_songs.csv')
 
     # Load config
-    sample_rate = config['sample_rate']
-    batch_size = config['batch_size']
-    epochs = config['epochs']
-    loader_num_workers = config['loader_num_workers']
-    deterministic = config['deterministic']
-    precision = config['precision']
+    sample_rate = config[ConfigKeys.SAMPLE_RATE]
+    batch_size = config[ConfigKeys.BATCH_SIZE]
+    epochs = config[ConfigKeys.EPOCHS]
+    loader_num_workers = config[ConfigKeys.LOADER_NUM_WORKERS]
+    deterministic = config[ConfigKeys.DETERMINISTIC]
+    precision = config[ConfigKeys.PRECISION]
 
-    win_length = config['win_length']
-    hop_length = config['hop_length']
-    patch_length = config['patch_length']
-    expand_factor = config['expand_factor']
-    neglect_frequency = config['neglect_frequency']
+    win_length = config[ConfigKeys.WIN_LENGTH]
+    hop_length = config[ConfigKeys.HOP_LENGTH]
+    patch_length = config[ConfigKeys.PATCH_LENGTH]
+    expand_factor = config[ConfigKeys.EXPAND_FACTOR]
+    neglect_frequency = config[ConfigKeys.NEGLECT_FREQUENCY]
 
-    learning_rate = config['learning_rate']
-    weight_decay = config['weight_decay']
-    optimizer = config['optimizer']
-    deeper = config['deeper']
+    learning_rate = config[ConfigKeys.LEARNING_RATE]
+    weight_decay = config[ConfigKeys.WEIGHT_DECAY]
+    optimizer = config[ConfigKeys.OPTIMIZER]
+    deeper = config[ConfigKeys.DEEPER]
 
     # Check input parameters
-    if not constants.Precision.has(precision):
+    if not Precision.has(precision):
         raise ValueError(f"Precision {precision} is not supported.")
 
     # Set seed
-    pl.seed_everything(constants.SEED, workers=True)
+    pl.seed_everything(SEED, workers=True)
 
     # Load dataset
     data_module = MagnitudeDataModule(
@@ -96,7 +96,7 @@ def main():
     callbacks=[model_checkpoint_best, model_checkpoint_last]
     logger = MyLogger(model_log_dir, resume_path)
 
-    parsed_precision = 'bf16-mixed' if precision == constants.Precision.BF16 else '32'
+    parsed_precision = 'bf16-mixed' if precision == Precision.BF16 else '32'
 
     trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger,
                          devices=[0], deterministic=deterministic, precision=parsed_precision)

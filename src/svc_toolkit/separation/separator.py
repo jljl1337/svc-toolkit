@@ -5,7 +5,8 @@ import numpy as np
 import torch
 
 from svc_toolkit.utility.functions import load_yaml
-from svc_toolkit.separation import utility, models, audio, constants
+from svc_toolkit.separation import utility, models, audio
+from svc_toolkit.separation.constants import ConfigKeys, Precision, NeglectFrequency
 
 class SeparatorFactory():
     def __init__(self) -> None:
@@ -25,11 +26,11 @@ class Separator():
         config_path = os.path.join(model_dir, 'config.yml')
 
         config = load_yaml(config_path)
-        self.sample_rate = config['sample_rate']
-        self.window_length = config['win_length']
-        self.hop_length = config['hop_length']
-        self.patch_length = config['patch_length']
-        self.neglect_frequency = config['neglect_frequency']
+        self.sample_rate = config[ConfigKeys.SAMPLE_RATE]
+        self.window_length = config[ConfigKeys.WIN_LENGTH]
+        self.hop_length = config[ConfigKeys.HOP_LENGTH]
+        self.patch_length = config[ConfigKeys.PATCH_LENGTH]
+        self.neglect_frequency = config[ConfigKeys.NEGLECT_FREQUENCY]
 
         self.model = models.UNetLightning.load_from_checkpoint(model_path, map_location=device, hparams_file=hparams_path)
         self.model.eval()
@@ -71,9 +72,9 @@ class Separator():
                 segment = magnitude[np.newaxis, channel, :, start: end]
 
                 # Neglect frequency to match model input
-                if self.neglect_frequency == constants.NeglectFrequency.NYQUIST:
+                if self.neglect_frequency == NeglectFrequency.NYQUIST:
                     segment = segment[:, : -1]
-                elif self.neglect_frequency == constants.NeglectFrequency.ZERO:
+                elif self.neglect_frequency == NeglectFrequency.ZERO:
                     segment = segment[:, 1:]
 
                 # Convert to tensor
@@ -82,10 +83,10 @@ class Separator():
 
                 # Predict mask
                 with torch.no_grad():
-                    if self.precision == constants.Precision.BF16:
+                    if self.precision == Precision.BF16:
                         with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
                             mask = self.model(segment_tensor)
-                    elif self.precision == constants.Precision.FP32:
+                    elif self.precision == Precision.FP32:
                         mask = self.model(segment_tensor)
 
                 # Invert mask if needed
@@ -96,9 +97,9 @@ class Separator():
                 masked = segment_tensor * mask
 
                 # Save masked segment
-                if self.neglect_frequency == constants.NeglectFrequency.NYQUIST:
+                if self.neglect_frequency == NeglectFrequency.NYQUIST:
                     magnitude[channel, :-1, start: end] = masked.squeeze().cpu().numpy()
-                elif self.neglect_frequency == constants.NeglectFrequency.ZERO:
+                elif self.neglect_frequency == NeglectFrequency.ZERO:
                     magnitude[channel, 1:, start: end] = masked.squeeze().cpu().numpy()
 
                 # Update progress

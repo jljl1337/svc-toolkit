@@ -22,12 +22,23 @@ class CSVColumns(BaseStrEnum):
     MIXTURE_PATH = 'mixture_path'
     STEM_PATH = 'stem_path'
 
+class ConfigKeys(BaseStrEnum):
+    SAMPLE_RATE = 'sample_rate'
+    WIN_LENGTH = 'win_length'
+    HOP_LENGTH = 'hop_length'
+    PATCH_LENGTH = 'patch_length'
+    NEGLECT_FREQUENCY = 'neglect_frequency'
+
+    EPOCHS = 'epochs'
+    BATCH_SIZE = 'batch_size'
+    LOADER_NUM_WORKERS = 'loader_num_workers'
+    DETERMINISTIC = 'deterministic'
+    PRECISION = 'precision'
+
+    EXPAND_FACTOR = 'expand_factor'
+    LEARNING_RATE = 'learning_rate'
+    WEIGHT_DECAY = 'weight_decay'
+    OPTIMIZER = 'optimizer'
+    DEEPER = 'deeper'
+
 SEED = 56615230
-
-# CSV_SONG_COLUMN = 'song'
-# CSV_MIXTURE_PATH_COLUMN = 'mixture_path'
-# CSV_STEM_PATH_COLUMN = 'stem_path'
-
-# NYQUIST = 'nyquist'
-# ZERO = 'zero'
-# NEGLECT_FREQUENCY_OPTIONS = [NYQUIST, ZERO]
