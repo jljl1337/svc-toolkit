@@ -41,4 +41,9 @@ class ConfigKeys(BaseStrEnum):
     OPTIMIZER = 'optimizer'
     DEEPER = 'deeper'
 
+class LoggerDFColumns(BaseStrEnum):
+    EPOCH = 'epoch'
+    TRAIN_LOSS = 'train_loss'
+    VAL_LOSS = 'val_loss'
+
 SEED = 56615230
