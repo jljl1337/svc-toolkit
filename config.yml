@@ -13,4 +13,4 @@ neglect_frequency: nyquist
 learning_rate: 1.0e-04
 weight_decay: 1.0e-08
 optimizer: adam
-deeper: true
+deeper: True
