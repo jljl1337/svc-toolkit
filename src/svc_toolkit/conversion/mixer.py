@@ -6,14 +6,21 @@ class MixerFactory:
     def __init__(self) -> None:
         pass
 
-    def create(self):
+    def create(self) -> 'Mixer':
         return Mixer()
 
 class Mixer:
     def __init__(self) -> None:
         pass
 
-    def mix(self, source_1_path: str, source_2_path: str, output_path: str, source_1_ratio: float, normalize: bool = False):
+    def mix(
+        self,
+        source_1_path: str,
+        source_2_path: str,
+        output_path: str,
+        source_1_ratio: float,
+        normalize: bool = False
+    ) -> None:
         wave_1, sr1 = load(source_1_path, mono=False, sr=None)
         wave_2, sr2 = load(source_2_path, mono=False, sr=None)
 

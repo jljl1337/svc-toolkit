@@ -24,7 +24,7 @@ class MagnitudeRandomDataset(Dataset):
         patch_length: int,
         neglect_frequency: str,
         sample_rate: int,
-    ):
+    ) -> None:
         # Validate neglect_frequency
         if not NeglectFrequency.has(neglect_frequency):
             raise ValueError(f'Invalid neglect_frequency, available options: {NeglectFrequency.all()}')
@@ -64,7 +64,7 @@ class MagnitudeRandomDataset(Dataset):
             # Sort expanded magnitudes since they are not executed in order
             self.expanded_magnitudes = sorted(self.expanded_magnitudes)
 
-    def load_magnitude(self, index, mixture_path, stem_path):
+    def load_magnitude(self, index: int, mixture_path: str, stem_path: str) -> tuple[int, np.ndarray, np.ndarray, int]:
         # Load audio
         mixture_wave, _mixture_sr = load(mixture_path, sr=self.sample_rate)
         stem_wave, _stem_sr = load(stem_path, sr=self.sample_rate)
@@ -92,10 +92,10 @@ class MagnitudeRandomDataset(Dataset):
 
         return index, mix_magnitude, stem_magnitude, weight
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.expanded_magnitudes)
     
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor]:
         # Get a magnitude from the expanded list
         actual_index = self.expanded_magnitudes[index]
         mix_magnitude, stem_magnitude = self.magnitudes[actual_index]
@@ -124,7 +124,7 @@ class MagnitudeDataModule(pl.LightningDataModule):
         sample_rate: int = None,
         batch_size: int = None,
         loader_num_workers: int = None,
-    ):
+    ) -> None:
         super().__init__()
 
         self.train_csv = train_csv
@@ -151,7 +151,7 @@ class MagnitudeDataModule(pl.LightningDataModule):
             'sample_rate': sample_rate
         }
 
-    def setup(self, stage: str = None):
+    def setup(self, stage: str = None) -> None:
         if stage == TrainerFn.FITTING and self.train_dataset is None and self.val_dataset is None:
             print('Loading training datasets')
             df_train = read_csv(self.train_csv)
@@ -169,19 +169,19 @@ class MagnitudeDataModule(pl.LightningDataModule):
                 **self.dataset_kwargs
             )
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
         return DataLoader(
             self.train_dataset,
             **self._loader_kwargs(shuffle=True),
         )
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
         return DataLoader(
             self.val_dataset,
             **self._loader_kwargs(shuffle=False),
         )
 
-    def _loader_kwargs(self, shuffle: bool):
+    def _loader_kwargs(self, shuffle: bool) -> dict:
         return {
             'batch_size': self.batch_size,
             'num_workers': self.loader_num_workers,

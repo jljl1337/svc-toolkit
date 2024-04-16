@@ -1,6 +1,6 @@
 import torch
 
-def get_available_device():
+def get_available_device() -> list[tuple[str, str]]:
     device_list = []
 
     if torch.cuda.is_available():

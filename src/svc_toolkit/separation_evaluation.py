@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from svc_toolkit.separation.evaluator import Evaluator
 from svc_toolkit.separation.constants import Precision
 
-def main():
+def main() -> None:
     parser = ArgumentParser(description='Evaluate a separation model.')
     parser.add_argument('-m', '--model_dir', type=str, required=True, help='Path to the model directory (required)')
     parser.add_argument('-t', '--test_csv', type=str, required=True, help='Path to the test csv file (required)')

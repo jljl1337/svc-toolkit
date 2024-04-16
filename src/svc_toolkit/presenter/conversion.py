@@ -3,7 +3,7 @@ from svc_toolkit.conversion.converter import ConverterFactory
 from svc_toolkit.presenter.common import get_available_device
 
 class ConversionPresenter:
-    def __init__(self, view: ConversionWidget, model_factory: ConverterFactory):
+    def __init__(self, view: ConversionWidget, model_factory: ConverterFactory) -> None:
         self.view = view
         self.model_factory = model_factory
 
@@ -19,6 +19,6 @@ class ConversionPresenter:
         output_path: str,
         speaker: int,
         **kwargs
-    ):
+    ) -> None:
         converter = self.model_factory.create(model_path, config_path, device)
         converter.convert(input_path, output_path, speaker, **kwargs)

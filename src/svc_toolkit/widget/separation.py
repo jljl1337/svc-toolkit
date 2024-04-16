@@ -1,3 +1,5 @@
+from typing import Callable
+
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QProgressBar, QGroupBox
 from PySide6.QtCore import QThread, Signal
 
@@ -6,15 +8,15 @@ from svc_toolkit.widget.common import info_message_box, error_message_box, FileW
 class SeparationThread(QThread):
     progress_signal = Signal(int)
 
-    def __init__(self, separation_function, kwargs):
+    def __init__(self, separation_function: Callable, kwargs: dict) -> None:
         super().__init__()
         self.separation_function = separation_function
         self.kwargs = kwargs
 
-    def progress_signal_connect(self, slot):
+    def progress_signal_connect(self, slot: Callable) -> None:
         self.progress_signal.connect(slot)
 
-    def run(self):
+    def run(self) -> None:
         try:
             self.error_message = None
             self.separation_function(self.progress_signal.emit, **self.kwargs)
@@ -29,7 +31,7 @@ class SeparationThread(QThread):
                 self.error_message = new_error_message
 
 class SeparationWidget(QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         layout = QVBoxLayout(self)
@@ -76,19 +78,19 @@ class SeparationWidget(QWidget):
         layout.addWidget(self.start_button)
         layout.addWidget(self.progress_bar)
 
-    def set_model_list(self, model_list):
+    def set_model_list(self, model_list: list[tuple[str, str]]) -> None:
         self.model_dropdown.set_options(model_list)
 
-    def set_device_list(self, device_list):
+    def set_device_list(self, device_list: list[tuple[str, str]]) -> None:
         self.device_dropdown.set_options(device_list)
 
-    def set_separation_function(self, separation_function):
+    def set_separation_function(self, separation_function: Callable) -> None:
         self.separation_function = separation_function
 
-    def update_progress(self, value):
+    def update_progress(self, value: int) -> None:
         self.progress_bar.setValue(value)
 
-    def separation_end(self):
+    def separation_end(self) -> None:
         self.start_button.setEnabled(True)
         self.progress_bar.setValue(0)
 
@@ -97,7 +99,7 @@ class SeparationWidget(QWidget):
         else:
             error_message_box(self.separation_thread.error_message)
 
-    def start_separation(self):
+    def start_separation(self) -> None:
         error_message = ''
 
         if self.file_widget.get_file() is None:

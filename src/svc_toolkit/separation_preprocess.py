@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from svc_toolkit.separation import constants
 from svc_toolkit.separation.preprocess import moisesdb_mix, preprocess
 
-def main():
+def main() -> None:
     parser = ArgumentParser(description='Preprocess the dataset(s).')
     parser.add_argument('-o', '--csv_output_dir', type=str, default='./input_csv', help='CSV Output directory (default: ./input_csv)')
     parser.add_argument('-v', '--val_size', type=float, default=0.2, help='Validation size (default: 0.2)')

@@ -1,4 +1,5 @@
 import json
+from typing import Callable
 
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QGroupBox
 from PySide6.QtCore import QThread
@@ -8,12 +9,12 @@ from svc_toolkit.widget.common import SliderWidget, FloatSliderWidget, FileWidge
 from svc_toolkit.widget.loading_overlay import LoadingOverlayWidget
 
 class ConversionThread(QThread):
-    def __init__(self, conversion_function, kwargs):
+    def __init__(self, conversion_function: Callable, kwargs: dict) -> None:
         super().__init__()
         self.conversion_function = conversion_function
         self.kwargs = kwargs
 
-    def run(self):
+    def run(self) -> None:
         try:
             self.error_message = None
             self.conversion_function(**self.kwargs)
@@ -22,7 +23,7 @@ class ConversionThread(QThread):
             self.error_message = str(e)
 
 class ConversionWidget(OverlayWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(parent=None)
 
         layout = QVBoxLayout(self)
@@ -95,13 +96,13 @@ class ConversionWidget(OverlayWidget):
         self.advanced_settings_layout.addWidget(self.absolute_threshold_checkbox)
         self.advanced_settings_layout.addWidget(self.advance_settings_close_button)
 
-    def _show_advanced_settings(self):
+    def _show_advanced_settings(self) -> None:
         self.advanced_settings_widget.show()
 
-    def _close_advanced_settings(self):
+    def _close_advanced_settings(self) -> None:
         self.advanced_settings_widget.hide()
 
-    def _set_speaker_list(self, config_path: str):
+    def _set_speaker_list(self, config_path: str) -> None:
         try:
             # Read the config json file and set the speaker list
             with open(config_path) as f:
@@ -111,13 +112,13 @@ class ConversionWidget(OverlayWidget):
             self.speaker_dropdown.set_options([])
             error_message_box(str(e))
 
-    def set_device_list(self, device_list):
+    def set_device_list(self, device_list: list) -> None:
         self.device_dropdown.set_options(device_list)
 
-    def set_conversion_function(self, conversion_function):
+    def set_conversion_function(self, conversion_function: Callable) -> None:
         self.conversion_function = conversion_function
 
-    def _conversion_end(self):
+    def _conversion_end(self) -> None:
         self.loading_overlay.stop_movie()
         self.set_overlay_hidden(True)
 
@@ -126,7 +127,7 @@ class ConversionWidget(OverlayWidget):
         else:
             error_message_box(self.conversion_thread.error_message)
 
-    def start_conversion(self):
+    def start_conversion(self) -> None:
         error_message = ''
 
         # if self.input_file_widget.get_file() is None:

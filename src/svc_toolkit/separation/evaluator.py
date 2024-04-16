@@ -7,12 +7,12 @@ from svc_toolkit.separation.separator import Separator
 from svc_toolkit.separation.constants import CSVColumns
 
 class Evaluator:
-    def __init__(self, model_dir: str, device: str, precision: str, last: bool):
+    def __init__(self, model_dir: str, device: str, precision: str, last: bool) -> None:
         self.separator = Separator(model_dir, device, precision, last)
         self.sdr = SignalDistortionRatio()
         self.sisdr = ScaleInvariantSignalDistortionRatio()
 
-    def evaluate(self, test_csv: str):
+    def evaluate(self, test_csv: str) -> pd.DataFrame:
         df_test = pd.read_csv(test_csv)
         df_result = pd.DataFrame(columns=['song', 'SDR', 'SI-SDR', 'NSDR', 'NSI-SDR'])
 
@@ -36,7 +36,7 @@ class Evaluator:
 
         return df_result
 
-    def summary(self, df: pd.DataFrame):
+    def summary(self, df: pd.DataFrame) -> pd.DataFrame:
         summary_df = pd.DataFrame(columns=['Mean', 'SD', 'Min', 'Max', 'Median'])
 
         for column in df.columns[1:]:

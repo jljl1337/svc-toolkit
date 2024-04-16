@@ -12,7 +12,7 @@ from svc_toolkit.separation.data import MagnitudeDataModule
 from svc_toolkit.separation.logger import MyLogger
 from svc_toolkit.separation.models import UNetLightning
 
-def main():
+def main() -> None:
     parser = ArgumentParser(description='Train a separation model.')
     parser.add_argument('-t', '--train_csv', type=str, required=True, help='Path to the training csv file (required)')
     parser.add_argument('-v', '--val_csv', type=str, required=True, help='Path to the validation csv file (required)')

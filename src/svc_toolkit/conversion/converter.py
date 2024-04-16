@@ -8,16 +8,16 @@ class ConverterFactory:
     def __init__(self) -> None:
         pass
 
-    def create(self, model_path: str, config_path: str, device: str):
+    def create(self, model_path: str, config_path: str, device: str) -> 'Converter':
         return Converter(model_path, config_path, device)
 
 class Converter:
-    def __init__(self, model_path: str, config_path: str, device: str):
+    def __init__(self, model_path: str, config_path: str, device: str) -> None:
         self.model_path = model_path
         self.config_path = config_path
         self.device = device
 
-    def convert(self, input_path: str, output_path: str, speaker: int, **kwargs):
+    def convert(self, input_path: str, output_path: str, speaker: int, **kwargs) -> None:
         infer(
             input_path=input_path,
             output_path=output_path,

@@ -10,7 +10,7 @@ from pytorch_lightning.utilities import rank_zero_only
 from svc_toolkit.separation.constants import LoggerDFColumns
 
 class MyLogger(Logger):
-    def __init__(self, save_dir, old_dir=''):
+    def __init__(self, save_dir: str, old_dir: str = '') -> None:
         super().__init__()
         if old_dir != '':
             self.df = pd.read_csv(os.path.join(old_dir, 'loss.csv'))
@@ -20,20 +20,20 @@ class MyLogger(Logger):
         self.experiment = ExperimentWriter(save_dir)
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "MyLogger"
 
     @property
-    def version(self):
+    def version(self) -> str:
         return "0.1"
 
     @rank_zero_only
-    def log_hyperparams(self, params):
+    def log_hyperparams(self, params: dict) -> None:
         self.experiment.log_hparams(_convert_params(params))
         self.experiment.save()
 
     @rank_zero_only
-    def log_metrics(self, metrics, step):
+    def log_metrics(self, metrics: dict, step: int) -> None:
 
         epoch = metrics[LoggerDFColumns.EPOCH]
         if epoch not in self.df[LoggerDFColumns.EPOCH].values:
@@ -45,7 +45,7 @@ class MyLogger(Logger):
         self.df.loc[self.df[LoggerDFColumns.EPOCH] == epoch, loss_name] = loss
 
     @rank_zero_only
-    def save(self):
+    def save(self) -> None:
         csv_path = os.path.join(self.dir, 'loss.csv')
         self.df.to_csv(csv_path, index=False)
 

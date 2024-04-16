@@ -1,5 +1,6 @@
 import os
 import math
+from typing import Callable
 
 import numpy as np
 import torch
@@ -12,11 +13,11 @@ class SeparatorFactory():
     def __init__(self) -> None:
         pass
 
-    def create(self, model_dir, device, precision):
+    def create(self, model_dir: str, device: str, precision: str) -> 'Separator':
         return Separator(model_dir, device, precision)
 
 class Separator():
-    def __init__(self, model_dir, device, precision, last=False) -> None:
+    def __init__(self, model_dir: str, device: str, precision: str, last: bool = False) -> None:
         if last:
             model_path = utility.get_last_checkpoint_path(model_dir)
         else:
@@ -37,11 +38,11 @@ class Separator():
         self.device = device
         self.precision = precision
 
-    def load_file(self, file):
+    def load_file(self, file: str) -> np.ndarray:
         wave, _sr = audio.load(file, sr=self.sample_rate, mono=False)
         return wave
 
-    def separate(self, wave, invert=False, emit=None):
+    def separate(self, wave: np.ndarray, invert: bool = False, emit: Callable = None) -> tuple[np.ndarray, int]:
         # Convert to 2D array if mono for convenience
         if wave.ndim == 1:
             wave = wave[np.newaxis, :]
@@ -122,7 +123,7 @@ class Separator():
 
         return pre_wave, self.sample_rate
 
-    def separate_file(self, file, output_path, invert=False, emit=None):
+    def separate_file(self, file: str, output_path: str, invert: bool = False, emit: Callable = None) -> None:
         wave = self.load_file(file)
         new_wave, sample_rate = self.separate(wave, invert=invert, emit=emit)
         audio.save(output_path, new_wave.T, sample_rate)

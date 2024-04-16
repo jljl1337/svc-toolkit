@@ -1,3 +1,5 @@
+from typing import Callable
+
 from PySide6.QtWidgets import QVBoxLayout, QPushButton, QGroupBox
 from PySide6.QtCore import QThread
 from pyside6_utils.widgets import OverlayWidget
@@ -6,14 +8,14 @@ from svc_toolkit.widget.common import FileWidget, DirectoryWidget, CheckboxWidge
 from svc_toolkit.widget.loading_overlay import LoadingOverlayWidget
 
 class PreprocessThread(QThread):
-    def __init__(self, preprocess_function, dataset_dir, output_dir, split=False):
+    def __init__(self, preprocess_function: Callable, dataset_dir: str, output_dir: str, split: bool = False) -> None:
         super().__init__()
         self.preprocess_function = preprocess_function
         self.dataset_dir = dataset_dir
         self.output_dir = output_dir
         self.split = split
 
-    def run(self):
+    def run(self) -> None:
         try:
             self.error_message = None
             self.preprocess_function(self.dataset_dir, self.output_dir, self.split)
@@ -22,13 +24,13 @@ class PreprocessThread(QThread):
             self.error_message = str(e)
 
 class TrainingThread(QThread):
-    def __init__(self, train_function, config_file, model_output_dir):
+    def __init__(self, train_function: Callable, config_file: str, model_output_dir: str) -> None:
         super().__init__()
         self.train_function = train_function
         self.config_file = config_file
         self.model_output_dir = model_output_dir
 
-    def run(self):
+    def run(self) -> None:
         try:
             self.error_message = None
             self.train_function(self.config_file, self.model_output_dir)
@@ -37,7 +39,7 @@ class TrainingThread(QThread):
             self.error_message = str(e)
 
 class TrainingWidget(OverlayWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(parent=None)
 
         layout = QVBoxLayout(self)
@@ -75,7 +77,7 @@ class TrainingWidget(OverlayWidget):
         layout.addWidget(self.preprocess_group_box)
         layout.addWidget(self.train_group_box)
 
-    def _preprocess_end(self):
+    def _preprocess_end(self) -> None:
         self._long_process_end()
 
         if self.preprocess_thread.error_message:
@@ -83,7 +85,7 @@ class TrainingWidget(OverlayWidget):
         else:
             info_message_box('Preprocessing is done.')
 
-    def _train_end(self):
+    def _train_end(self) -> None:
         self._long_process_end()
 
         if self.train_thread.error_message:
@@ -91,11 +93,11 @@ class TrainingWidget(OverlayWidget):
         else:
             info_message_box('Training is done.')
 
-    def _long_process_end(self):
+    def _long_process_end(self) -> None:
         self.loading_overlay.stop_movie()
         self.set_overlay_hidden(True)
 
-    def _start_preprocess(self):
+    def _start_preprocess(self) -> None:
         dataset_dir = self.dataset_dir_widget.get_directory()
         output_dir = self.Output_dir_widget.get_directory()
         split = self.split_checkbox.get_checked()
@@ -115,7 +117,7 @@ class TrainingWidget(OverlayWidget):
 
         self._long_process_start()
 
-    def _start_train(self):
+    def _start_train(self) -> None:
         model_output_dir = self.model_output_dir_widget.get_directory()
         config_file = self.config_file_widget.get_file()
 
@@ -133,14 +135,14 @@ class TrainingWidget(OverlayWidget):
 
         self._long_process_start()
 
-    def _long_process_start(self):
+    def _long_process_start(self) -> None:
         self.loading_overlay.start_movie()
         self.set_overlay_hidden(False)
 
-    def set_preprocess_function(self, preprocess_function):
+    def set_preprocess_function(self, preprocess_function: Callable) -> None:
         self._preprocess = preprocess_function
 
-    def set_train_function(self, train_function):
+    def set_train_function(self, train_function : Callable) -> None:
         self._train = train_function
 
 

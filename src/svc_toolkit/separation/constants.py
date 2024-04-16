@@ -2,11 +2,11 @@ from enum import Enum
 
 class BaseStrEnum(str, Enum):
     @classmethod
-    def has(cls, value):
+    def has(cls, value) -> bool:
         return value in cls._value2member_map_
 
     @classmethod
-    def all(cls):
+    def all(cls) -> list[str]:
         return [member.value for _name, member in cls.__members__.items()]
 
 class Precision(BaseStrEnum):

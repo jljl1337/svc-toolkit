@@ -12,7 +12,7 @@ from moisesdb.defaults import all_stems, default_sample_rate
 import svc_toolkit.separation.audio as audio
 from svc_toolkit.separation.constants import CSVColumns
 
-def mix_track(track: MoisesDBTrack, stem, save_dir):
+def mix_track(track: MoisesDBTrack, stem: str, save_dir: str) -> None:
     if stem in track.stems:
         track_dir = f'{track.artist} - {track.name}'.strip().replace('ö', 'o')
 
@@ -38,7 +38,7 @@ def mix_track(track: MoisesDBTrack, stem, save_dir):
         audio.save(mixture_path, waves['mixture'].T, default_sample_rate)
         audio.save(stem_path, waves[stem].T, default_sample_rate)
 
-def moisesdb_mix(root, save_dir, stem):
+def moisesdb_mix(root: str, save_dir: str, stem: str) -> None:
     db = MoisesDB(root)
     # db = [db[i] for i in [52, 71, 95, 113, 117, 167, 177, 220]]
     os.makedirs(save_dir, exist_ok=True)
@@ -49,7 +49,7 @@ def moisesdb_mix(root, save_dir, stem):
         # for future in as_completed(futures):
             pass
 
-def get_df(root, stem):
+def get_df(root: str, stem: str) -> pd.DataFrame:
     df = pd.DataFrame(columns=[CSVColumns.SONG, CSVColumns.MIXTURE_PATH, CSVColumns.STEM_PATH])
 
     for dir in sorted(os.listdir(root)):
@@ -60,7 +60,7 @@ def get_df(root, stem):
     
     return df
 
-def preprocess(musdb_dir, moisesdb_wav_dir, val_size, csv_dir, stem, seed):
+def preprocess(musdb_dir: str, moisesdb_wav_dir: str, val_size: float, csv_dir: str, stem: str, seed: int) -> None:
     df_musdb = get_df(os.path.join(musdb_dir, 'train'), stem)
     df_musdb_train, df_musdb_val = train_test_split(df_musdb, test_size=val_size, random_state=seed)
     df_musdb_train.to_csv(os.path.join(csv_dir, 'musdb_train.csv'), index=False)
