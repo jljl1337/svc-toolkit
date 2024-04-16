@@ -103,7 +103,9 @@ training is running.
 ### Files
 
 In this tab, you can convert the vocals to a different singer. The input, output,
-model, and config file has to be specified. TODO: model file name
+model, and config file has to be specified. The model file should be started with
+the letter `G`, that is something like `G_XXX.pth`, where `XXX` is the number of
+epochs.
 
 ### Options
 
