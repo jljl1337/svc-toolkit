@@ -3,7 +3,7 @@ batch_size: 16
 epochs: 1000
 loader_num_workers: 4
 deterministic: True
-precision: bf32
+precision: bf16
 sample_rate: 44100
 win_length: 4096
 hop_length: 1024
