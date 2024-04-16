@@ -24,7 +24,7 @@ steps to install for GPU support might be different.
 
 To set up the development environment, follow these steps:
 
-1. Install [Python](https://www.python.org/downloads/) (3.10 is recommended, but 3.10 - 3.12 should work)
+1. Install [Python](https://www.python.org/downloads/) (3.10 is recommended, but 3.10 - 3.11 should work)
 
 2. Install [Poetry](https://python-poetry.org/docs/#installation)
 

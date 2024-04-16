@@ -11,7 +11,7 @@ with Deep U-Net model for vocal separation feature and easy to use GUI.
 
 ### Installation
 
-1. Install [Python](https://www.python.org/downloads/) (3.10 is recommended, but 3.10 - 3.12 should work)
+1. Install [Python](https://www.python.org/downloads/) (3.10 is recommended, but 3.10 - 3.11 should work)
 
 2. Install [pipx](https://pipx.pypa.io/stable/installation/)
 
