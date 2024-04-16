@@ -262,12 +262,17 @@ and a new directory will be created in the `MODEL_LOG_DIR` with the experiment n
 The experiment name can also be used to create nested directories, for example,
 `exp1/config1`.
 
-The CSV files should have three columns in total, all of which are strings, namely
-`song`, `mixture_path`, and `stem_path`. The `song` column is the name of the song,
-usually follow the format of `artist - title`. The `mixture_path` column is the path
-to the mixture audio file, and the `stem_path` column is that to the stem audio file.
-Any CSV file that follows this format can be used for training, even if it is not
-generated using the preprocessing script.
+The CSV files should have three columns in total, all of which are strings, they
+are as follows:
+
+* `song`
+* `mixture_path`
+* `stem_path`
+
+The `song` column is the name of the song, usually follow the format of `artist - title`.
+The `mixture_path` column is the path to the mixture audio file, and the `stem_path`
+column is that to the stem audio file. Any CSV file that follows this format can
+be used for training, even if it is not generated using the preprocessing script.
 
 The config file is a YAML file containing the training configuration. The format
 of the config file should follow that of this example [here](https://github.com/jljl1337/svc-toolkit/blob/main/config.yml).
@@ -275,6 +280,13 @@ There are a few parameters that are worth noting: `resume_path` is the path to t
 directory of the experiment to resume training from, `expand_factor` is the factor
 to expand the dataset by, which should be around the length of a patch/segment.
 `deeper` is the flag to train the large model.
+
+Some of the parameters in the config file have fixed possible values, they and their
+possible values are as follows:
+
+* `precision`: `bf16` or `fp32`
+* `neglect_frequency`: `nyquist` or `zero`
+* `optimizer`: `adam` or `adamw`
 
 ### Evaluation
 
@@ -299,7 +311,7 @@ vs-eval
 The help message is as follows:
 
 ```
-usage: vs-eval [-h] -m MODEL_DIR -t TEST_CSV [-p {bf16,32}] [-l | --last | --no-last]
+usage: vs-eval [-h] -m MODEL_DIR -t TEST_CSV [-p {bf16,fp32}] [-l | --last | --no-last]
 
 Evaluate a separation model.
 
@@ -309,8 +321,8 @@ options:
                         Path to the model directory (required)
   -t TEST_CSV, --test_csv TEST_CSV
                         Path to the test csv file (required)
-  -p {bf16,32}, --precision {bf16,32}
-                        Precision (default: bf16, choices: bf16, 32)
+  -p {bf16,fp32}, --precision {bf16,fp32}
+                        Precision (default: bf16)
   -l, --last, --no-last
                         Use the last model
 ```

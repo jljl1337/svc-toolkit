@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 from svc_toolkit.separation.separator import Separator
-from svc_toolkit.separation.constants import NeglectFrequency
+from svc_toolkit.separation.constants import NeglectFrequency, Precision
 
 CURRENT_DIR = os.path.dirname(__file__)
 
@@ -52,7 +52,7 @@ def test_separator_separate():
     assert progress is not None
 
     separator.neglect_frequency = NeglectFrequency.NYQUIST
-    separator.precision = '32'
+    separator.precision = Precision.FP32
     magnitude, sr = separator.separate(wave, invert=True, emit=emit)
 
 def test_separator_separate_file():
@@ -64,7 +64,7 @@ def test_separator_separate_file():
     separator.patch_length = 128
     separator.neglect_frequency = NeglectFrequency.ZERO
     separator.device = 'cpu'
-    separator.precision = 'bf16'
+    separator.precision = Precision.BF16
 
     output_path = os.path.join(CURRENT_DIR, 'output.wav')
 

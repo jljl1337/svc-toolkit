@@ -70,21 +70,22 @@ class Separator():
                 end = start + self.patch_length
                 segment = magnitude[np.newaxis, channel, :, start: end]
 
-
-                if self.neglect_frequency == constants.NYQUIST:
+                # Neglect frequency to match model input
+                if self.neglect_frequency == constants.NeglectFrequency.NYQUIST:
                     segment = segment[:, : -1]
-                elif self.neglect_frequency == constants.ZERO:
+                elif self.neglect_frequency == constants.NeglectFrequency.ZERO:
                     segment = segment[:, 1:]
 
+                # Convert to tensor
                 segment_tensor = torch.from_numpy(segment)
                 segment_tensor = torch.unsqueeze(segment_tensor, 0).to(self.device)
 
                 # Predict mask
                 with torch.no_grad():
-                    if self.precision == 'bf16':
+                    if self.precision == constants.Precision.BF16:
                         with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
                             mask = self.model(segment_tensor)
-                    elif self.precision == '32':
+                    elif self.precision == constants.Precision.FP32:
                         mask = self.model(segment_tensor)
 
                 # Invert mask if needed
@@ -95,9 +96,9 @@ class Separator():
                 masked = segment_tensor * mask
 
                 # Save masked segment
-                if self.neglect_frequency == constants.NYQUIST:
+                if self.neglect_frequency == constants.NeglectFrequency.NYQUIST:
                     magnitude[channel, :-1, start: end] = masked.squeeze().cpu().numpy()
-                elif self.neglect_frequency == constants.ZERO:
+                elif self.neglect_frequency == constants.NeglectFrequency.ZERO:
                     magnitude[channel, 1:, start: end] = masked.squeeze().cpu().numpy()
 
                 # Update progress

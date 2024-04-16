@@ -7,7 +7,7 @@ class BaseStrEnum(str, Enum):
 
     @classmethod
     def all(cls):
-        return [member.value for name, member in cls.__members__.items()]
+        return [member.value for _name, member in cls.__members__.items()]
 
 class Precision(BaseStrEnum):
     BF16 = 'bf16'
