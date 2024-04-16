@@ -11,7 +11,7 @@ from pytorch_lightning.trainer.states import TrainerFn
 from tqdm import tqdm
 
 from svc_toolkit.separation.audio import load, to_magnitude
-from svc_toolkit.separation.constants import CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN, NYQUIST, ZERO, NEGLECT_FREQUENCY_OPTIONS
+from svc_toolkit.separation.constants import NeglectFrequency, CSVColumns
 
 class MagnitudeRandomDataset(Dataset):
     def __init__(
@@ -26,8 +26,8 @@ class MagnitudeRandomDataset(Dataset):
         sample_rate: int,
     ):
         # Validate neglect_frequency
-        if neglect_frequency not in NEGLECT_FREQUENCY_OPTIONS:
-            raise ValueError(f'Invalid neglect_frequency, available options: {NEGLECT_FREQUENCY_OPTIONS}')
+        if not NeglectFrequency.has(neglect_frequency):
+            raise ValueError(f'Invalid neglect_frequency, available options: {NeglectFrequency.all()}')
 
         # Check if the length of the lists are equal
         if not len(mixture_path_list) == len(stem_path_list):
@@ -79,10 +79,10 @@ class MagnitudeRandomDataset(Dataset):
         stem_magnitude /= mix_magnitude_max
 
         # Neglect frequency to match model input
-        if self.neglect_frequency == NYQUIST:
+        if self.neglect_frequency == NeglectFrequency.NYQUIST:
             mix_magnitude = mix_magnitude[: -1]
             stem_magnitude = stem_magnitude[: -1]
-        elif self.neglect_frequency == ZERO:
+        elif self.neglect_frequency == NeglectFrequency.ZERO:
             mix_magnitude = mix_magnitude[1:]
             stem_magnitude = stem_magnitude[1:]
 
@@ -156,16 +156,16 @@ class MagnitudeDataModule(pl.LightningDataModule):
             print('Loading training datasets')
             df_train = read_csv(self.train_csv)
             self.train_dataset = MagnitudeRandomDataset(
-                df_train[CSV_MIXTURE_PATH_COLUMN].tolist(),
-                df_train[CSV_STEM_PATH_COLUMN].tolist(),
+                df_train[CSVColumns.MIXTURE_PATH].tolist(),
+                df_train[CSVColumns.STEM_PATH].tolist(),
                 **self.dataset_kwargs
             )
 
             print('Loading validation datasets')
             df_val = read_csv(self.val_csv)
             self.val_dataset = MagnitudeRandomDataset(
-                df_val[CSV_MIXTURE_PATH_COLUMN].tolist(),
-                df_val[CSV_STEM_PATH_COLUMN].tolist(),
+                df_val[CSVColumns.MIXTURE_PATH].tolist(),
+                df_val[CSVColumns.STEM_PATH].tolist(),
                 **self.dataset_kwargs
             )
 

@@ -4,7 +4,7 @@ import shutil
 import pandas as pd
 
 from svc_toolkit.separation.utility import get_best_checkpoint_path, get_last_checkpoint_path, get_checkpoint_path, save_song_list
-from svc_toolkit.separation.constants import CSV_SONG_COLUMN
+from svc_toolkit.separation.constants import CSVColumns
 
 CURRENT_DIR = os.path.dirname(__file__)
 
@@ -42,7 +42,7 @@ def test_save_song_list():
     song_list_path = os.path.join(CURRENT_DIR, 'song_list.csv')
 
     song_list_pd = pd.DataFrame({
-        CSV_SONG_COLUMN: ['song1', 'song2']
+        CSVColumns.SONG: ['song1', 'song2']
     })
 
     song_list_pd.to_csv(song_list_path, index=False)

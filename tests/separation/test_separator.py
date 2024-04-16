@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 from svc_toolkit.separation.separator import Separator
-from svc_toolkit.separation.constants import ZERO, NYQUIST
+from svc_toolkit.separation.constants import NeglectFrequency
 
 CURRENT_DIR = os.path.dirname(__file__)
 
@@ -31,7 +31,7 @@ def test_separator_separate():
     separator.window_length = 2048
     separator.hop_length = 512
     separator.patch_length = 128
-    separator.neglect_frequency = ZERO
+    separator.neglect_frequency = NeglectFrequency.NYQUIST
     separator.device = 'cpu'
     separator.precision = 'bf16'
 
@@ -51,7 +51,7 @@ def test_separator_separate():
     assert magnitude.shape == (441000,)
     assert progress is not None
 
-    separator.neglect_frequency = NYQUIST
+    separator.neglect_frequency = NeglectFrequency.NYQUIST
     separator.precision = '32'
     magnitude, sr = separator.separate(wave, invert=True, emit=emit)
 
@@ -62,7 +62,7 @@ def test_separator_separate_file():
     separator.window_length = 2048
     separator.hop_length = 512
     separator.patch_length = 128
-    separator.neglect_frequency = ZERO
+    separator.neglect_frequency = NeglectFrequency.ZERO
     separator.device = 'cpu'
     separator.precision = 'bf16'
 

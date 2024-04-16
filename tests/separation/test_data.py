@@ -7,13 +7,13 @@ from pytorch_lightning.trainer.states import TrainerFn
 from torch.utils.data import DataLoader
 
 from svc_toolkit.separation.data import MagnitudeRandomDataset, MagnitudeDataModule
-from svc_toolkit.separation.constants import NYQUIST, ZERO, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
+from svc_toolkit.separation.constants import NeglectFrequency, CSVColumns
 
 CURRENT_DIR = os.path.dirname(__file__)
 
 def test_load_magnitude_random_dataset():
     # Create a MagnitudeRandomDataset object
-    dataset = MagnitudeRandomDataset([], [], 10, 10, 10, 10, NYQUIST, 10)
+    dataset = MagnitudeRandomDataset([], [], 10, 10, 10, 10, NeglectFrequency.NYQUIST, 10)
 
     test_audio_path = os.path.join(CURRENT_DIR, '../source.wav')
     
@@ -23,7 +23,7 @@ def test_load_magnitude_random_dataset():
     assert mix_mag.shape == stem_mag.shape
     assert weight == 2
 
-    dataset = MagnitudeRandomDataset([], [], 10, 10, 10, 10, ZERO, 10)
+    dataset = MagnitudeRandomDataset([], [], 10, 10, 10, 10, NeglectFrequency.ZERO, 10)
     index, mix_mag_zero, stem_mag_zero, weight = dataset.load_magnitude(0, test_audio_path, test_audio_path)
 
     assert index == 0
@@ -50,20 +50,20 @@ def test_random_dataset_constructor():
     try:
         exception_str = ''
         # Create a MagnitudeRandomDataset object
-        dataset = MagnitudeRandomDataset([test_audio_path], [], 10, 10, 10, 10, NYQUIST, 10)
+        dataset = MagnitudeRandomDataset([test_audio_path], [], 10, 10, 10, 10, NeglectFrequency.NYQUIST, 10)
     except Exception as e:
         exception_str = str(e)
 
     assert exception_str == 'Length of mixture and stem lists must be equal'
 
     # Create a MagnitudeRandomDataset object
-    dataset = MagnitudeRandomDataset([test_audio_path], [test_audio_path], 10, 10, 10, 10, NYQUIST, 10)
+    dataset = MagnitudeRandomDataset([test_audio_path], [test_audio_path], 10, 10, 10, 10, NeglectFrequency.NYQUIST, 10)
 
     assert dataset.win_length == 10
     assert dataset.hop_length == 10
     assert dataset.patch_length == 10
     assert dataset.expand_factor == 10
-    assert dataset.neglect_frequency == NYQUIST
+    assert dataset.neglect_frequency == NeglectFrequency.NYQUIST
     assert dataset.sample_rate == 10
 
     assert len(dataset.expanded_magnitudes) == 2
@@ -73,7 +73,7 @@ def test_random_dataset_len():
     test_audio_path = os.path.join(CURRENT_DIR, '../source.wav')
 
     # Create a MagnitudeRandomDataset object
-    dataset = MagnitudeRandomDataset([test_audio_path], [test_audio_path], 10, 10, 10, 10, NYQUIST, 10)
+    dataset = MagnitudeRandomDataset([test_audio_path], [test_audio_path], 10, 10, 10, 10, NeglectFrequency.NYQUIST, 10)
 
     assert len(dataset) == 2
 
@@ -83,7 +83,7 @@ def test_random_dataset_get_item():
     test_audio_path = os.path.join(CURRENT_DIR, '../source.wav')
 
     # Create a MagnitudeRandomDataset object
-    dataset = MagnitudeRandomDataset([test_audio_path], [test_audio_path], 10, 10, 10, 10, NYQUIST, 10)
+    dataset = MagnitudeRandomDataset([test_audio_path], [test_audio_path], 10, 10, 10, 10, NeglectFrequency.NYQUIST, 10)
 
     mix_mag, stem_mag = dataset[0]
 
@@ -117,12 +117,12 @@ def test_magnitude_data_module_constructor():
     
 def test_magnitude_data_module_setup():
     # Create a empty dataframe with columns
-    df = pd.DataFrame(columns=[CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN])
+    df = pd.DataFrame(columns=[CSVColumns.MIXTURE_PATH, CSVColumns.STEM_PATH])
     df_path = os.path.join(CURRENT_DIR, 'test.csv')
     df.to_csv(df_path, index=False)
 
     # Create a MagnitudeDataModule object
-    data_module = MagnitudeDataModule(df_path, df_path, 1, 2, 3, 4, NYQUIST, 6, 7, 8)
+    data_module = MagnitudeDataModule(df_path, df_path, 1, 2, 3, 4, NeglectFrequency.NYQUIST, 6, 7, 8)
 
     data_module.setup(TrainerFn.FITTING)
 
@@ -133,7 +133,7 @@ def test_magnitude_data_module_setup():
 
 def test_magnitude_data_module_loader_kwargs():
     # Create a MagnitudeDataModule object
-    data_module = MagnitudeDataModule('', '', 1, 2, 3, 4, NYQUIST, 6, 7, 8)
+    data_module = MagnitudeDataModule('', '', 1, 2, 3, 4, NeglectFrequency.NYQUIST, 6, 7, 8)
 
     loader_kwargs = data_module._loader_kwargs(shuffle=True)
 
@@ -149,14 +149,14 @@ def test_magnitude_data_module_loader_kwargs():
 
 def test_magnitude_data_module_dataloaders():
     # Create a dataframe with only one row
-    df = pd.DataFrame(columns=[CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN])
+    df = pd.DataFrame(columns=[CSVColumns.MIXTURE_PATH, CSVColumns.STEM_PATH])
     source_path = os.path.join(CURRENT_DIR, '../source.wav')
     df.loc[0] = [source_path, source_path]
     df_path = os.path.join(CURRENT_DIR, 'test.csv')
     df.to_csv(df_path, index=False)
 
     # Create a MagnitudeDataModule object
-    data_module = MagnitudeDataModule(df_path, df_path, 1, 2, 3, 4, NYQUIST, 6, 7, 8)
+    data_module = MagnitudeDataModule(df_path, df_path, 1, 2, 3, 4, NeglectFrequency.NYQUIST, 6, 7, 8)
 
     data_module.setup(TrainerFn.FITTING)
 

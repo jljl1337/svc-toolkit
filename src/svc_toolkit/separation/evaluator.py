@@ -4,7 +4,7 @@ from torchmetrics.audio import SignalDistortionRatio, ScaleInvariantSignalDistor
 from tqdm import tqdm
 
 from svc_toolkit.separation.separator import Separator
-from svc_toolkit.separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
+from svc_toolkit.separation.constants import CSVColumns
 
 class Evaluator:
     def __init__(self, model_dir: str, device: str, precision: str, last: bool):
@@ -17,8 +17,8 @@ class Evaluator:
         df_result = pd.DataFrame(columns=['song', 'SDR', 'SI-SDR', 'NSDR', 'NSI-SDR'])
 
         for _index, row in tqdm(df_test.iterrows(), total=len(df_test)):
-            mixture_path = row[CSV_MIXTURE_PATH_COLUMN]
-            stem_path = row[CSV_STEM_PATH_COLUMN]
+            mixture_path = row[CSVColumns.MIXTURE_PATH]
+            stem_path = row[CSVColumns.STEM_PATH]
             mixture_wave = self.separator.load_file(mixture_path)
             stem_wave = self.separator.load_file(stem_path)
             mixture_tensor = torch.from_numpy(mixture_wave)
@@ -32,7 +32,7 @@ class Evaluator:
             nsdr_num = sdr_num - float(self.sdr(mixture_tensor, stem_tensor))
             nsisdr_num = sisdr_num - float(self.sisdr(mixture_tensor, stem_tensor))
             
-            df_result.loc[len(df_result)] = [row[CSV_SONG_COLUMN], sdr_num, sisdr_num, nsdr_num, nsisdr_num]
+            df_result.loc[len(df_result)] = [row[CSVColumns.SONG], sdr_num, sisdr_num, nsdr_num, nsisdr_num]
 
         return df_result
 

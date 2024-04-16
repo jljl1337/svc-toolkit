@@ -6,7 +6,7 @@ from torchmetrics.audio import SignalDistortionRatio, ScaleInvariantSignalDistor
 
 from svc_toolkit.separation.evaluator import Evaluator
 from svc_toolkit.separation.separator import Separator
-from svc_toolkit.separation.constants import CSV_SONG_COLUMN, CSV_MIXTURE_PATH_COLUMN, CSV_STEM_PATH_COLUMN
+from svc_toolkit.separation.constants import CSVColumns
 
 CURRENT_DIR = os.path.dirname(__file__)
 
@@ -36,9 +36,9 @@ def test_evaluator_evaluate():
     evaluator.sisdr = MockMetric()
 
     df = pd.DataFrame({
-        CSV_SONG_COLUMN: ['song1', 'song2'],
-        CSV_MIXTURE_PATH_COLUMN: ['mixture1', 'mixture2'],
-        CSV_STEM_PATH_COLUMN: ['stem1', 'stem2']
+        CSVColumns.SONG: ['song1', 'song2'],
+        CSVColumns.MIXTURE_PATH: ['mixture1', 'mixture2'],
+        CSVColumns.STEM_PATH: ['stem1', 'stem2']
     })
     df_path = os.path.join(current_dir, 'test.csv')
     df.to_csv(df_path, index=False)
@@ -46,8 +46,8 @@ def test_evaluator_evaluate():
     df_result = evaluator.evaluate(df_path)
 
     assert len(df_result) == 2
-    assert df_result[CSV_SONG_COLUMN][0] == 'song1'
-    assert df_result[CSV_SONG_COLUMN][1] == 'song2'
+    assert df_result[CSVColumns.SONG][0] == 'song1'
+    assert df_result[CSVColumns.SONG][1] == 'song2'
 
     os.remove(df_path)
 
