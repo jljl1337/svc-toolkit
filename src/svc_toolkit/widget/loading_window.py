@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QMainWindow, QHBoxLayout, QLabel, QWidget
 from PySide6.QtCore import Qt
 
 class LoadingWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.setWindowTitle('Loading...')

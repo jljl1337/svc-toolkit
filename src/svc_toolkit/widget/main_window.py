@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QTabWidget
 
 class MainWindow(QMainWindow):
-    def __init__(self, tab_list):
+    def __init__(self, tab_list: list[tuple]) -> None:
         super().__init__()
 
         self.tab_widget = QTabWidget()

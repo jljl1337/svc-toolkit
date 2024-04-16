@@ -1,21 +1,23 @@
 import os
 import math
+from typing import Callable
 
 import numpy as np
 import torch
 
 from svc_toolkit.utility.functions import load_yaml
-from svc_toolkit.separation import utility, models, audio, constants
+from svc_toolkit.separation import utility, models, audio
+from svc_toolkit.separation.constants import ConfigKeys, Precision, NeglectFrequency
 
 class SeparatorFactory():
     def __init__(self) -> None:
         pass
 
-    def create(self, model_dir, device, precision):
+    def create(self, model_dir: str, device: str, precision: str) -> 'Separator':
         return Separator(model_dir, device, precision)
 
 class Separator():
-    def __init__(self, model_dir, device, precision, last=False) -> None:
+    def __init__(self, model_dir: str, device: str, precision: str, last: bool = False) -> None:
         if last:
             model_path = utility.get_last_checkpoint_path(model_dir)
         else:
@@ -25,22 +27,22 @@ class Separator():
         config_path = os.path.join(model_dir, 'config.yml')
 
         config = load_yaml(config_path)
-        self.sample_rate = config['sample_rate']
-        self.window_length = config['win_length']
-        self.hop_length = config['hop_length']
-        self.patch_length = config['patch_length']
-        self.neglect_frequency = config['neglect_frequency']
+        self.sample_rate = config[ConfigKeys.SAMPLE_RATE]
+        self.window_length = config[ConfigKeys.WIN_LENGTH]
+        self.hop_length = config[ConfigKeys.HOP_LENGTH]
+        self.patch_length = config[ConfigKeys.PATCH_LENGTH]
+        self.neglect_frequency = config[ConfigKeys.NEGLECT_FREQUENCY]
 
         self.model = models.UNetLightning.load_from_checkpoint(model_path, map_location=device, hparams_file=hparams_path)
         self.model.eval()
         self.device = device
         self.precision = precision
 
-    def load_file(self, file):
+    def load_file(self, file: str) -> np.ndarray:
         wave, _sr = audio.load(file, sr=self.sample_rate, mono=False)
         return wave
 
-    def separate(self, wave, invert=False, emit=None):
+    def separate(self, wave: np.ndarray, invert: bool = False, emit: Callable = None) -> tuple[np.ndarray, int]:
         # Convert to 2D array if mono for convenience
         if wave.ndim == 1:
             wave = wave[np.newaxis, :]
@@ -70,21 +72,22 @@ class Separator():
                 end = start + self.patch_length
                 segment = magnitude[np.newaxis, channel, :, start: end]
 
-
-                if self.neglect_frequency == constants.NYQUIST:
+                # Neglect frequency to match model input
+                if self.neglect_frequency == NeglectFrequency.NYQUIST:
                     segment = segment[:, : -1]
-                elif self.neglect_frequency == constants.ZERO:
+                elif self.neglect_frequency == NeglectFrequency.ZERO:
                     segment = segment[:, 1:]
 
+                # Convert to tensor
                 segment_tensor = torch.from_numpy(segment)
                 segment_tensor = torch.unsqueeze(segment_tensor, 0).to(self.device)
 
                 # Predict mask
                 with torch.no_grad():
-                    if self.precision == 'bf16':
+                    if self.precision == Precision.BF16:
                         with torch.autocast(device_type=str(self.device), dtype=torch.bfloat16):
                             mask = self.model(segment_tensor)
-                    elif self.precision == '32':
+                    elif self.precision == Precision.FP32:
                         mask = self.model(segment_tensor)
 
                 # Invert mask if needed
@@ -95,9 +98,9 @@ class Separator():
                 masked = segment_tensor * mask
 
                 # Save masked segment
-                if self.neglect_frequency == constants.NYQUIST:
+                if self.neglect_frequency == NeglectFrequency.NYQUIST:
                     magnitude[channel, :-1, start: end] = masked.squeeze().cpu().numpy()
-                elif self.neglect_frequency == constants.ZERO:
+                elif self.neglect_frequency == NeglectFrequency.ZERO:
                     magnitude[channel, 1:, start: end] = masked.squeeze().cpu().numpy()
 
                 # Update progress
@@ -120,7 +123,7 @@ class Separator():
 
         return pre_wave, self.sample_rate
 
-    def separate_file(self, file, output_path, invert=False, emit=None):
+    def separate_file(self, file: str, output_path: str, invert: bool = False, emit: Callable = None) -> None:
         wave = self.load_file(file)
         new_wave, sample_rate = self.separate(wave, invert=invert, emit=emit)
         audio.save(output_path, new_wave.T, sample_rate)

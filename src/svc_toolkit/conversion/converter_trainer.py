@@ -10,11 +10,11 @@ class ConverterTrainerFactory:
     def __init__(self) -> None:
         pass
 
-    def create(self):
+    def create(self) -> 'ConverterTrainer':
         return ConverterTrainer()
     
 class ConverterTrainer:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     # split
@@ -38,7 +38,7 @@ class ConverterTrainer:
     # config configs/44k/config.json
     # model logs/44k
 
-    def preprocess(self, input_dir: str, output_dir: str, split: bool = False):
+    def preprocess(self, input_dir: str, output_dir: str, split: bool = False) -> None:
         tmp_dir = os.path.join(output_dir, 'tmp')
 
         raw_dir = input_dir
@@ -79,7 +79,7 @@ class ConverterTrainer:
             f0_method='crepe'
         )
 
-    def train(self, config_path: str, model_path: str):
+    def train(self, config_path: str, model_path: str) -> None:
         train(
             config_path=config_path,
             model_path=model_path

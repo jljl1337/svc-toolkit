@@ -5,7 +5,7 @@ from PySide6.QtGui import QIcon
 
 from svc_toolkit.widget.loading_window import LoadingWindow
 
-def main():
+def main() -> None:
     app = QApplication([])
 
     app.setWindowIcon(QIcon(os.path.join(os.path.dirname(__file__), 'img/icon.png')))

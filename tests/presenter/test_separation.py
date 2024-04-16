@@ -194,5 +194,4 @@ def test_vocal_separation_presenter_start_separation():
     assert model_factory.separator.file == file
 
     # Remove the model directory
-    print(os.path.dirname(__file__))
     shutil.rmtree(os.path.join(os.path.dirname(__file__), '../models', model_factory.model_dir))

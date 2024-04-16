@@ -2,7 +2,7 @@ from svc_toolkit.widget.mixing import MixingWidget
 from svc_toolkit.conversion.mixer import MixerFactory
 
 class MixingPresenter:
-    def __init__(self, view: MixingWidget, mixer_factory: MixerFactory):
+    def __init__(self, view: MixingWidget, mixer_factory: MixerFactory) -> None:
         self.view = view
         self.mixer_factory = mixer_factory
 
@@ -15,6 +15,6 @@ class MixingPresenter:
         output_path: str,
         source_1_ratio: float,
         **kwargs
-    ):
+    ) -> None:
         mixer = self.mixer_factory.create()
         mixer.mix(source_1_path, source_2_path, output_path, source_1_ratio, **kwargs)

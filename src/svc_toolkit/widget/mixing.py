@@ -1,15 +1,17 @@
+from typing import Callable
+
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QGroupBox
-from PySide6.QtCore import QThread, Signal
+from PySide6.QtCore import QThread
 
 from svc_toolkit.widget.common import info_message_box, error_message_box, FileWidget, SaveFileWidget, CheckboxWidget, FloatSliderWidget
 
 class MixingThread(QThread):
-    def __init__(self, mixer_function, kwargs):
+    def __init__(self, mixer_function: Callable, kwargs: dict) -> None:
         super().__init__()
         self.mixer_function = mixer_function
         self.kwargs = kwargs
 
-    def run(self):
+    def run(self) -> None:
         try:
             self.error_message = None
             self.mixer_function(**self.kwargs)
@@ -18,7 +20,7 @@ class MixingThread(QThread):
             self.error_message = str(e)
 
 class MixingWidget(QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         layout = QVBoxLayout(self)
@@ -50,10 +52,10 @@ class MixingWidget(QWidget):
         layout.addWidget(self.option_group_box)
         layout.addWidget(self.start_button)
 
-    def set_mixer_function(self, mixer_function):
+    def set_mixer_function(self, mixer_function: Callable) -> None:
         self.mixer_function = mixer_function
 
-    def mixing_end(self):
+    def mixing_end(self) -> None:
         self.start_button.setEnabled(True)
 
         error_message = self.mixing_thread.error_message
@@ -63,7 +65,7 @@ class MixingWidget(QWidget):
         else:
             info_message_box('Mixing completed.')
 
-    def start_mixing(self):
+    def start_mixing(self) -> None:
         error_message = ''
 
         if not self.source_1_file_widget.get_file():

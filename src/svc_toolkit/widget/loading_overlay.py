@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QMovie
 
 class LoadingOverlayWidget(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent: QWidget = None) -> None:
         super(LoadingOverlayWidget, self).__init__(parent)
 
         self.loading_label = QLabel(self)
@@ -16,8 +16,8 @@ class LoadingOverlayWidget(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(self.loading_label, alignment=Qt.AlignCenter)
 
-    def start_movie(self):
+    def start_movie(self) -> None:
         self.loading_movie.start()
 
-    def stop_movie(self):
+    def stop_movie(self) -> None:
         self.loading_movie.stop()

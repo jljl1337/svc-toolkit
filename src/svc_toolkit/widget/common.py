@@ -1,17 +1,18 @@
 import os
+from typing import Callable
 
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFileDialog, QCheckBox, QComboBox, QMessageBox, QSlider, QLineEdit
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIntValidator, QDoubleValidator
 
-def info_message_box(message):
+def info_message_box(message: str) -> None:
     message_box = QMessageBox()
     message_box.setIcon(QMessageBox.Icon.Information)
     message_box.setWindowTitle('Info')
     message_box.setText(message)
     message_box.exec()
 
-def error_message_box(message):
+def error_message_box(message: str) -> None:
     message_box = QMessageBox()
     message_box.setIcon(QMessageBox.Icon.Critical)
     message_box.setWindowTitle('Error')
@@ -19,7 +20,7 @@ def error_message_box(message):
     message_box.exec()
 
 class FileWidget(QWidget):
-    def __init__(self, name, on_change=None):
+    def __init__(self, name: str, on_change: Callable = None) -> None:
         super().__init__()
 
         layout = QHBoxLayout(self)
@@ -35,7 +36,7 @@ class FileWidget(QWidget):
 
         self.setFixedHeight(self.sizeHint().height())
 
-    def _choose_file(self):
+    def _choose_file(self) -> None:
         file_name, _ = QFileDialog.getOpenFileName(self, 'Choose File')
         if file_name:
             self.file_name = file_name
@@ -45,13 +46,13 @@ class FileWidget(QWidget):
             if self.on_change:
                 self.on_change(file_name)
 
-    def get_file(self):
+    def get_file(self) -> str:
         return self.file_name
 
 
 # Save as file widget
 class SaveFileWidget(QWidget):
-    def __init__(self, name, file_types):
+    def __init__(self, name: str, file_types: str) -> None:
         super().__init__()
 
         layout = QHBoxLayout(self)
@@ -68,18 +69,18 @@ class SaveFileWidget(QWidget):
 
         self.setFixedHeight(self.sizeHint().height())
 
-    def _choose_file(self):
+    def _choose_file(self) -> None:
         file_name, _ = QFileDialog.getSaveFileName(self, 'Choose File', '~/', self.file_types)
         if file_name:
             self.file_name = file_name
             self.label.setText(f'{self.name}: {os.path.basename(file_name)}')
             self.label.setToolTip(file_name)
 
-    def get_file(self):
+    def get_file(self) -> str:
         return self.file_name
 
 class DirectoryWidget(QWidget):
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         super().__init__()
 
         layout = QHBoxLayout(self)
@@ -94,18 +95,18 @@ class DirectoryWidget(QWidget):
 
         self.setFixedHeight(self.sizeHint().height())
 
-    def _choose_directory(self):
+    def _choose_directory(self) -> None:
         dir_name = QFileDialog.getExistingDirectory(self, 'Choose Output Directory')
         if dir_name:
             self.dir_name = dir_name
             self.label.setText(f'{self.name}: {os.path.basename(dir_name)}')
             self.label.setToolTip(dir_name)
 
-    def get_directory(self):
+    def get_directory(self) -> str:
         return self.dir_name
 
 class CheckboxWidget(QWidget):
-    def __init__(self, name, on_change=None, default_checked=False):
+    def __init__(self, name: str, on_change: Callable = None, default_checked: bool = False) -> None:
         super().__init__()
 
         layout = QHBoxLayout(self)
@@ -125,15 +126,15 @@ class CheckboxWidget(QWidget):
 
         self.setFixedHeight(self.sizeHint().height())
 
-    def _on_checkbox_changed(self, state):
+    def _on_checkbox_changed(self, state: Qt.CheckState) -> None:
         if self.on_change:
             self.on_change(state == Qt.CheckState.Checked)
 
-    def get_checked(self):
+    def get_checked(self) -> bool:
         return self.checkbox.isChecked()
 
 class DropdownWidget(QWidget):
-    def __init__(self, name, options):
+    def __init__(self, name: str, options: list) -> None:
         super().__init__()
 
         layout = QHBoxLayout(self)
@@ -150,17 +151,17 @@ class DropdownWidget(QWidget):
 
         self.setFixedHeight(self.sizeHint().height())
 
-    def set_options(self, options):
+    def set_options(self, options: list) -> None:
         self.dropdown.clear()
         for option in options:
             self.dropdown.addItem(*option)
 
-    def get_data(self):
+    def get_data(self) -> str:
         return self.dropdown.currentData()
 
 # Slider widget with label, and a text box to show the value, and the slider and text box are connected
 class SliderWidget(QWidget):
-    def __init__(self, name, min_value, max_value, default_value, tick_interval=None):
+    def __init__(self, name: str, min_value: int, max_value: int, default_value: int, tick_interval: int = None) -> None:
         super().__init__()
 
         layout = QHBoxLayout(self)
@@ -195,18 +196,18 @@ class SliderWidget(QWidget):
 
         self.setFixedHeight(self.sizeHint().height())
 
-    def update_textbox(self, value):
+    def update_textbox(self, value: int) -> None:
         self.textbox.setText(str(value))
 
-    def update_slider(self, text):
+    def update_slider(self, text: str) -> None:
         if text:
             self.slider.setValue(float(text))
 
-    def get_value(self):
+    def get_value(self) -> int:
         return self.slider.value()
 
 class FloatSliderWidget(QWidget):
-    def __init__(self, name, min_value, max_value, default_value, decimals=2):
+    def __init__(self, name: str, min_value: float, max_value: float, default_value: float, decimals: int = 2) -> None:
         super().__init__()
 
         layout = QHBoxLayout(self)
@@ -238,12 +239,12 @@ class FloatSliderWidget(QWidget):
 
         self.setFixedHeight(self.sizeHint().height())
 
-    def update_textbox(self, value):
+    def update_textbox(self, value: int) -> None:
         self.textbox.setText(str(value / self.multiplier))
 
-    def update_slider(self, text):
+    def update_slider(self, text: str) -> None:
         if text:
             self.slider.setValue(float(text) * self.multiplier)
 
-    def get_value(self):
+    def get_value(self) -> float:
         return self.slider.value() / self.multiplier

@@ -1,4 +1,5 @@
 import os
+from typing import Callable
 
 from huggingface_hub import hf_hub_download
 
@@ -11,7 +12,7 @@ VOCAL_FILE_NAME = 'vocal.wav'
 NON_VOCAL_FILE_NAME = 'instrument.wav'
 
 class SeparationPresenter:
-    def __init__(self, view: SeparationWidget, model_factory: SeparatorFactory):
+    def __init__(self, view: SeparationWidget, model_factory: SeparatorFactory) -> None:
         self.view = view
         self.model_factory = model_factory
         self.manifest = self._get_manifest()
@@ -20,16 +21,26 @@ class SeparationPresenter:
         self.view.set_device_list(get_available_device())
         self.view.set_separation_function(self.start_separation)
 
-    def _get_manifest(self):
+    def _get_manifest(self) -> dict:
         manifest_path = os.path.join(os.path.dirname(__file__), '../models/manifest.yml')
         manifest = load_yaml(manifest_path)
 
         return manifest
 
-    def _get_model_list(self, manifest):
+    def _get_model_list(self, manifest: dict) -> list[tuple[str, str]]:
         return [(model_name, model_name) for model_name in manifest['models']]
 
-    def start_separation(self, emit, file, output_dir, vocal, non_vocal, model, device, precision):
+    def start_separation(
+        self,
+        emit: Callable[[int], None],
+        file: str,
+        output_dir: str,
+        vocal: bool,
+        non_vocal: bool,
+        model: str,
+        device: str,
+        precision: str,
+    ):
         model_dir = self._get_model_dir(model)
         self._download_model_if_needed(model, model_dir)
 
@@ -49,10 +60,10 @@ class SeparationPresenter:
         if non_vocal:
             separator.separate_file(file, non_vocal_file_path, invert=True, emit=fn2)
 
-    def _get_model_dir(self, model: str):
+    def _get_model_dir(self, model: str) -> str:
         return os.path.join(os.path.dirname(__file__), '../models', self.manifest['models'][model]['subfolder'])
 
-    def _download_model_if_needed(self, model, model_dir):
+    def _download_model_if_needed(self, model: str, model_dir: str) -> None:
         if os.path.exists(model_dir):
             return
 

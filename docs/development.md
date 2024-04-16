@@ -24,7 +24,7 @@ steps to install for GPU support might be different.
 
 To set up the development environment, follow these steps:
 
-1. Install [Python](https://www.python.org/downloads/) (3.10 is recommended, but 3.10 - 3.12 should work)
+1. Install [Python](https://www.python.org/downloads/) (3.10 is recommended, but 3.10 - 3.11 should work)
 
 2. Install [Poetry](https://python-poetry.org/docs/#installation)
 
@@ -32,7 +32,7 @@ To set up the development environment, follow these steps:
 
 4. Select the Python version to use with Poetry. For example, to use Python 3.10:
 
-        poetry env use 3.10
+        poetry env use path/to/python3.10
 
 5. Install the package in editable mode
 
@@ -55,3 +55,13 @@ To set up the development environment, follow these steps:
         pip install -U torch==2.1.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu118
 
 8. Good to go!
+
+## Testing
+
+To run the tests, run the following command:
+
+    poetry run pytest
+
+If the poetry environment is activated, you can just run `pytest` straight away:
+
+    pytest

@@ -6,19 +6,19 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 from svc_toolkit.utility.functions import load_yaml, save_yaml
-from svc_toolkit.separation import constants
+from svc_toolkit.separation.constants import SEED, Precision, ConfigKeys
 from svc_toolkit.separation import utility
 from svc_toolkit.separation.data import MagnitudeDataModule
 from svc_toolkit.separation.logger import MyLogger
 from svc_toolkit.separation.models import UNetLightning
 
-def main():
+def main() -> None:
     parser = ArgumentParser(description='Train a separation model.')
-    parser.add_argument('-t', '--train_csv', type=str, required=True, help='Path to the training csv file')
-    parser.add_argument('-v', '--val_csv', type=str, required=True, help='Path to the validation csv file')
-    parser.add_argument('-e', '--experiment', type=str, default='exp', help='Name of the experiment')
-    parser.add_argument('-m', '--model_dir', type=str, default='./model_log/', help='Path to the model log directory')
-    parser.add_argument('-c', '--config', type=str, default='./config.yml', help='Path to the config file')
+    parser.add_argument('-t', '--train_csv', type=str, required=True, help='Path to the training csv file (required)')
+    parser.add_argument('-v', '--val_csv', type=str, required=True, help='Path to the validation csv file (required)')
+    parser.add_argument('-e', '--experiment', type=str, default='exp', help='Name of the experiment (default: exp)')
+    parser.add_argument('-m', '--model_log_dir', type=str, default='./model_log/', help='Path to the model log directory (default: ./model_log/)')
+    parser.add_argument('-c', '--config', type=str, default='./config.yml', help='Path to the config file (default: ./config.yml)')
     args = parser.parse_args()
 
     config = load_yaml(args.config)
@@ -36,36 +36,41 @@ def main():
     # Create directory for this experiment
     now = datetime.now()
     date_time = now.strftime("%Y%m%d_%H%M%S")
-    model_dir = os.path.join(args.model_dir, args.experiment, date_time)
-    os.makedirs(model_dir, exist_ok=True)
+    model_log_dir = os.path.join(args.model_log_dir, args.experiment, date_time)
+    os.makedirs(model_log_dir, exist_ok=True)
 
     # Save config
-    save_yaml(config, os.path.join(model_dir, 'config.yml'))
+    save_yaml(config, os.path.join(model_log_dir, 'config.yml'))
 
     # Save song lists
-    utility.save_song_list(args.train_csv, model_dir, 'train_songs.csv')
-    utility.save_song_list(args.val_csv, model_dir, 'val_songs.csv')
+    utility.save_song_list(args.train_csv, model_log_dir, 'train_songs.csv')
+    utility.save_song_list(args.val_csv, model_log_dir, 'val_songs.csv')
 
     # Load config
-    sample_rate = config['sample_rate']
-    batch_size = config['batch_size']
-    epochs = config['epochs']
-    loader_num_workers = config['loader_num_workers']
-    deterministic = config['deterministic']
+    sample_rate = config[ConfigKeys.SAMPLE_RATE]
+    batch_size = config[ConfigKeys.BATCH_SIZE]
+    epochs = config[ConfigKeys.EPOCHS]
+    loader_num_workers = config[ConfigKeys.LOADER_NUM_WORKERS]
+    deterministic = config[ConfigKeys.DETERMINISTIC]
+    precision = config[ConfigKeys.PRECISION]
 
-    win_length = config['win_length']
-    hop_length = config['hop_length']
-    patch_length = config['patch_length']
-    expand_factor = config['expand_factor']
-    neglect_frequency = config['neglect_frequency']
+    win_length = config[ConfigKeys.WIN_LENGTH]
+    hop_length = config[ConfigKeys.HOP_LENGTH]
+    patch_length = config[ConfigKeys.PATCH_LENGTH]
+    expand_factor = config[ConfigKeys.EXPAND_FACTOR]
+    neglect_frequency = config[ConfigKeys.NEGLECT_FREQUENCY]
 
-    learning_rate = config['learning_rate']
-    weight_decay = config['weight_decay']
-    optimizer = config['optimizer']
-    deeper = config['deeper']
+    learning_rate = config[ConfigKeys.LEARNING_RATE]
+    weight_decay = config[ConfigKeys.WEIGHT_DECAY]
+    optimizer = config[ConfigKeys.OPTIMIZER]
+    deeper = config[ConfigKeys.DEEPER]
+
+    # Check input parameters
+    if not Precision.has(precision):
+        raise ValueError(f"Precision {precision} is not supported.")
 
     # Set seed
-    pl.seed_everything(constants.SEED, workers=True)
+    pl.seed_everything(SEED, workers=True)
 
     # Load dataset
     data_module = MagnitudeDataModule(
@@ -86,13 +91,15 @@ def main():
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, mode='min')
     model_checkpoint_best = ModelCheckpoint(monitor='val_loss', save_top_k=1, 
                                             mode='min', filename='best-{epoch}',
-                                            dirpath=model_dir)
-    model_checkpoint_last = ModelCheckpoint(filename='last-{epoch}', dirpath=model_dir)
+                                            dirpath=model_log_dir)
+    model_checkpoint_last = ModelCheckpoint(filename='last-{epoch}', dirpath=model_log_dir)
     callbacks=[model_checkpoint_best, model_checkpoint_last]
-    logger = MyLogger(model_dir, resume_path)
+    logger = MyLogger(model_log_dir, resume_path)
+
+    parsed_precision = 'bf16-mixed' if precision == Precision.BF16 else '32'
 
     trainer = pl.Trainer(max_epochs=epochs, callbacks=callbacks, logger=logger,
-                         devices=[0], deterministic=deterministic, precision='bf16-mixed')
+                         devices=[0], deterministic=deterministic, precision=parsed_precision)
 
     if resume_path != '':
         model_path = utility.get_last_checkpoint_path(resume_path)
